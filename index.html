@@ -88,6 +88,16 @@ details.card .in > *{min-width:0;max-width:100%}
 :root[data-design="gosch"] .seg button[aria-checked="true"]{background:var(--accent);color:var(--accent-ink);box-shadow:none}
 :root[data-design="neon"] .seg button[aria-checked="true"]{background:linear-gradient(100deg,rgba(47,123,255,.9),rgba(53,200,255,.9));color:#fff}
 .check{display:flex;gap:10px;align-items:center}
+.su-bg{position:fixed;inset:0;z-index:150;background:rgba(5,15,30,.55);display:flex;align-items:flex-end;justify-content:center}
+.su{background:var(--surface);color:var(--ink);width:100%;max-width:560px;border-radius:26px 26px 0 0;padding:22px 18px calc(22px + env(safe-area-inset-bottom,0px));display:grid;gap:12px;box-shadow:0 -10px 40px rgba(0,0,0,.25)}
+.su-step{margin:0 0 -6px;font-size:12px;letter-spacing:.04em;color:var(--muted)}
+.su h2{margin:0;font:800 24px/1.2 var(--f-display);color:var(--brand,var(--ink))}
+.su-f{display:grid;gap:6px;font-weight:600;font-size:14px}
+.su-f small{font-weight:400;color:var(--muted)}
+.su-f input{height:48px;border:1px solid transparent;border-radius:var(--rs);background:var(--sunk);padding:0 14px;font-size:16px;color:var(--ink)}
+.su-f input:focus{outline:none;border-color:var(--accent);background:var(--surface)}
+.su .btn{height:52px;border-radius:99px;font-size:16px}
+.su .btn:disabled{opacity:.45}
 #designSeg{grid-template-columns:repeat(2,minmax(0,1fr))}
 #designSeg button{padding:0 2px;font-size:15px}
 .days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
@@ -164,6 +174,9 @@ details.card .in > *{min-width:0;max-width:100%}
 :root[data-design="modern"] .brand{display:flex;justify-content:flex-start;padding:0}
 @media (prefers-color-scheme: dark){:root[data-design="modern"]:not([data-theme="light"]):not([data-mode="light"]) .brand img{filter:brightness(0) invert(.92)}}
 :root[data-design="modern"][data-mode="dark"] .brand img,:root[data-design="modern"][data-theme="dark"]:not([data-mode="light"]) .brand img{filter:brightness(0) invert(.92)}
+/* Gosch-Logo auch im Neon-Design: weiß mit leichtem Leuchten */
+:root[data-design="neon"] .brand{display:flex;justify-content:flex-start;padding:0}
+:root[data-design="neon"] .brand img{filter:brightness(0) invert(1) drop-shadow(0 0 6px rgba(53,200,255,.55)) drop-shadow(0 0 14px rgba(47,123,255,.35))}
 
 /* ===== Gemeinsamer Aufbau wie bei den Brandmeldeanlagen: großer Seitentitel + Navigationsleiste unten ===== */
 .pagehead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:6px 2px 2px;min-width:0}
@@ -234,13 +247,13 @@ header.top{position:static!important;border-bottom:0!important}
     </a>
     <a class="tile" id="t-lf" href="leitfaden.html">
       <span class="tic"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 22H20v-4"/><path d="M8.5 7.5h7M8.5 11h5"/></svg></span>
-      <span style="margin:0;white-space:normal"><b>Firmenleitfaden</b><span id="s-lf">Sicherheit, Abläufe, Kontakte</span></span>
+      <span style="margin:0;white-space:normal"><b>Leitfäden</b><span id="s-lf">Firma, Elektro, BMA, SAT, Notfall</span></span>
       <i class="go"></i>
     </a>
   </div>
   <p class="note" id="noneNote" hidden>Alle Bereiche sind ausgeblendet. Schalte unten unter „Einstellungen“ einen Bereich ein.</p>
 
-  <p class="ver"><span style="white-space:nowrap">Oh-MyGosch</span> · <span style="white-space:nowrap">erstellt von Christopher Seltmann</span> · <span style="white-space:nowrap">Version 3.4</span></p>
+  <p class="ver"><span style="white-space:nowrap">Oh-MyGosch</span> · <span style="white-space:nowrap">Version 4.0</span></p>
 </main>
 <main class="wrap" id="vSet" hidden>
   <div class="pagehead"><h1>Einstellungen</h1><span class="ctx">Oh-MyGosch</span></div>
@@ -255,6 +268,28 @@ header.top{position:static!important;border-bottom:0!important}
       <p class="note">Einmal mit dem Finger unterschreiben und auf „Übernehmen“ tippen. Sie wird beim Stundenzettel und beim Urlaubsantrag automatisch eingesetzt, jedes Mal mit aktuellem Datum und Uhrzeit.</p>
       <canvas class="sigpad" id="sigPad" width="900" height="300" aria-label="Unterschriftsfeld"></canvas>
       <div class="row"><button class="btn" type="button" id="sigClear">Feld leeren</button><button class="btn primary" type="button" id="sigSave">Übernehmen</button><button class="btn" type="button" id="sigDel" style="color:var(--danger)">Entfernen</button></div>
+    </div>
+  </details>
+  <details class="card" id="secLock">
+    <summary>App-Sperre</summary>
+    <div class="in">
+      <div class="seg" role="radiogroup" aria-label="App-Sperre" id="lockSeg">
+        <button type="button" role="radio" data-v="off" aria-checked="false">Aus</button>
+        <button type="button" role="radio" data-v="pin" aria-checked="false">PIN</button>
+        <button type="button" role="radio" data-v="pw" aria-checked="false">Passwort</button>
+      </div>
+      <div id="lockMore" style="display:grid;gap:12px" hidden>
+        <label class="check" id="bioRow"><input type="checkbox" id="lockBio"> Mit Face ID / Fingerabdruck entsperren</label>
+        <p class="note" id="bioNote" hidden></p>
+        <h3>Sperren, wenn die App im Hintergrund war</h3>
+        <div class="seg" role="radiogroup" aria-label="Sperren nach" id="afterSeg">
+          <button type="button" role="radio" data-s="0" aria-checked="false">Sofort</button>
+          <button type="button" role="radio" data-s="60" aria-checked="false">nach 1 Min.</button>
+          <button type="button" role="radio" data-s="300" aria-checked="false">nach 5 Min.</button>
+        </div>
+        <div class="row"><button class="btn" type="button" id="lockChange">PIN ändern</button><button class="btn" type="button" id="lockNowBtn">Jetzt sperren</button></div>
+      </div>
+      <p class="note">Schützt die App beim Öffnen vor fremdem Zugriff. <b>Nach 10 falschen Eingaben werden alle Daten der App auf diesem Gerät gelöscht.</b> Merk dir PIN oder Passwort gut und mach regelmäßig eine Datensicherung.</p>
     </div>
   </details>
   <details class="card" id="secDesign">
@@ -288,7 +323,14 @@ header.top{position:static!important;border-bottom:0!important}
       <label class="check"><input type="checkbox" id="m-bma"> Brandmeldeanlagen</label>
       <label class="check"><input type="checkbox" id="m-wb"> Stundenzettel</label>
       <label class="check"><input type="checkbox" id="m-ur"> Urlaub beantragen</label>
-      <label class="check"><input type="checkbox" id="m-lf"> Firmenleitfaden</label>
+      <label class="check"><input type="checkbox" id="m-lf"> Leitfäden</label>
+    </div>
+  </details>
+  <details class="card" id="secHelp">
+    <summary>Hilfe</summary>
+    <div class="in">
+      <p class="note">Die Einführung zeigt dir Schritt für Schritt, wie die App funktioniert. Sie startet auch in jedem Bereich beim nächsten Öffnen wieder. Einzelne Bereiche erklärst du dir jederzeit über das „?“ oben rechts.</p>
+      <div class="row"><button class="btn primary" type="button" id="tourAgain">Einführung erneut ansehen</button></div>
     </div>
   </details>
   <details class="card" id="secBk">
@@ -307,8 +349,34 @@ header.top{position:static!important;border-bottom:0!important}
       <p class="note">Eingelesen werden Sicherungen aus dieser App, aus dem alten Wochenbericht und aus der alten Brandmelde-App. Einträge mit gleicher Kennung werden ersetzt, alle anderen bleiben.</p>
     </div>
   </details>
-  <p class="ver"><span style="white-space:nowrap">Oh-MyGosch</span> · <span style="white-space:nowrap">erstellt von Christopher Seltmann</span> · <span style="white-space:nowrap">Version 3.4</span></p>
+  <p class="ver"><span style="white-space:nowrap">Oh-MyGosch</span> · <span style="white-space:nowrap">Version 4.0</span></p>
 </main>
+<div class="su-bg" id="setupSheet" hidden>
+  <div class="su" role="dialog" aria-modal="true" aria-labelledby="suTitle" id="suStep1">
+    <p class="su-step">Schritt 1 von 2</p>
+    <h2 id="suTitle">Willkommen bei <span style="white-space:nowrap">Oh-MyGosch</span></h2>
+    <p class="note">Damit Stundenzettel und Urlaubsanträge gleich richtig ausgefüllt werden, trag bitte kurz deinen Namen ein.</p>
+    <label class="su-f">Vorname Name<input id="suName" autocomplete="name" placeholder="z. B. Max Mustermann"></label>
+    <label class="su-f"><span>Urlaubstage pro Jahr <small>(optional)</small></span><input id="suUrlaub" inputmode="decimal" placeholder="z. B. 30 – geht auch später"></label>
+    <p class="note">Die Urlaubstage kannst du auch später unter Einstellungen → Persönliche Daten eintragen. Alles bleibt nur auf diesem Gerät.</p>
+    <button class="btn primary" type="button" id="suOk" disabled>Weiter</button>
+  </div>
+  <div class="su" role="dialog" aria-modal="true" aria-labelledby="suLockT" id="suStep2" hidden>
+    <p class="su-step">Schritt 2 von 2</p>
+    <h2 id="suLockT">App absichern</h2>
+    <p class="note">In der App liegen deine Stundenzettel, Urlaubsanträge, Kundendaten und deine Unterschrift. Leg deshalb eine Sperre fest – sie wird bei jedem Öffnen abgefragt.</p>
+    <div id="suLockPick" style="display:grid;gap:10px">
+      <button class="btn primary" type="button" id="suPin">PIN festlegen (4–6 Ziffern)</button>
+      <button class="btn" type="button" id="suPw">Lieber ein Passwort</button>
+    </div>
+    <div id="suBio" style="display:grid;gap:10px" hidden>
+      <p class="note"><b>Fertig – die Sperre ist eingerichtet.</b> Möchtest du zusätzlich mit Face ID oder Fingerabdruck entsperren? PIN bzw. Passwort bleiben als Ersatz.</p>
+      <button class="btn primary" type="button" id="suBioOn">Face ID / Fingerabdruck einschalten</button>
+      <button class="btn" type="button" id="suBioNo">Nicht jetzt</button>
+    </div>
+    <p class="note"><b>Nach 10 falschen Eingaben werden alle Daten gelöscht.</b> Merk dir PIN oder Passwort gut. Ändern oder ausschalten kannst du die Sperre später unter Einstellungen → App-Sperre.</p>
+  </div>
+</div>
 <nav class="appnav" id="nav" aria-label="Oh-MyGosch"><div class="in" role="tablist">
   <button type="button" role="tab" data-view="home" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Start</button>
   <button type="button" role="tab" data-view="set" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>Einstellungen</button>
@@ -410,8 +478,379 @@ header.top{position:static!important;border-bottom:0!important}
     if(hiddenAt && Date.now() - hiddenAt > 15*60*1000 && !/(^|\/)(index\.html)?$/.test(location.pathname)){ location.replace("index.html"); }
     hiddenAt = 0;
   });
-  window.GT = {toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home};
+
+  // ---------- Geführte Einführung (Tour) ----------
+  function tourCss(){
+    if(document.getElementById("gtTourCss")) return;
+    const st = document.createElement("style"); st.id = "gtTourCss";
+    st.textContent = ".gt-tour{position:fixed;inset:0;z-index:200}"
+      + ".gt-blur{position:fixed;inset:0;-webkit-backdrop-filter:blur(6px) saturate(.8);backdrop-filter:blur(6px) saturate(.8);transition:clip-path .25s}"
+      + ".gt-tour.nospot{background:rgba(5,15,30,.5)}"
+      + ".gt-spot{position:fixed;border-radius:18px;box-shadow:0 0 0 2px rgba(255,255,255,.85),0 0 24px 4px rgba(255,255,255,.25),0 0 0 9999px rgba(5,15,30,.5);pointer-events:none;transition:left .25s,top .25s,width .25s,height .25s}"
+      + ".gt-card{position:fixed;left:16px;right:16px;max-width:420px;margin:0 auto;background:var(--surface,#fff);color:var(--ink,#111);border-radius:22px;padding:16px 16px 14px;box-shadow:0 14px 40px rgba(0,0,0,.35);display:grid;gap:6px;font:15px/1.45 var(--f-body,system-ui,sans-serif)}"
+      + ".gt-step{font-size:12px;color:var(--muted,#667);letter-spacing:.04em}"
+      + ".gt-title{font:700 18px/1.25 var(--f-display,system-ui,sans-serif);color:var(--brand,var(--ink,#111))}"
+      + ".gt-text{margin:0}"
+      + ".gt-row{display:flex;gap:8px;align-items:center;margin-top:6px}"
+      + ".gt-row button{border:0;border-radius:99px;height:42px;padding:0 16px;font:600 15px/1 var(--f-body,system-ui,sans-serif);cursor:pointer}"
+      + ".gt-skip{background:none;color:var(--muted,#667);padding:0 4px!important}"
+      + ".gt-back{background:var(--sunk,#eef);color:var(--ink,#111)}"
+      + ".gt-next{background:var(--accent,#003769);color:var(--accent-ink,#fff)}";
+    document.head.appendChild(st);
+  }
+  function tourDone(id){ try{ return !!(localStorage.getItem("app.tour.off") || localStorage.getItem("app.tour." + id)); }catch(e){ return true; } }
+  let lastTour = null;
+  function helpBtn(){
+    if(document.getElementById("gtHelp")) return;
+    const st = document.createElement("style");
+    st.textContent = '#gtHelp{position:fixed;z-index:40;top:calc(10px + env(safe-area-inset-top,0px));right:max(16px,calc(50vw - 304px));width:40px;height:40px;border-radius:50%;border:0;display:grid;place-items:center;background:var(--surface,#fff);color:var(--ink,#0d1b2e);box-shadow:0 6px 18px rgba(0,30,60,.18);font:700 18px/1 system-ui,-apple-system,sans-serif;cursor:pointer}#gtHelp:focus-visible{outline:2px solid var(--accent,#003769);outline-offset:2px}:root[data-design="neon"] #gtHelp{background:rgba(15,18,32,.92);color:#8e95ba;border:1px solid #242a45}@media print{#gtHelp{display:none}}';
+    document.head.appendChild(st);
+    const b = document.createElement("button"); b.type = "button"; b.id = "gtHelp"; b.textContent = "?";
+    b.setAttribute("aria-label", "Einführung für diesen Bereich starten"); b.title = "Einführung starten";
+    b.addEventListener("click", () => { if(lastTour) tour(lastTour.id, lastTour.steps, {force:true}); });
+    document.body.appendChild(b);
+  }
+  // Fläche mit Loch: alles außer dem erklärten Bereich wird unscharf
+  function holePath(x, y, w, h, rad){
+    rad = Math.max(0, Math.min(rad, w/2, h/2)); const pts = [], N = 6;
+    const arc = (cx, cy, a0) => { for(let k = 0; k <= N; k++){ const a = (a0 - k*90/N) * Math.PI/180; pts.push((cx + rad*Math.cos(a)).toFixed(1) + "px " + (cy - rad*Math.sin(a)).toFixed(1) + "px"); } };
+    arc(x + rad, y + rad, 180); arc(x + w - rad, y + rad, 90); arc(x + w - rad, y + h - rad, 0); arc(x + rad, y + h - rad, -90);
+    return "polygon(evenodd,0 0,100% 0,100% 100%,0 100%,0 0," + pts.join(",") + "," + pts[0] + ",0 0)";
+  }
+  function tour(id, steps, opts){
+    opts = opts || {};
+    lastTour = {id, steps}; helpBtn();
+    if(!opts.force && tourDone(id)) return;
+    if(document.querySelector(".gt-tour")) return;
+    tourCss();
+    const ov = document.createElement("div"); ov.className = "gt-tour";
+    ov.innerHTML = '<div class="gt-blur"></div><div class="gt-spot"></div><div class="gt-card" role="dialog" aria-modal="true" aria-labelledby="gtTitle"><div class="gt-step"></div><b class="gt-title" id="gtTitle"></b><p class="gt-text"></p><div class="gt-row"><button type="button" class="gt-skip">Überspringen</button><span style="flex:1"></span><button type="button" class="gt-back">Zurück</button><button type="button" class="gt-next">Weiter</button></div></div>';
+    document.body.appendChild(ov);
+    const spot = ov.querySelector(".gt-spot"), blur = ov.querySelector(".gt-blur"), card = ov.querySelector(".gt-card");
+    let i = 0, el = null;
+    const find = s => { if(!s.sel) return null; const e = typeof s.sel === "function" ? s.sel() : document.querySelector(s.sel); if(!e) return s.center ? null : undefined; const r = e.getBoundingClientRect(); return (r.width || r.height) ? e : (s.center ? null : undefined); };
+    function place(){
+      const H = innerHeight, cr = card.getBoundingClientRect();
+      if(!el){ ov.classList.add("nospot"); spot.hidden = true; blur.style.clipPath = "none"; card.style.top = Math.max(16, (H - cr.height) / 2) + "px"; card.style.bottom = ""; return; }
+      ov.classList.remove("nospot"); spot.hidden = false;
+      const r = el.getBoundingClientRect(), pad = 6;
+      const top = Math.max(4, r.top - pad), bot = Math.min(H - 4, r.bottom + pad);
+      const L = Math.max(4, r.left - pad), W = Math.min(innerWidth - 8, r.width + 2*pad), Hh = Math.max(0, bot - top);
+      Object.assign(spot.style, {left: L + "px", top: top + "px", width: W + "px", height: Hh + "px"});
+      blur.style.clipPath = holePath(L, top, W, Hh, 18);
+      if(bot + 14 + cr.height < H - 8){ card.style.top = (bot + 14) + "px"; }
+      else if(top - 14 - cr.height > 8){ card.style.top = (top - 14 - cr.height) + "px"; }
+      else { card.style.top = Math.max(16, H - cr.height - 16) + "px"; }
+    }
+    function show(n, dir){
+      i = n; if(i < 0) i = 0;
+      if(i >= steps.length){ return end(); }
+      const s = steps[i];
+      if(s.before){ try{ s.before(); }catch(e){} }
+      const f = find(s);
+      if(f === undefined){ return show(i + (dir || 1), dir); }
+      el = f;
+      ov.querySelector(".gt-step").textContent = "Schritt " + (i + 1) + " von " + steps.length;
+      ov.querySelector(".gt-title").textContent = s.title;
+      ov.querySelector(".gt-text").textContent = s.text;
+      ov.querySelector(".gt-back").hidden = i === 0;
+      ov.querySelector(".gt-next").textContent = i === steps.length - 1 ? "Fertig" : "Weiter";
+      if(el && !s.fixed) el.scrollIntoView({block: "center", behavior: "instant"});
+      place(); setTimeout(place, 60); setTimeout(place, 300);
+    }
+    function end(){ try{ localStorage.setItem("app.tour." + id, "1"); }catch(e){} window.removeEventListener("resize", place); window.removeEventListener("scroll", place, true); ov.remove(); if(opts.done) opts.done(); }
+    ov.querySelector(".gt-next").onclick = () => show(i + 1, 1);
+    ov.querySelector(".gt-back").onclick = () => show(i - 1, -1);
+    ov.querySelector(".gt-skip").onclick = end;
+    window.addEventListener("resize", place); window.addEventListener("scroll", place, true);
+    show(0, 1);
+  }
+  function tourReset(){ try{ Object.keys(localStorage).filter(k => k.indexOf("app.tour.") === 0).forEach(k => localStorage.removeItem(k)); }catch(e){} }
+  window.GT = {toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home, tour, tourDone, tourReset};
   persist(); registerSW();
+})();
+
+/* App-Sperre: PIN, Passwort und Biometrie (Face ID / Fingerabdruck über WebAuthn). Alles bleibt auf dem Gerät. */
+(function(){
+  "use strict";
+  const KEY = "app.lock", FAILS = "app.lock.fails", S_UNL = "app.unlockedAt", S_HID = "app.hiddenAt", S_NAV = "app.navAt";
+  const lget = k => { try{ return JSON.parse(localStorage.getItem(k) || "null"); }catch(e){ return null; } };
+  const lset = (k, v) => { try{ v == null ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); }catch(e){} };
+  const sget = k => { try{ return Number(sessionStorage.getItem(k) || 0); }catch(e){ return 0; } };
+  const sset = (k, v) => { try{ v == null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, String(v)); }catch(e){} };
+  const cfg = () => { const c = lget(KEY); return c && (c.type === "pin" || c.type === "pw") && c.hash ? c : null; };
+  const b64 = buf => { const a = new Uint8Array(buf); let s = ""; for(let i = 0; i < a.length; i++) s += String.fromCharCode(a[i]); return btoa(s); };
+  const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  const rand = n => crypto.getRandomValues(new Uint8Array(n));
+  const ITER = 150000, MAXF = 10;
+  const vers = n => "Noch " + n + (n === 1 ? " Versuch" : " Versuche") + ", dann werden alle Daten gelöscht.";
+  async function derive(secret, salt, iter){
+    const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), "PBKDF2", false, ["deriveBits"]);
+    return b64(await crypto.subtle.deriveBits({name:"PBKDF2", salt:unb64(salt), iterations:iter, hash:"SHA-256"}, k, 256));
+  }
+  async function makeSecret(type, secret, keep){
+    const salt = b64(rand(16)); const hash = await derive(secret, salt, ITER);
+    const c = Object.assign({after:0, bio:null}, keep || {}, {type, salt, hash, iter:ITER, len: type === "pin" ? secret.length : 0});
+    lset(KEY, c); lset(FAILS, null); return c;
+  }
+  async function checkSecret(secret){ const c = cfg(); if(!c) return true; return (await derive(secret, c.salt, c.iter || ITER)) === c.hash; }
+
+  // ---------- Biometrie ----------
+  async function bioAvailable(){
+    try{ return !!(window.PublicKeyCredential && window.isSecureContext && await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()); }catch(e){ return false; }
+  }
+  async function bioRegister(){
+    const cred = await navigator.credentials.create({publicKey:{
+      challenge: rand(32), rp:{name:"Oh-MyGosch"},
+      user:{id: rand(16), name:"Oh-MyGosch", displayName:"Oh-MyGosch"},
+      pubKeyCredParams:[{type:"public-key", alg:-7}, {type:"public-key", alg:-257}],
+      authenticatorSelection:{authenticatorAttachment:"platform", userVerification:"required", residentKey:"discouraged"},
+      timeout:60000, attestation:"none"}});
+    if(!cred) throw new Error("abgebrochen");
+    return b64(cred.rawId);
+  }
+  async function bioCheck(){
+    const c = cfg(); if(!c || !c.bio) return false;
+    const a = await navigator.credentials.get({publicKey:{challenge: rand(32), allowCredentials:[{type:"public-key", id: unb64(c.bio), transports:["internal","hybrid"]}], userVerification:"required", timeout:60000}});
+    if(!a || b64(a.rawId) !== c.bio) return false;
+    const ad = new Uint8Array(a.response.authenticatorData);
+    return ad.length > 32 && !!(ad[32] & 0x04); // Benutzer wurde geprüft (Face ID / Fingerabdruck / Geräte-Code)
+  }
+
+  // ---------- Fehlversuche ----------
+  function failInfo(){ return lget(FAILS) || {n:0, until:0}; }
+  function addFail(){ const f = failInfo(); f.n++; if(f.n >= 5) f.until = Date.now() + Math.min(300, 30 * Math.pow(2, f.n - 5)) * 1000; lset(FAILS, f); return f; }
+
+  // ---------- Oberfläche ----------
+  const CSS = 'html.gt-locked body>*:not(#gtLock):not(#gtToast){visibility:hidden!important}html.gt-locked,html.gt-locked body{overflow:hidden!important}'
+    + '#gtLock{position:fixed;inset:0;z-index:1000;background:var(--bg,#f3f5f8);color:var(--ink,#0d1b2e);display:flex;align-items:center;justify-content:center;padding:calc(20px + env(safe-area-inset-top,0px)) 20px calc(20px + env(safe-area-inset-bottom,0px));font:16px/1.4 var(--f-body,system-ui,-apple-system,sans-serif);overflow:auto}'
+    + '#gtLock .gl-in{width:100%;max-width:340px;display:grid;justify-items:center;gap:12px;text-align:center}'
+    + '#gtLock .gl-ic{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:var(--accent,#003769);color:var(--accent-ink,#fff)}'
+    + '#gtLock .gl-ic svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}'
+    + '#gtLock h2{margin:4px 0 0;font:800 24px/1.2 var(--f-display,system-ui,sans-serif);color:var(--brand,var(--ink,#0d1b2e));letter-spacing:-.02em}'
+    + '#gtLock .gl-sub{margin:0;color:var(--muted,#5d6b7c);font-size:15px;min-height:1.4em}'
+    + '#gtLock .gl-dots{display:flex;justify-content:center;gap:14px;height:18px;align-items:center;margin:6px 0 4px}'
+    + '#gtLock .gl-dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--accent,#003769);display:block}'
+    + '#gtLock .gl-dots i.on{background:var(--accent,#003769)}'
+    + '#gtLock .gl-dots.shake{animation:glShake .35s}@keyframes glShake{25%{transform:translateX(-10px)}50%{transform:translateX(10px)}75%{transform:translateX(-6px)}}'
+    + '#gtLock .gl-pad{display:grid;grid-template-columns:repeat(3,72px);gap:14px 22px;margin-top:6px}'
+    + '#gtLock .gl-pad button{width:72px;height:72px;border-radius:50%;border:0;background:var(--surface,#fff);color:var(--ink,#0d1b2e);font:600 28px/1 var(--f-body,system-ui,sans-serif);box-shadow:var(--shadow,0 1px 3px rgba(0,0,0,.1));cursor:pointer;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}'
+    + '#gtLock .gl-pad button:active{background:var(--accent-soft,#e2eaf3)}'
+    + '#gtLock .gl-pad button.fn{background:none;box-shadow:none;font-size:15px;color:var(--muted,#5d6b7c)}'
+    + '#gtLock .gl-pad button svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}'
+    + '#gtLock .gl-pad button:disabled{opacity:.35}'
+    + '#gtLock .gl-pw{display:grid;gap:10px;width:100%}'
+    + '#gtLock input{height:52px;border:1px solid transparent;border-radius:16px;background:var(--surface,#fff);box-shadow:var(--shadow,none);padding:0 16px;font-size:17px;color:var(--ink,#0d1b2e);width:100%;box-sizing:border-box}'
+    + '#gtLock input:focus{outline:none;border-color:var(--accent,#003769)}'
+    + '#gtLock .gl-btn{height:52px;border-radius:99px;border:0;background:var(--accent,#003769);color:var(--accent-ink,#fff);font:650 16px/1 var(--f-body,system-ui,sans-serif);width:100%;cursor:pointer}'
+    + '#gtLock .gl-btn:disabled{opacity:.45}'
+    + '#gtLock .gl-btn.sec{background:var(--sunk,#eef2f6);color:var(--ink,#0d1b2e)}'
+    + '#gtLock .gl-btn.danger{background:var(--danger,#c62f2f);color:#fff}'
+    + '#gtLock .gl-link{border:0;background:none;color:var(--muted,#5d6b7c);font:600 14px/1.2 var(--f-body,system-ui,sans-serif);padding:10px;cursor:pointer}'
+    + '#gtLock .gl-err{margin:0;color:var(--danger,#c62f2f);font-size:14px;min-height:1.4em}'
+    + '#gtLock .gl-forgot{display:grid;gap:10px;width:100%}#gtLock .gl-forgot p{margin:0;font-size:14px;color:var(--muted,#5d6b7c)}'
+    + ':root[data-design="neon"] #gtLock .gl-ic,:root[data-design="neon"] #gtLock .gl-btn:not(.sec):not(.danger){background:linear-gradient(100deg,var(--neon-blue,#2f7bff),var(--neon-cyan,#35c8ff));color:#fff}'
+    + ':root[data-design="neon"] #gtLock .gl-dots i{border-color:var(--neon-cyan,#35c8ff)}:root[data-design="neon"] #gtLock .gl-dots i.on{background:var(--neon-cyan,#35c8ff)}';
+  const CSS_W = '#gtLockWarn{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,15,30,.45);-webkit-backdrop-filter:blur(8px) saturate(.8);backdrop-filter:blur(8px) saturate(.8);font:15px/1.5 var(--f-body,system-ui,-apple-system,sans-serif)}'
+    + '#gtLockWarn .glw-card{width:100%;max-width:400px;background:var(--surface,#fff);color:var(--ink,#0d1b2e);border-radius:24px;padding:22px 20px 16px;box-shadow:0 18px 50px rgba(0,0,0,.35);display:grid;gap:10px;border-top:6px solid var(--danger,#c62f2f)}'
+    + '#gtLockWarn .glw-ic{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--danger-soft,#fbe9e9);color:var(--danger,#c62f2f)}'
+    + '#gtLockWarn .glw-ic svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}'
+    + '#gtLockWarn #glwT{font:800 21px/1.25 var(--f-display,system-ui,sans-serif);color:var(--danger,#c62f2f)}'
+    + '#gtLockWarn p{margin:0 0 8px}#gtLockWarn p b{color:var(--ink,#0d1b2e)}'
+    + '#gtLockWarn .glw-row{display:flex;gap:10px;margin-top:4px}'
+    + '#gtLockWarn .glw-row button{flex:1;height:50px;border:0;border-radius:99px;font:650 16px/1 var(--f-body,system-ui,sans-serif);cursor:pointer}'
+    + '#gtLockWarn .glw-no{background:var(--sunk,#eef2f6);color:var(--ink,#0d1b2e)}#gtLockWarn .glw-ok{background:var(--danger,#c62f2f);color:#fff}';
+  const IC_LOCK = '<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+  const IC_BIO = '<svg viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M9 9.5v1M15 9.5v1M12 9.5v3.5h-1M9.5 16c1.4 1 3.6 1 5 0"/></svg>';
+  const IC_DEL = '<svg viewBox="0 0 24 24"><path d="M21 5H9l-6 7 6 7h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1z"/><path d="M17 9.5l-5 5M12 9.5l5 5"/></svg>';
+  function css(){ if(document.getElementById("gtLockCss")) return; const s = document.createElement("style"); s.id = "gtLockCss"; s.textContent = CSS + CSS_W; (document.head || document.documentElement).appendChild(s); }
+
+  let box = null, busy = null;
+  // mode: unlock | verify | setPin | setPw
+  function open(mode, opts){
+    opts = opts || {};
+    return new Promise(resolve => {
+      css(); if(box) box.remove();
+      const c = cfg(), type = mode === "setPin" ? "pin" : mode === "setPw" ? "pw" : (c ? c.type : "pin");
+      box = document.createElement("div"); box.id = "gtLock"; box.setAttribute("role", "dialog"); box.setAttribute("aria-modal", "true"); box.setAttribute("aria-labelledby", "gtLockT");
+      box.innerHTML = '<div class="gl-in"><div class="gl-ic">' + IC_LOCK + '</div><h2 id="gtLockT"></h2><p class="gl-sub"></p>'
+        + '<div class="gl-main"></div><p class="gl-err" role="alert"></p>'
+        + '<button type="button" class="gl-link gl-bio" hidden></button>'
+        + '<button type="button" class="gl-link gl-fg" hidden></button>'
+        + '<button type="button" class="gl-link gl-cancel" hidden>Abbrechen</button></div>';
+      document.body.appendChild(box);
+      const $q = s => box.querySelector(s), title = $q("#gtLockT"), sub = $q(".gl-sub"), main = $q(".gl-main"), err = $q(".gl-err");
+      const bioBtn = $q(".gl-bio"), fgBtn = $q(".gl-fg"), cancel = $q(".gl-cancel");
+      const isSet = mode === "setPin" || mode === "setPw";
+      const done = ok => { const b = box; box = null; if(b) b.remove(); document.removeEventListener("keydown", onKey, true); resolve(ok); };
+      cancel.hidden = mode === "unlock"; cancel.onclick = () => done(false);
+      let step = 1, first = "", val = "", onKey = () => {};
+      const blocked = () => { const f = failInfo(); return f.until > Date.now() ? Math.ceil((f.until - Date.now()) / 1000) : 0; };
+      const left = () => MAXF - failInfo().n;
+      const showBlock = () => { const s = blocked(); if(!s) return false; err.textContent = "Zu viele Fehlversuche. Bitte " + s + " Sekunden warten. " + vers(left()); setTimeout(() => { if(box && !blocked()) err.textContent = ""; else if(box) showBlock(); }, 1000); return true; };
+      async function tryUnlock(secret){
+        if(showBlock()) return false;
+        if(await checkSecret(secret)){ lset(FAILS, null); done(true); return true; }
+        const f = addFail();
+        if(f.n >= MAXF){ main.innerHTML = ""; bioBtn.hidden = true; fgBtn.hidden = true; cancel.hidden = true; title.textContent = "Daten gelöscht"; sub.textContent = "";
+          err.textContent = MAXF + "-mal falsch eingegeben. Alle Daten der App wurden auf diesem Gerät gelöscht."; setTimeout(wipe, 2500); return false; }
+        err.textContent = (type === "pin" ? "Falsche PIN." : "Falsches Passwort.") + (f.n >= 3 ? " " + vers(MAXF - f.n) : "");
+        showBlock(); return false;
+      }
+      const texts = () => {
+        if(mode === "unlock"){ title.textContent = "Oh-MyGosch ist gesperrt"; sub.textContent = type === "pin" ? "PIN eingeben" : "Passwort eingeben"; }
+        else if(mode === "verify"){ title.textContent = opts.title || "Bestätigen"; sub.textContent = type === "pin" ? "Aktuelle PIN eingeben" : "Aktuelles Passwort eingeben"; }
+        else if(mode === "setPin"){ title.textContent = step === 1 ? "Neue PIN" : "PIN wiederholen"; sub.textContent = step === 1 ? "4 bis 6 Ziffern" : "Zur Sicherheit noch einmal eingeben"; }
+        else { title.textContent = "Neues Passwort"; sub.textContent = "Mindestens 6 Zeichen"; }
+      };
+      texts();
+      if(type === "pin"){
+        const maxLen = isSet ? (step === 1 ? 6 : first.length) : (c && c.len) || 6;
+        main.innerHTML = '<div class="gl-dots" aria-hidden="true"></div><div class="gl-pad"></div>';
+        const dots = $q(".gl-dots"), pad = $q(".gl-pad");
+        const keys = ["1","2","3","4","5","6","7","8","9", "L", "0", "del"];
+        pad.innerHTML = keys.map(k => k === "del" ? '<button type="button" class="fn" data-k="del" aria-label="Löschen">' + IC_DEL + '</button>'
+          : k === "L" ? '<button type="button" class="fn" data-k="L"></button>'
+          : '<button type="button" data-k="' + k + '">' + k + '</button>').join("");
+        const L = pad.querySelector('[data-k="L"]');
+        const lenNow = () => isSet ? (step === 1 ? 6 : first.length) : maxLen;
+        const paint = () => { const n = isSet && step === 1 ? Math.max(4, val.length) : lenNow(); dots.innerHTML = Array.from({length:n}, (_, i) => '<i class="' + (i < val.length ? "on" : "") + '"></i>').join("");
+          dots.setAttribute("aria-label", val.length + " Ziffern eingegeben");
+          if(isSet && step === 1){ L.textContent = "OK"; L.disabled = val.length < 4; L.setAttribute("aria-label", "Weiter"); }
+          else if(mode !== "setPin" && c && c.bio){ L.innerHTML = IC_BIO; L.disabled = false; L.setAttribute("aria-label", "Mit Biometrie entsperren"); }
+          else { L.textContent = ""; L.disabled = true; L.removeAttribute("aria-label"); } };
+        const shake = () => { dots.classList.remove("shake"); void dots.offsetWidth; dots.classList.add("shake"); if(navigator.vibrate) try{ navigator.vibrate(80); }catch(e){} };
+        async function full(){
+          if(isSet){
+            if(step === 1){ if(val.length < 4) return; first = val; val = ""; step = 2; err.textContent = ""; texts(); paint(); return; }
+            if(val === first){ await makeSecret("pin", val, opts.keep); done(true); }
+            else { err.textContent = "Die PINs stimmen nicht überein. Bitte neu eingeben."; shake(); step = 1; first = ""; val = ""; texts(); paint(); }
+            return;
+          }
+          const v = val; val = ""; const ok = await tryUnlock(v); if(!ok){ shake(); paint(); }
+        }
+        function press(k){
+          if(k === "del"){ val = val.slice(0, -1); paint(); return; }
+          if(k === "L"){ if(isSet && step === 1) full(); else if(c && c.bio) runBio(); return; }
+          if(blocked()){ showBlock(); return; }
+          if(val.length >= lenNow()) return;
+          val += k; err.textContent = err.textContent && val.length === 1 ? "" : err.textContent; paint();
+          if(val.length === lenNow() && !(isSet && step === 1)) setTimeout(full, 120);
+          else if(isSet && step === 1 && val.length === 6) setTimeout(full, 120);
+        }
+        pad.addEventListener("click", ev => { const b = ev.target.closest("[data-k]"); if(b && !b.disabled) press(b.dataset.k); });
+        onKey = ev => { if(!box) return; if(/^[0-9]$/.test(ev.key)){ ev.preventDefault(); press(ev.key); } else if(ev.key === "Backspace"){ ev.preventDefault(); press("del"); } else if(ev.key === "Enter" && isSet && step === 1){ ev.preventDefault(); full(); } else if(ev.key === "Escape" && mode !== "unlock"){ done(false); } };
+        document.addEventListener("keydown", onKey, true);
+        paint();
+      } else {
+        if(mode === "setPw"){
+          main.innerHTML = '<form class="gl-pw"><input type="password" id="glP1" autocomplete="new-password" placeholder="Neues Passwort" aria-label="Neues Passwort"><input type="password" id="glP2" autocomplete="new-password" placeholder="Passwort wiederholen" aria-label="Passwort wiederholen"><button class="gl-btn" type="submit">Passwort speichern</button></form>';
+        } else {
+          main.innerHTML = '<form class="gl-pw"><input type="password" id="glP1" autocomplete="current-password" placeholder="Passwort" aria-label="Passwort"><button class="gl-btn" type="submit">Entsperren</button></form>';
+        }
+        const f = main.querySelector("form"), p1 = main.querySelector("#glP1"), p2 = main.querySelector("#glP2");
+        f.addEventListener("submit", async ev => { ev.preventDefault();
+          if(mode === "setPw"){
+            if(p1.value.length < 6){ err.textContent = "Bitte mindestens 6 Zeichen."; p1.focus(); return; }
+            if(p1.value !== p2.value){ err.textContent = "Die Passwörter stimmen nicht überein."; p2.value = ""; p2.focus(); return; }
+            await makeSecret("pw", p1.value, opts.keep); done(true); return;
+          }
+          const ok = await tryUnlock(p1.value); if(!ok){ p1.value = ""; p1.focus(); } });
+        onKey = ev => { if(ev.key === "Escape" && mode !== "unlock") done(false); };
+        document.addEventListener("keydown", onKey, true);
+        setTimeout(() => { if(mode !== "unlock" || !(c && c.bio)) p1.focus(); }, 60);
+      }
+      // Biometrie
+      async function runBio(){
+        if(busy) return; busy = true; err.textContent = "";
+        try{ if(await bioCheck()){ lset(FAILS, null); done(true); } else err.textContent = "Nicht erkannt. Bitte erneut versuchen oder " + (type === "pin" ? "PIN" : "Passwort") + " eingeben."; }
+        catch(e){ if(e && e.name !== "NotAllowedError" && e.name !== "AbortError") err.textContent = "Biometrie ist gerade nicht möglich. Bitte " + (type === "pin" ? "PIN" : "Passwort") + " eingeben."; }
+        finally{ busy = null; }
+      }
+      if(!isSet && c && c.bio){ bioBtn.hidden = false; bioBtn.textContent = "Mit Face ID / Fingerabdruck entsperren"; bioBtn.onclick = runBio; if(opts.autoBio) setTimeout(runBio, 250); }
+      // Vergessen
+      if(mode === "unlock"){
+        fgBtn.hidden = false; fgBtn.textContent = type === "pin" ? "PIN vergessen?" : "Passwort vergessen?";
+        fgBtn.onclick = () => {
+          const keep = main.innerHTML; fgBtn.hidden = true; bioBtn.hidden = true; err.textContent = "";
+          title.textContent = type === "pin" ? "PIN vergessen" : "Passwort vergessen"; sub.textContent = "";
+          main.innerHTML = '<div class="gl-forgot"><p>Ohne ' + (type === "pin" ? "PIN" : "Passwort") + ' kommt niemand an die Daten – auch nicht der Entwickler. Du kannst nur alle Daten der App auf diesem Gerät löschen und neu anfangen. Achtung: Nach ' + MAXF + ' falschen Eingaben passiert das automatisch. Danach kannst du eine Datensicherung einlesen, falls du eine hast.</p><button type="button" class="gl-btn danger" id="glWipe">Alle Daten löschen</button><button type="button" class="gl-btn sec" id="glBack">Zurück</button></div>';
+          main.querySelector("#glBack").onclick = () => { document.removeEventListener("keydown", onKey, true); if(box){ box.remove(); box = null; } showing = false; lockNow(); };
+          const w = main.querySelector("#glWipe");
+          w.onclick = () => { if(w.dataset.armed !== "1"){ w.dataset.armed = "1"; w.textContent = "Wirklich alles löschen?"; return; } wipe(); };
+        };
+      }
+    });
+  }
+  // Warnung vor dem Einrichten: Hintergrund unscharf wie im Tutorial
+  function warn(){
+    return new Promise(resolve => {
+      css();
+      const w = document.createElement("div"); w.id = "gtLockWarn"; w.setAttribute("role", "alertdialog"); w.setAttribute("aria-modal", "true"); w.setAttribute("aria-labelledby", "glwT"); w.setAttribute("aria-describedby", "glwD");
+      w.innerHTML = '<div class="glw-card"><div class="glw-ic"><svg viewBox="0 0 24 24"><path d="M12 3.5 2.5 20h19L12 3.5z"/><path d="M12 10v4.5M12 17.3v.2"/></svg></div>'
+        + '<b id="glwT">Wichtig – bitte lesen</b>'
+        + '<div id="glwD"><p>Nach <b>' + MAXF + ' falschen Eingaben</b> von PIN oder Passwort werden <b>alle Daten der App auf diesem Gerät gelöscht</b>: Stundenzettel, Urlaubsanträge, Brandmeldeanlagen mit Grundrissen und deine Unterschrift.</p>'
+        + '<p>Das lässt sich <b>nicht rückgängig machen</b>. Merk dir PIN oder Passwort gut und mach regelmäßig eine Datensicherung (Einstellungen → Datensicherung).</p></div>'
+        + '<div class="glw-row"><button type="button" class="glw-no">Abbrechen</button><button type="button" class="glw-ok">Verstanden</button></div></div>';
+      document.body.appendChild(w);
+      const end = ok => { w.remove(); document.removeEventListener("keydown", k, true); resolve(ok); };
+      const k = ev => { if(ev.key === "Escape"){ ev.preventDefault(); end(false); } };
+      document.addEventListener("keydown", k, true);
+      w.querySelector(".glw-ok").onclick = () => end(true); w.querySelector(".glw-no").onclick = () => end(false);
+      setTimeout(() => w.querySelector(".glw-ok").focus(), 50);
+    });
+  }
+  async function wipe(){
+    try{ localStorage.clear(); }catch(e){} try{ sessionStorage.clear(); }catch(e){}
+    try{ await new Promise(r => { const q = indexedDB.deleteDatabase("gosch-tools"); q.onsuccess = q.onerror = q.onblocked = () => r(); setTimeout(r, 1500); }); }catch(e){}
+    location.href = "index.html";
+  }
+
+  // ---------- Wann sperren ----------
+  const grace = c => Math.max(5, (c.after || 0)) * 1000;
+  function needLockNow(){
+    const c = cfg(); if(!c) return false;
+    const u = sget(S_UNL); if(!u) return true;
+    const h = sget(S_HID); if(!h) return false;
+    if(sget(S_NAV) >= h - 1500) return false; // Wechsel zwischen den Seiten der App
+    return Date.now() - h > grace(c);
+  }
+  function unlocked(){ sset(S_UNL, Date.now()); sset(S_HID, null); document.documentElement.classList.remove("gt-locked"); }
+  let showing = false;
+  async function lockNow(){
+    if(showing || !cfg()) return; showing = true; sset(S_UNL, null);
+    css(); document.documentElement.classList.add("gt-locked");
+    const ok = await open("unlock", {autoBio:true}); showing = false; if(ok) unlocked();
+  }
+  function start(){
+    if(!cfg()) return;
+    if(needLockNow()){ css(); document.documentElement.classList.add("gt-locked"); const go = () => lockNow(); if(document.body) go(); else document.addEventListener("DOMContentLoaded", go); }
+    else sset(S_HID, null);
+    document.addEventListener("visibilitychange", () => {
+      if(!cfg()) return;
+      if(document.visibilityState === "hidden"){ if(!showing) sset(S_HID, Date.now()); }
+      else { const h = sget(S_HID); if(h && !showing && Date.now() - h > grace(cfg())) lockNow(); else sset(S_HID, null); }
+    });
+    window.addEventListener("pagehide", () => sset(S_NAV, Date.now()));
+    document.addEventListener("click", ev => { const a = ev.target.closest && ev.target.closest("a[href]"); if(a) sset(S_NAV, Date.now()); }, true);
+    window.addEventListener("pageshow", ev => { if(ev.persisted && needLockNow()) lockNow(); });
+  }
+
+  // ---------- Schnittstelle für die Einstellungen ----------
+  const API = {
+    config: () => { const c = cfg(); return c ? {type:c.type, bio:!!c.bio, after:c.after || 0} : null; },
+    verify: title => cfg() ? open("verify", {title}) : Promise.resolve(true),
+    setup: async type => { const old = cfg(); const keep = old ? {after:old.after || 0, bio:old.bio || null} : {after:0, bio:null}; if(!(await warn())) return false; const ok = await open(type === "pw" ? "setPw" : "setPin", {keep}); if(ok) unlocked(); return ok; },
+    off: () => { lset(KEY, null); lset(FAILS, null); },
+    setAfter: s => { const c = cfg(); if(c){ c.after = s; lset(KEY, c); } },
+    bioAvailable,
+    bioOn: async () => { const c = cfg(); if(!c) return false; const id = await bioRegister(); c.bio = id; lset(KEY, c); return true; },
+    bioOff: () => { const c = cfg(); if(c){ c.bio = null; lset(KEY, c); } },
+    lockNow
+  };
+  const attach = () => { if(window.GT) window.GT.lock = API; else setTimeout(attach, 0); };
+  attach();
+  try{ start(); }catch(e){}
 })();
 </script>
 <script>
@@ -483,6 +922,38 @@ function setLook(d, m){ try{ localStorage.setItem("app.design", d); localStorage
 $("designSeg").addEventListener("click", ev => { const b = ev.target.closest("[data-design]"); if(b) setLook(b.dataset.design, look().m); });
 $("modeSeg").addEventListener("click", ev => { const b = ev.target.closest("[data-mode]"); if(b) setLook(look().d, b.dataset.mode); });
 
+// ---------- App-Sperre ----------
+const segSet = (id, attr, v) => document.querySelectorAll("#" + id + " [" + attr + "]").forEach(b => b.setAttribute("aria-checked", String(b.getAttribute(attr) === String(v))));
+let bioOk = null;
+async function renderLock(){
+  const c = GT.lock.config(); segSet("lockSeg", "data-v", c ? c.type : "off");
+  $("lockMore").hidden = !c; if(!c) return;
+  segSet("afterSeg", "data-s", c.after || 0);
+  $("lockChange").textContent = c.type === "pin" ? "PIN ändern" : "Passwort ändern";
+  if(bioOk === null) bioOk = await GT.lock.bioAvailable();
+  $("lockBio").checked = !!c.bio; $("bioRow").hidden = !bioOk && !c.bio;
+  $("bioNote").hidden = bioOk; $("bioNote").textContent = "Face ID / Fingerabdruck ist hier nicht verfügbar. Es klappt in der installierten App, wenn auf dem Gerät Face ID oder ein Fingerabdruck eingerichtet ist.";
+}
+$("lockSeg").addEventListener("click", async ev => {
+  const b = ev.target.closest("[data-v]"); if(!b) return; const v = b.dataset.v; const c = GT.lock.config();
+  if((c ? c.type : "off") === v) return;
+  if(c && !(await GT.lock.verify(v === "off" ? "App-Sperre ausschalten" : "Sperre ändern"))){ renderLock(); return; }
+  if(v === "off"){ GT.lock.off(); GT.toast("App-Sperre ist aus."); }
+  else if(await GT.lock.setup(v)) GT.toast(v === "pin" ? "PIN gespeichert – die App ist jetzt gesperrt beim Öffnen." : "Passwort gespeichert – die App ist jetzt gesperrt beim Öffnen.");
+  renderLock();
+});
+$("afterSeg").addEventListener("click", ev => { const b = ev.target.closest("[data-s]"); if(!b) return; GT.lock.setAfter(Number(b.dataset.s)); renderLock(); });
+$("lockBio").addEventListener("change", async () => {
+  if($("lockBio").checked){
+    try{ await GT.lock.bioOn(); GT.toast("Face ID / Fingerabdruck ist eingerichtet."); }
+    catch(e){ $("lockBio").checked = false; GT.toast(e && e.name === "NotAllowedError" ? "Abgebrochen oder hier nicht erlaubt." : "Face ID / Fingerabdruck konnte nicht eingerichtet werden."); }
+  } else GT.lock.bioOff();
+  renderLock();
+});
+$("lockChange").addEventListener("click", async () => { const c = GT.lock.config(); if(!c) return; if(!(await GT.lock.verify(c.type === "pin" ? "PIN ändern" : "Passwort ändern"))) return; if(await GT.lock.setup(c.type)) GT.toast(c.type === "pin" ? "Neue PIN gespeichert." : "Neues Passwort gespeichert."); renderLock(); });
+$("lockNowBtn").addEventListener("click", () => GT.lock.lockNow());
+renderLock();
+
 // ---------- Datensicherung ----------
 $("bkAll").addEventListener("click", async () => {
   const bma = ls("bma.local") || {};
@@ -553,6 +1024,51 @@ $("sigDel").addEventListener("click", () => { const b = $("sigDel"); if(b.datase
   b.dataset.armed = ""; b.textContent = "Entfernen"; gsave({signature:null}); renderGlobal(); });
 
 renderLook(); renderModules(); renderAz(); summary();
+// Einführung
+const TOUR_START = [
+  {title:"Willkommen bei Oh-MyGosch", text:"Eine kurze Einführung in wenigen Schritten. Du kannst sie überspringen und jederzeit über das „?“ oben rechts neu starten."},
+  {sel:"#t-bma", title:"Brandmeldeanlagen", text:"Kunden und Anlagen anlegen, Melder prüfen und abhaken, Mängel notieren."},
+  {sel:"#t-wb", title:"Stundenzettel", text:"Deinen Wochenbericht erfassen und als PDF für den Chef erstellen."},
+  {sel:"#t-ur", title:"Urlaub beantragen", text:"Urlaubsanträge ausfüllen, als PDF erstellen und deine Urlaubstage im Blick behalten."},
+  {sel:"#t-lf", title:"Leitfäden", text:"Regeln im Betrieb, Elektro, Brandmeldeanlagen, SAT – und der Ablauf im Notfall."},
+  {sel:'#nav [data-view="set"]', fixed:true, title:"Einstellungen", text:"Name, Unterschrift, Urlaubstage, App-Sperre und Design – alles an einer Stelle."},
+  {sel:'#nav [data-view="home"]', fixed:true, title:"Deine Daten bleiben bei dir", text:"Alles wird nur auf diesem Gerät gespeichert. Sichere es ab und zu unter Einstellungen → Datensicherung."}
+];
+function startTour(force){ GT.tour("start", TOUR_START, {force}); }
+// Erster Start: Name und (optional) Urlaubstage abfragen
+function setupStage(){ try{ if(localStorage.getItem("app.tour.off") || localStorage.getItem("app.setup.done")) return 0; }catch(e){ return 0; }
+  if(!(gset().name || "").trim()) return 1; return GT.lock.config() ? 0 : 2; }
+function showStage(n){ $("setupSheet").hidden = false; $("suStep1").hidden = n !== 1; $("suStep2").hidden = n !== 2;
+  if(n === 1) setTimeout(() => $("suName").focus(), 300); }
+function finishAll(){
+  try{ localStorage.setItem("app.setup.done", "1"); }catch(e){}
+  $("setupSheet").hidden = true; summary(); renderGlobal(); renderUrlaub(); renderLock();
+  setTimeout(() => startTour(false), 400);
+}
+function finishSetup(){
+  const n = $("suName").value.trim(); if(!n){ $("suName").focus(); GT.toast("Bitte deinen Namen eintragen."); return; }
+  const raw = $("suUrlaub").value.trim();
+  if(raw){ const v = Number(raw.replace(",", ".")); if(v > 0 && v < 100){ const U = ls("urlaub.v1") || {antraege:{}}; U.settings = Object.assign({}, U.settings || {}, {anspruch: v, anspruchSet: true}); lsSet("urlaub.v1", U); } else { GT.toast("Urlaubstage bitte als Zahl eintragen – oder leer lassen."); $("suUrlaub").focus(); return; } }
+  gsave({name: n});
+  if(GT.lock.config()) finishAll(); else showStage(2);
+}
+async function suLock(type){
+  if(!(await GT.lock.setup(type))) return;
+  if(await GT.lock.bioAvailable()){ $("suLockPick").hidden = true; $("suBio").hidden = false; }
+  else { GT.toast(type === "pin" ? "PIN gespeichert." : "Passwort gespeichert."); finishAll(); }
+}
+$("suOk").addEventListener("click", finishSetup);
+$("suPin").addEventListener("click", () => suLock("pin"));
+$("suPw").addEventListener("click", () => suLock("pw"));
+$("suBioOn").addEventListener("click", async () => {
+  try{ await GT.lock.bioOn(); GT.toast("Face ID / Fingerabdruck ist eingerichtet."); finishAll(); }
+  catch(e){ GT.toast("Hat nicht geklappt. Du kannst es später unter Einstellungen → App-Sperre einschalten."); finishAll(); }
+});
+$("suBioNo").addEventListener("click", finishAll);
+["suName","suUrlaub"].forEach(id => $(id).addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); if(id === "suName") $("suUrlaub").focus(); else finishSetup(); } }));
+$("suName").addEventListener("input", () => { $("suOk").disabled = !$("suName").value.trim(); });
+{ const st = setupStage(); if(st) showStage(st); else setTimeout(() => { if($("vSet").hidden) startTour(false); }, 700); }
+$("tourAgain").addEventListener("click", () => { GT.tourReset(); showSet(false); setTimeout(() => startTour(true), 300); });
 window.addEventListener("pageshow", () => { const l = look(); window.WB_look(l.d, l.m); summary(); renderLook(); renderModules(); });
 // Urlaubstage pro Jahr (gilt für "Urlaub beantragen")
 function renderUrlaub(){ const U = ls("urlaub.v1") || {}; const st = U.settings || {}; $("gUrlaub").value = st.anspruchSet ? String(st.anspruch).replace(".", ",") : ""; }

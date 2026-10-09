@@ -11,7 +11,7 @@
 <meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>Firmenleitfaden – Oh-MyGosch</title>
+<title>Leitfäden – Oh-MyGosch</title>
 <script>
 (function(){var d="modern",m="system";try{d=localStorage.getItem("app.design")||"modern";m=localStorage.getItem("app.mode")||"system"}catch(e){}
 window.WB_look=function(design,mode){if(design!=="neon")design="modern";var el=document.documentElement;el.setAttribute("data-design",design);if(mode==="light"||mode==="dark")el.setAttribute("data-mode",mode);else el.removeAttribute("data-mode")};
@@ -133,6 +133,9 @@ mark{background:#ffe58a;color:#14202b;border-radius:2px}
 :root[data-design="modern"] .brand{display:flex;justify-content:flex-start;padding:0}
 @media (prefers-color-scheme: dark){:root[data-design="modern"]:not([data-theme="light"]):not([data-mode="light"]) .brand img{filter:brightness(0) invert(.92)}}
 :root[data-design="modern"][data-mode="dark"] .brand img,:root[data-design="modern"][data-theme="dark"]:not([data-mode="light"]) .brand img{filter:brightness(0) invert(.92)}
+/* Gosch-Logo auch im Neon-Design: weiß mit leichtem Leuchten */
+:root[data-design="neon"] .brand{display:flex;justify-content:flex-start;padding:0}
+:root[data-design="neon"] .brand img{filter:brightness(0) invert(1) drop-shadow(0 0 6px rgba(53,200,255,.55)) drop-shadow(0 0 14px rgba(47,123,255,.35))}
 
 /* ===== Gemeinsamer Aufbau wie bei den Brandmeldeanlagen: großer Seitentitel + Navigationsleiste unten ===== */
 .pagehead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:6px 2px 2px;min-width:0}
@@ -278,20 +281,391 @@ header.top{position:static!important;border-bottom:0!important}
     if(hiddenAt && Date.now() - hiddenAt > 15*60*1000 && !/(^|\/)(index\.html)?$/.test(location.pathname)){ location.replace("index.html"); }
     hiddenAt = 0;
   });
-  window.GT = {toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home};
+
+  // ---------- Geführte Einführung (Tour) ----------
+  function tourCss(){
+    if(document.getElementById("gtTourCss")) return;
+    const st = document.createElement("style"); st.id = "gtTourCss";
+    st.textContent = ".gt-tour{position:fixed;inset:0;z-index:200}"
+      + ".gt-blur{position:fixed;inset:0;-webkit-backdrop-filter:blur(6px) saturate(.8);backdrop-filter:blur(6px) saturate(.8);transition:clip-path .25s}"
+      + ".gt-tour.nospot{background:rgba(5,15,30,.5)}"
+      + ".gt-spot{position:fixed;border-radius:18px;box-shadow:0 0 0 2px rgba(255,255,255,.85),0 0 24px 4px rgba(255,255,255,.25),0 0 0 9999px rgba(5,15,30,.5);pointer-events:none;transition:left .25s,top .25s,width .25s,height .25s}"
+      + ".gt-card{position:fixed;left:16px;right:16px;max-width:420px;margin:0 auto;background:var(--surface,#fff);color:var(--ink,#111);border-radius:22px;padding:16px 16px 14px;box-shadow:0 14px 40px rgba(0,0,0,.35);display:grid;gap:6px;font:15px/1.45 var(--f-body,system-ui,sans-serif)}"
+      + ".gt-step{font-size:12px;color:var(--muted,#667);letter-spacing:.04em}"
+      + ".gt-title{font:700 18px/1.25 var(--f-display,system-ui,sans-serif);color:var(--brand,var(--ink,#111))}"
+      + ".gt-text{margin:0}"
+      + ".gt-row{display:flex;gap:8px;align-items:center;margin-top:6px}"
+      + ".gt-row button{border:0;border-radius:99px;height:42px;padding:0 16px;font:600 15px/1 var(--f-body,system-ui,sans-serif);cursor:pointer}"
+      + ".gt-skip{background:none;color:var(--muted,#667);padding:0 4px!important}"
+      + ".gt-back{background:var(--sunk,#eef);color:var(--ink,#111)}"
+      + ".gt-next{background:var(--accent,#003769);color:var(--accent-ink,#fff)}";
+    document.head.appendChild(st);
+  }
+  function tourDone(id){ try{ return !!(localStorage.getItem("app.tour.off") || localStorage.getItem("app.tour." + id)); }catch(e){ return true; } }
+  let lastTour = null;
+  function helpBtn(){
+    if(document.getElementById("gtHelp")) return;
+    const st = document.createElement("style");
+    st.textContent = '#gtHelp{position:fixed;z-index:40;top:calc(10px + env(safe-area-inset-top,0px));right:max(16px,calc(50vw - 304px));width:40px;height:40px;border-radius:50%;border:0;display:grid;place-items:center;background:var(--surface,#fff);color:var(--ink,#0d1b2e);box-shadow:0 6px 18px rgba(0,30,60,.18);font:700 18px/1 system-ui,-apple-system,sans-serif;cursor:pointer}#gtHelp:focus-visible{outline:2px solid var(--accent,#003769);outline-offset:2px}:root[data-design="neon"] #gtHelp{background:rgba(15,18,32,.92);color:#8e95ba;border:1px solid #242a45}@media print{#gtHelp{display:none}}';
+    document.head.appendChild(st);
+    const b = document.createElement("button"); b.type = "button"; b.id = "gtHelp"; b.textContent = "?";
+    b.setAttribute("aria-label", "Einführung für diesen Bereich starten"); b.title = "Einführung starten";
+    b.addEventListener("click", () => { if(lastTour) tour(lastTour.id, lastTour.steps, {force:true}); });
+    document.body.appendChild(b);
+  }
+  // Fläche mit Loch: alles außer dem erklärten Bereich wird unscharf
+  function holePath(x, y, w, h, rad){
+    rad = Math.max(0, Math.min(rad, w/2, h/2)); const pts = [], N = 6;
+    const arc = (cx, cy, a0) => { for(let k = 0; k <= N; k++){ const a = (a0 - k*90/N) * Math.PI/180; pts.push((cx + rad*Math.cos(a)).toFixed(1) + "px " + (cy - rad*Math.sin(a)).toFixed(1) + "px"); } };
+    arc(x + rad, y + rad, 180); arc(x + w - rad, y + rad, 90); arc(x + w - rad, y + h - rad, 0); arc(x + rad, y + h - rad, -90);
+    return "polygon(evenodd,0 0,100% 0,100% 100%,0 100%,0 0," + pts.join(",") + "," + pts[0] + ",0 0)";
+  }
+  function tour(id, steps, opts){
+    opts = opts || {};
+    lastTour = {id, steps}; helpBtn();
+    if(!opts.force && tourDone(id)) return;
+    if(document.querySelector(".gt-tour")) return;
+    tourCss();
+    const ov = document.createElement("div"); ov.className = "gt-tour";
+    ov.innerHTML = '<div class="gt-blur"></div><div class="gt-spot"></div><div class="gt-card" role="dialog" aria-modal="true" aria-labelledby="gtTitle"><div class="gt-step"></div><b class="gt-title" id="gtTitle"></b><p class="gt-text"></p><div class="gt-row"><button type="button" class="gt-skip">Überspringen</button><span style="flex:1"></span><button type="button" class="gt-back">Zurück</button><button type="button" class="gt-next">Weiter</button></div></div>';
+    document.body.appendChild(ov);
+    const spot = ov.querySelector(".gt-spot"), blur = ov.querySelector(".gt-blur"), card = ov.querySelector(".gt-card");
+    let i = 0, el = null;
+    const find = s => { if(!s.sel) return null; const e = typeof s.sel === "function" ? s.sel() : document.querySelector(s.sel); if(!e) return s.center ? null : undefined; const r = e.getBoundingClientRect(); return (r.width || r.height) ? e : (s.center ? null : undefined); };
+    function place(){
+      const H = innerHeight, cr = card.getBoundingClientRect();
+      if(!el){ ov.classList.add("nospot"); spot.hidden = true; blur.style.clipPath = "none"; card.style.top = Math.max(16, (H - cr.height) / 2) + "px"; card.style.bottom = ""; return; }
+      ov.classList.remove("nospot"); spot.hidden = false;
+      const r = el.getBoundingClientRect(), pad = 6;
+      const top = Math.max(4, r.top - pad), bot = Math.min(H - 4, r.bottom + pad);
+      const L = Math.max(4, r.left - pad), W = Math.min(innerWidth - 8, r.width + 2*pad), Hh = Math.max(0, bot - top);
+      Object.assign(spot.style, {left: L + "px", top: top + "px", width: W + "px", height: Hh + "px"});
+      blur.style.clipPath = holePath(L, top, W, Hh, 18);
+      if(bot + 14 + cr.height < H - 8){ card.style.top = (bot + 14) + "px"; }
+      else if(top - 14 - cr.height > 8){ card.style.top = (top - 14 - cr.height) + "px"; }
+      else { card.style.top = Math.max(16, H - cr.height - 16) + "px"; }
+    }
+    function show(n, dir){
+      i = n; if(i < 0) i = 0;
+      if(i >= steps.length){ return end(); }
+      const s = steps[i];
+      if(s.before){ try{ s.before(); }catch(e){} }
+      const f = find(s);
+      if(f === undefined){ return show(i + (dir || 1), dir); }
+      el = f;
+      ov.querySelector(".gt-step").textContent = "Schritt " + (i + 1) + " von " + steps.length;
+      ov.querySelector(".gt-title").textContent = s.title;
+      ov.querySelector(".gt-text").textContent = s.text;
+      ov.querySelector(".gt-back").hidden = i === 0;
+      ov.querySelector(".gt-next").textContent = i === steps.length - 1 ? "Fertig" : "Weiter";
+      if(el && !s.fixed) el.scrollIntoView({block: "center", behavior: "instant"});
+      place(); setTimeout(place, 60); setTimeout(place, 300);
+    }
+    function end(){ try{ localStorage.setItem("app.tour." + id, "1"); }catch(e){} window.removeEventListener("resize", place); window.removeEventListener("scroll", place, true); ov.remove(); if(opts.done) opts.done(); }
+    ov.querySelector(".gt-next").onclick = () => show(i + 1, 1);
+    ov.querySelector(".gt-back").onclick = () => show(i - 1, -1);
+    ov.querySelector(".gt-skip").onclick = end;
+    window.addEventListener("resize", place); window.addEventListener("scroll", place, true);
+    show(0, 1);
+  }
+  function tourReset(){ try{ Object.keys(localStorage).filter(k => k.indexOf("app.tour.") === 0).forEach(k => localStorage.removeItem(k)); }catch(e){} }
+  window.GT = {toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home, tour, tourDone, tourReset};
   persist(); registerSW();
+})();
+
+/* App-Sperre: PIN, Passwort und Biometrie (Face ID / Fingerabdruck über WebAuthn). Alles bleibt auf dem Gerät. */
+(function(){
+  "use strict";
+  const KEY = "app.lock", FAILS = "app.lock.fails", S_UNL = "app.unlockedAt", S_HID = "app.hiddenAt", S_NAV = "app.navAt";
+  const lget = k => { try{ return JSON.parse(localStorage.getItem(k) || "null"); }catch(e){ return null; } };
+  const lset = (k, v) => { try{ v == null ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); }catch(e){} };
+  const sget = k => { try{ return Number(sessionStorage.getItem(k) || 0); }catch(e){ return 0; } };
+  const sset = (k, v) => { try{ v == null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, String(v)); }catch(e){} };
+  const cfg = () => { const c = lget(KEY); return c && (c.type === "pin" || c.type === "pw") && c.hash ? c : null; };
+  const b64 = buf => { const a = new Uint8Array(buf); let s = ""; for(let i = 0; i < a.length; i++) s += String.fromCharCode(a[i]); return btoa(s); };
+  const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  const rand = n => crypto.getRandomValues(new Uint8Array(n));
+  const ITER = 150000, MAXF = 10;
+  const vers = n => "Noch " + n + (n === 1 ? " Versuch" : " Versuche") + ", dann werden alle Daten gelöscht.";
+  async function derive(secret, salt, iter){
+    const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), "PBKDF2", false, ["deriveBits"]);
+    return b64(await crypto.subtle.deriveBits({name:"PBKDF2", salt:unb64(salt), iterations:iter, hash:"SHA-256"}, k, 256));
+  }
+  async function makeSecret(type, secret, keep){
+    const salt = b64(rand(16)); const hash = await derive(secret, salt, ITER);
+    const c = Object.assign({after:0, bio:null}, keep || {}, {type, salt, hash, iter:ITER, len: type === "pin" ? secret.length : 0});
+    lset(KEY, c); lset(FAILS, null); return c;
+  }
+  async function checkSecret(secret){ const c = cfg(); if(!c) return true; return (await derive(secret, c.salt, c.iter || ITER)) === c.hash; }
+
+  // ---------- Biometrie ----------
+  async function bioAvailable(){
+    try{ return !!(window.PublicKeyCredential && window.isSecureContext && await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()); }catch(e){ return false; }
+  }
+  async function bioRegister(){
+    const cred = await navigator.credentials.create({publicKey:{
+      challenge: rand(32), rp:{name:"Oh-MyGosch"},
+      user:{id: rand(16), name:"Oh-MyGosch", displayName:"Oh-MyGosch"},
+      pubKeyCredParams:[{type:"public-key", alg:-7}, {type:"public-key", alg:-257}],
+      authenticatorSelection:{authenticatorAttachment:"platform", userVerification:"required", residentKey:"discouraged"},
+      timeout:60000, attestation:"none"}});
+    if(!cred) throw new Error("abgebrochen");
+    return b64(cred.rawId);
+  }
+  async function bioCheck(){
+    const c = cfg(); if(!c || !c.bio) return false;
+    const a = await navigator.credentials.get({publicKey:{challenge: rand(32), allowCredentials:[{type:"public-key", id: unb64(c.bio), transports:["internal","hybrid"]}], userVerification:"required", timeout:60000}});
+    if(!a || b64(a.rawId) !== c.bio) return false;
+    const ad = new Uint8Array(a.response.authenticatorData);
+    return ad.length > 32 && !!(ad[32] & 0x04); // Benutzer wurde geprüft (Face ID / Fingerabdruck / Geräte-Code)
+  }
+
+  // ---------- Fehlversuche ----------
+  function failInfo(){ return lget(FAILS) || {n:0, until:0}; }
+  function addFail(){ const f = failInfo(); f.n++; if(f.n >= 5) f.until = Date.now() + Math.min(300, 30 * Math.pow(2, f.n - 5)) * 1000; lset(FAILS, f); return f; }
+
+  // ---------- Oberfläche ----------
+  const CSS = 'html.gt-locked body>*:not(#gtLock):not(#gtToast){visibility:hidden!important}html.gt-locked,html.gt-locked body{overflow:hidden!important}'
+    + '#gtLock{position:fixed;inset:0;z-index:1000;background:var(--bg,#f3f5f8);color:var(--ink,#0d1b2e);display:flex;align-items:center;justify-content:center;padding:calc(20px + env(safe-area-inset-top,0px)) 20px calc(20px + env(safe-area-inset-bottom,0px));font:16px/1.4 var(--f-body,system-ui,-apple-system,sans-serif);overflow:auto}'
+    + '#gtLock .gl-in{width:100%;max-width:340px;display:grid;justify-items:center;gap:12px;text-align:center}'
+    + '#gtLock .gl-ic{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:var(--accent,#003769);color:var(--accent-ink,#fff)}'
+    + '#gtLock .gl-ic svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}'
+    + '#gtLock h2{margin:4px 0 0;font:800 24px/1.2 var(--f-display,system-ui,sans-serif);color:var(--brand,var(--ink,#0d1b2e));letter-spacing:-.02em}'
+    + '#gtLock .gl-sub{margin:0;color:var(--muted,#5d6b7c);font-size:15px;min-height:1.4em}'
+    + '#gtLock .gl-dots{display:flex;justify-content:center;gap:14px;height:18px;align-items:center;margin:6px 0 4px}'
+    + '#gtLock .gl-dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--accent,#003769);display:block}'
+    + '#gtLock .gl-dots i.on{background:var(--accent,#003769)}'
+    + '#gtLock .gl-dots.shake{animation:glShake .35s}@keyframes glShake{25%{transform:translateX(-10px)}50%{transform:translateX(10px)}75%{transform:translateX(-6px)}}'
+    + '#gtLock .gl-pad{display:grid;grid-template-columns:repeat(3,72px);gap:14px 22px;margin-top:6px}'
+    + '#gtLock .gl-pad button{width:72px;height:72px;border-radius:50%;border:0;background:var(--surface,#fff);color:var(--ink,#0d1b2e);font:600 28px/1 var(--f-body,system-ui,sans-serif);box-shadow:var(--shadow,0 1px 3px rgba(0,0,0,.1));cursor:pointer;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}'
+    + '#gtLock .gl-pad button:active{background:var(--accent-soft,#e2eaf3)}'
+    + '#gtLock .gl-pad button.fn{background:none;box-shadow:none;font-size:15px;color:var(--muted,#5d6b7c)}'
+    + '#gtLock .gl-pad button svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}'
+    + '#gtLock .gl-pad button:disabled{opacity:.35}'
+    + '#gtLock .gl-pw{display:grid;gap:10px;width:100%}'
+    + '#gtLock input{height:52px;border:1px solid transparent;border-radius:16px;background:var(--surface,#fff);box-shadow:var(--shadow,none);padding:0 16px;font-size:17px;color:var(--ink,#0d1b2e);width:100%;box-sizing:border-box}'
+    + '#gtLock input:focus{outline:none;border-color:var(--accent,#003769)}'
+    + '#gtLock .gl-btn{height:52px;border-radius:99px;border:0;background:var(--accent,#003769);color:var(--accent-ink,#fff);font:650 16px/1 var(--f-body,system-ui,sans-serif);width:100%;cursor:pointer}'
+    + '#gtLock .gl-btn:disabled{opacity:.45}'
+    + '#gtLock .gl-btn.sec{background:var(--sunk,#eef2f6);color:var(--ink,#0d1b2e)}'
+    + '#gtLock .gl-btn.danger{background:var(--danger,#c62f2f);color:#fff}'
+    + '#gtLock .gl-link{border:0;background:none;color:var(--muted,#5d6b7c);font:600 14px/1.2 var(--f-body,system-ui,sans-serif);padding:10px;cursor:pointer}'
+    + '#gtLock .gl-err{margin:0;color:var(--danger,#c62f2f);font-size:14px;min-height:1.4em}'
+    + '#gtLock .gl-forgot{display:grid;gap:10px;width:100%}#gtLock .gl-forgot p{margin:0;font-size:14px;color:var(--muted,#5d6b7c)}'
+    + ':root[data-design="neon"] #gtLock .gl-ic,:root[data-design="neon"] #gtLock .gl-btn:not(.sec):not(.danger){background:linear-gradient(100deg,var(--neon-blue,#2f7bff),var(--neon-cyan,#35c8ff));color:#fff}'
+    + ':root[data-design="neon"] #gtLock .gl-dots i{border-color:var(--neon-cyan,#35c8ff)}:root[data-design="neon"] #gtLock .gl-dots i.on{background:var(--neon-cyan,#35c8ff)}';
+  const CSS_W = '#gtLockWarn{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,15,30,.45);-webkit-backdrop-filter:blur(8px) saturate(.8);backdrop-filter:blur(8px) saturate(.8);font:15px/1.5 var(--f-body,system-ui,-apple-system,sans-serif)}'
+    + '#gtLockWarn .glw-card{width:100%;max-width:400px;background:var(--surface,#fff);color:var(--ink,#0d1b2e);border-radius:24px;padding:22px 20px 16px;box-shadow:0 18px 50px rgba(0,0,0,.35);display:grid;gap:10px;border-top:6px solid var(--danger,#c62f2f)}'
+    + '#gtLockWarn .glw-ic{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--danger-soft,#fbe9e9);color:var(--danger,#c62f2f)}'
+    + '#gtLockWarn .glw-ic svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}'
+    + '#gtLockWarn #glwT{font:800 21px/1.25 var(--f-display,system-ui,sans-serif);color:var(--danger,#c62f2f)}'
+    + '#gtLockWarn p{margin:0 0 8px}#gtLockWarn p b{color:var(--ink,#0d1b2e)}'
+    + '#gtLockWarn .glw-row{display:flex;gap:10px;margin-top:4px}'
+    + '#gtLockWarn .glw-row button{flex:1;height:50px;border:0;border-radius:99px;font:650 16px/1 var(--f-body,system-ui,sans-serif);cursor:pointer}'
+    + '#gtLockWarn .glw-no{background:var(--sunk,#eef2f6);color:var(--ink,#0d1b2e)}#gtLockWarn .glw-ok{background:var(--danger,#c62f2f);color:#fff}';
+  const IC_LOCK = '<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+  const IC_BIO = '<svg viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M9 9.5v1M15 9.5v1M12 9.5v3.5h-1M9.5 16c1.4 1 3.6 1 5 0"/></svg>';
+  const IC_DEL = '<svg viewBox="0 0 24 24"><path d="M21 5H9l-6 7 6 7h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1z"/><path d="M17 9.5l-5 5M12 9.5l5 5"/></svg>';
+  function css(){ if(document.getElementById("gtLockCss")) return; const s = document.createElement("style"); s.id = "gtLockCss"; s.textContent = CSS + CSS_W; (document.head || document.documentElement).appendChild(s); }
+
+  let box = null, busy = null;
+  // mode: unlock | verify | setPin | setPw
+  function open(mode, opts){
+    opts = opts || {};
+    return new Promise(resolve => {
+      css(); if(box) box.remove();
+      const c = cfg(), type = mode === "setPin" ? "pin" : mode === "setPw" ? "pw" : (c ? c.type : "pin");
+      box = document.createElement("div"); box.id = "gtLock"; box.setAttribute("role", "dialog"); box.setAttribute("aria-modal", "true"); box.setAttribute("aria-labelledby", "gtLockT");
+      box.innerHTML = '<div class="gl-in"><div class="gl-ic">' + IC_LOCK + '</div><h2 id="gtLockT"></h2><p class="gl-sub"></p>'
+        + '<div class="gl-main"></div><p class="gl-err" role="alert"></p>'
+        + '<button type="button" class="gl-link gl-bio" hidden></button>'
+        + '<button type="button" class="gl-link gl-fg" hidden></button>'
+        + '<button type="button" class="gl-link gl-cancel" hidden>Abbrechen</button></div>';
+      document.body.appendChild(box);
+      const $q = s => box.querySelector(s), title = $q("#gtLockT"), sub = $q(".gl-sub"), main = $q(".gl-main"), err = $q(".gl-err");
+      const bioBtn = $q(".gl-bio"), fgBtn = $q(".gl-fg"), cancel = $q(".gl-cancel");
+      const isSet = mode === "setPin" || mode === "setPw";
+      const done = ok => { const b = box; box = null; if(b) b.remove(); document.removeEventListener("keydown", onKey, true); resolve(ok); };
+      cancel.hidden = mode === "unlock"; cancel.onclick = () => done(false);
+      let step = 1, first = "", val = "", onKey = () => {};
+      const blocked = () => { const f = failInfo(); return f.until > Date.now() ? Math.ceil((f.until - Date.now()) / 1000) : 0; };
+      const left = () => MAXF - failInfo().n;
+      const showBlock = () => { const s = blocked(); if(!s) return false; err.textContent = "Zu viele Fehlversuche. Bitte " + s + " Sekunden warten. " + vers(left()); setTimeout(() => { if(box && !blocked()) err.textContent = ""; else if(box) showBlock(); }, 1000); return true; };
+      async function tryUnlock(secret){
+        if(showBlock()) return false;
+        if(await checkSecret(secret)){ lset(FAILS, null); done(true); return true; }
+        const f = addFail();
+        if(f.n >= MAXF){ main.innerHTML = ""; bioBtn.hidden = true; fgBtn.hidden = true; cancel.hidden = true; title.textContent = "Daten gelöscht"; sub.textContent = "";
+          err.textContent = MAXF + "-mal falsch eingegeben. Alle Daten der App wurden auf diesem Gerät gelöscht."; setTimeout(wipe, 2500); return false; }
+        err.textContent = (type === "pin" ? "Falsche PIN." : "Falsches Passwort.") + (f.n >= 3 ? " " + vers(MAXF - f.n) : "");
+        showBlock(); return false;
+      }
+      const texts = () => {
+        if(mode === "unlock"){ title.textContent = "Oh-MyGosch ist gesperrt"; sub.textContent = type === "pin" ? "PIN eingeben" : "Passwort eingeben"; }
+        else if(mode === "verify"){ title.textContent = opts.title || "Bestätigen"; sub.textContent = type === "pin" ? "Aktuelle PIN eingeben" : "Aktuelles Passwort eingeben"; }
+        else if(mode === "setPin"){ title.textContent = step === 1 ? "Neue PIN" : "PIN wiederholen"; sub.textContent = step === 1 ? "4 bis 6 Ziffern" : "Zur Sicherheit noch einmal eingeben"; }
+        else { title.textContent = "Neues Passwort"; sub.textContent = "Mindestens 6 Zeichen"; }
+      };
+      texts();
+      if(type === "pin"){
+        const maxLen = isSet ? (step === 1 ? 6 : first.length) : (c && c.len) || 6;
+        main.innerHTML = '<div class="gl-dots" aria-hidden="true"></div><div class="gl-pad"></div>';
+        const dots = $q(".gl-dots"), pad = $q(".gl-pad");
+        const keys = ["1","2","3","4","5","6","7","8","9", "L", "0", "del"];
+        pad.innerHTML = keys.map(k => k === "del" ? '<button type="button" class="fn" data-k="del" aria-label="Löschen">' + IC_DEL + '</button>'
+          : k === "L" ? '<button type="button" class="fn" data-k="L"></button>'
+          : '<button type="button" data-k="' + k + '">' + k + '</button>').join("");
+        const L = pad.querySelector('[data-k="L"]');
+        const lenNow = () => isSet ? (step === 1 ? 6 : first.length) : maxLen;
+        const paint = () => { const n = isSet && step === 1 ? Math.max(4, val.length) : lenNow(); dots.innerHTML = Array.from({length:n}, (_, i) => '<i class="' + (i < val.length ? "on" : "") + '"></i>').join("");
+          dots.setAttribute("aria-label", val.length + " Ziffern eingegeben");
+          if(isSet && step === 1){ L.textContent = "OK"; L.disabled = val.length < 4; L.setAttribute("aria-label", "Weiter"); }
+          else if(mode !== "setPin" && c && c.bio){ L.innerHTML = IC_BIO; L.disabled = false; L.setAttribute("aria-label", "Mit Biometrie entsperren"); }
+          else { L.textContent = ""; L.disabled = true; L.removeAttribute("aria-label"); } };
+        const shake = () => { dots.classList.remove("shake"); void dots.offsetWidth; dots.classList.add("shake"); if(navigator.vibrate) try{ navigator.vibrate(80); }catch(e){} };
+        async function full(){
+          if(isSet){
+            if(step === 1){ if(val.length < 4) return; first = val; val = ""; step = 2; err.textContent = ""; texts(); paint(); return; }
+            if(val === first){ await makeSecret("pin", val, opts.keep); done(true); }
+            else { err.textContent = "Die PINs stimmen nicht überein. Bitte neu eingeben."; shake(); step = 1; first = ""; val = ""; texts(); paint(); }
+            return;
+          }
+          const v = val; val = ""; const ok = await tryUnlock(v); if(!ok){ shake(); paint(); }
+        }
+        function press(k){
+          if(k === "del"){ val = val.slice(0, -1); paint(); return; }
+          if(k === "L"){ if(isSet && step === 1) full(); else if(c && c.bio) runBio(); return; }
+          if(blocked()){ showBlock(); return; }
+          if(val.length >= lenNow()) return;
+          val += k; err.textContent = err.textContent && val.length === 1 ? "" : err.textContent; paint();
+          if(val.length === lenNow() && !(isSet && step === 1)) setTimeout(full, 120);
+          else if(isSet && step === 1 && val.length === 6) setTimeout(full, 120);
+        }
+        pad.addEventListener("click", ev => { const b = ev.target.closest("[data-k]"); if(b && !b.disabled) press(b.dataset.k); });
+        onKey = ev => { if(!box) return; if(/^[0-9]$/.test(ev.key)){ ev.preventDefault(); press(ev.key); } else if(ev.key === "Backspace"){ ev.preventDefault(); press("del"); } else if(ev.key === "Enter" && isSet && step === 1){ ev.preventDefault(); full(); } else if(ev.key === "Escape" && mode !== "unlock"){ done(false); } };
+        document.addEventListener("keydown", onKey, true);
+        paint();
+      } else {
+        if(mode === "setPw"){
+          main.innerHTML = '<form class="gl-pw"><input type="password" id="glP1" autocomplete="new-password" placeholder="Neues Passwort" aria-label="Neues Passwort"><input type="password" id="glP2" autocomplete="new-password" placeholder="Passwort wiederholen" aria-label="Passwort wiederholen"><button class="gl-btn" type="submit">Passwort speichern</button></form>';
+        } else {
+          main.innerHTML = '<form class="gl-pw"><input type="password" id="glP1" autocomplete="current-password" placeholder="Passwort" aria-label="Passwort"><button class="gl-btn" type="submit">Entsperren</button></form>';
+        }
+        const f = main.querySelector("form"), p1 = main.querySelector("#glP1"), p2 = main.querySelector("#glP2");
+        f.addEventListener("submit", async ev => { ev.preventDefault();
+          if(mode === "setPw"){
+            if(p1.value.length < 6){ err.textContent = "Bitte mindestens 6 Zeichen."; p1.focus(); return; }
+            if(p1.value !== p2.value){ err.textContent = "Die Passwörter stimmen nicht überein."; p2.value = ""; p2.focus(); return; }
+            await makeSecret("pw", p1.value, opts.keep); done(true); return;
+          }
+          const ok = await tryUnlock(p1.value); if(!ok){ p1.value = ""; p1.focus(); } });
+        onKey = ev => { if(ev.key === "Escape" && mode !== "unlock") done(false); };
+        document.addEventListener("keydown", onKey, true);
+        setTimeout(() => { if(mode !== "unlock" || !(c && c.bio)) p1.focus(); }, 60);
+      }
+      // Biometrie
+      async function runBio(){
+        if(busy) return; busy = true; err.textContent = "";
+        try{ if(await bioCheck()){ lset(FAILS, null); done(true); } else err.textContent = "Nicht erkannt. Bitte erneut versuchen oder " + (type === "pin" ? "PIN" : "Passwort") + " eingeben."; }
+        catch(e){ if(e && e.name !== "NotAllowedError" && e.name !== "AbortError") err.textContent = "Biometrie ist gerade nicht möglich. Bitte " + (type === "pin" ? "PIN" : "Passwort") + " eingeben."; }
+        finally{ busy = null; }
+      }
+      if(!isSet && c && c.bio){ bioBtn.hidden = false; bioBtn.textContent = "Mit Face ID / Fingerabdruck entsperren"; bioBtn.onclick = runBio; if(opts.autoBio) setTimeout(runBio, 250); }
+      // Vergessen
+      if(mode === "unlock"){
+        fgBtn.hidden = false; fgBtn.textContent = type === "pin" ? "PIN vergessen?" : "Passwort vergessen?";
+        fgBtn.onclick = () => {
+          const keep = main.innerHTML; fgBtn.hidden = true; bioBtn.hidden = true; err.textContent = "";
+          title.textContent = type === "pin" ? "PIN vergessen" : "Passwort vergessen"; sub.textContent = "";
+          main.innerHTML = '<div class="gl-forgot"><p>Ohne ' + (type === "pin" ? "PIN" : "Passwort") + ' kommt niemand an die Daten – auch nicht der Entwickler. Du kannst nur alle Daten der App auf diesem Gerät löschen und neu anfangen. Achtung: Nach ' + MAXF + ' falschen Eingaben passiert das automatisch. Danach kannst du eine Datensicherung einlesen, falls du eine hast.</p><button type="button" class="gl-btn danger" id="glWipe">Alle Daten löschen</button><button type="button" class="gl-btn sec" id="glBack">Zurück</button></div>';
+          main.querySelector("#glBack").onclick = () => { document.removeEventListener("keydown", onKey, true); if(box){ box.remove(); box = null; } showing = false; lockNow(); };
+          const w = main.querySelector("#glWipe");
+          w.onclick = () => { if(w.dataset.armed !== "1"){ w.dataset.armed = "1"; w.textContent = "Wirklich alles löschen?"; return; } wipe(); };
+        };
+      }
+    });
+  }
+  // Warnung vor dem Einrichten: Hintergrund unscharf wie im Tutorial
+  function warn(){
+    return new Promise(resolve => {
+      css();
+      const w = document.createElement("div"); w.id = "gtLockWarn"; w.setAttribute("role", "alertdialog"); w.setAttribute("aria-modal", "true"); w.setAttribute("aria-labelledby", "glwT"); w.setAttribute("aria-describedby", "glwD");
+      w.innerHTML = '<div class="glw-card"><div class="glw-ic"><svg viewBox="0 0 24 24"><path d="M12 3.5 2.5 20h19L12 3.5z"/><path d="M12 10v4.5M12 17.3v.2"/></svg></div>'
+        + '<b id="glwT">Wichtig – bitte lesen</b>'
+        + '<div id="glwD"><p>Nach <b>' + MAXF + ' falschen Eingaben</b> von PIN oder Passwort werden <b>alle Daten der App auf diesem Gerät gelöscht</b>: Stundenzettel, Urlaubsanträge, Brandmeldeanlagen mit Grundrissen und deine Unterschrift.</p>'
+        + '<p>Das lässt sich <b>nicht rückgängig machen</b>. Merk dir PIN oder Passwort gut und mach regelmäßig eine Datensicherung (Einstellungen → Datensicherung).</p></div>'
+        + '<div class="glw-row"><button type="button" class="glw-no">Abbrechen</button><button type="button" class="glw-ok">Verstanden</button></div></div>';
+      document.body.appendChild(w);
+      const end = ok => { w.remove(); document.removeEventListener("keydown", k, true); resolve(ok); };
+      const k = ev => { if(ev.key === "Escape"){ ev.preventDefault(); end(false); } };
+      document.addEventListener("keydown", k, true);
+      w.querySelector(".glw-ok").onclick = () => end(true); w.querySelector(".glw-no").onclick = () => end(false);
+      setTimeout(() => w.querySelector(".glw-ok").focus(), 50);
+    });
+  }
+  async function wipe(){
+    try{ localStorage.clear(); }catch(e){} try{ sessionStorage.clear(); }catch(e){}
+    try{ await new Promise(r => { const q = indexedDB.deleteDatabase("gosch-tools"); q.onsuccess = q.onerror = q.onblocked = () => r(); setTimeout(r, 1500); }); }catch(e){}
+    location.href = "index.html";
+  }
+
+  // ---------- Wann sperren ----------
+  const grace = c => Math.max(5, (c.after || 0)) * 1000;
+  function needLockNow(){
+    const c = cfg(); if(!c) return false;
+    const u = sget(S_UNL); if(!u) return true;
+    const h = sget(S_HID); if(!h) return false;
+    if(sget(S_NAV) >= h - 1500) return false; // Wechsel zwischen den Seiten der App
+    return Date.now() - h > grace(c);
+  }
+  function unlocked(){ sset(S_UNL, Date.now()); sset(S_HID, null); document.documentElement.classList.remove("gt-locked"); }
+  let showing = false;
+  async function lockNow(){
+    if(showing || !cfg()) return; showing = true; sset(S_UNL, null);
+    css(); document.documentElement.classList.add("gt-locked");
+    const ok = await open("unlock", {autoBio:true}); showing = false; if(ok) unlocked();
+  }
+  function start(){
+    if(!cfg()) return;
+    if(needLockNow()){ css(); document.documentElement.classList.add("gt-locked"); const go = () => lockNow(); if(document.body) go(); else document.addEventListener("DOMContentLoaded", go); }
+    else sset(S_HID, null);
+    document.addEventListener("visibilitychange", () => {
+      if(!cfg()) return;
+      if(document.visibilityState === "hidden"){ if(!showing) sset(S_HID, Date.now()); }
+      else { const h = sget(S_HID); if(h && !showing && Date.now() - h > grace(cfg())) lockNow(); else sset(S_HID, null); }
+    });
+    window.addEventListener("pagehide", () => sset(S_NAV, Date.now()));
+    document.addEventListener("click", ev => { const a = ev.target.closest && ev.target.closest("a[href]"); if(a) sset(S_NAV, Date.now()); }, true);
+    window.addEventListener("pageshow", ev => { if(ev.persisted && needLockNow()) lockNow(); });
+  }
+
+  // ---------- Schnittstelle für die Einstellungen ----------
+  const API = {
+    config: () => { const c = cfg(); return c ? {type:c.type, bio:!!c.bio, after:c.after || 0} : null; },
+    verify: title => cfg() ? open("verify", {title}) : Promise.resolve(true),
+    setup: async type => { const old = cfg(); const keep = old ? {after:old.after || 0, bio:old.bio || null} : {after:0, bio:null}; if(!(await warn())) return false; const ok = await open(type === "pw" ? "setPw" : "setPin", {keep}); if(ok) unlocked(); return ok; },
+    off: () => { lset(KEY, null); lset(FAILS, null); },
+    setAfter: s => { const c = cfg(); if(c){ c.after = s; lset(KEY, c); } },
+    bioAvailable,
+    bioOn: async () => { const c = cfg(); if(!c) return false; const id = await bioRegister(); c.bio = id; lset(KEY, c); return true; },
+    bioOff: () => { const c = cfg(); if(c){ c.bio = null; lset(KEY, c); } },
+    lockNow
+  };
+  const attach = () => { if(window.GT) window.GT.lock = API; else setTimeout(attach, 0); };
+  attach();
+  try{ start(); }catch(e){}
 })();
 </script>
 <main class="wrap">
   <div class="backline"><a class="backbtn" href="index.html" onclick="return GT.home(event)">‹ Zurück</a></div>
 
-  <div class="pagehead"><h1 id="pageTitle">Kapitel</h1><span class="ctx">Firmenleitfaden</span></div>
-  <p class="lead">Für Elektroniker/innen für Energie- und Gebäudetechnik. Kurz nachschlagen, was gilt und wie es bei uns läuft.</p>
-  <div class="search"><input id="q" type="search" placeholder="Suchen, z. B. Unfall, RCD, Krank" autocomplete="off" aria-label="Leitfaden durchsuchen"></div>
+  <div class="pagehead"><h1 id="pageTitle">Firma</h1></div>
+  <p class="lead" id="lead">Regeln und Abläufe im Betrieb – kurz nachschlagen, was gilt und wie es bei uns läuft.</p>
+  <div class="search"><input id="q" type="search" placeholder="Alle Leitfäden durchsuchen" autocomplete="off" aria-label="Leitfaden durchsuchen"></div>
   <p class="hits" id="hits" hidden></p>
   <div id="list" style="display:grid;gap:10px">
 
-  <details data-k="notfall stromunfall unfall erste hilfe 112">
+  <details data-grp="notfall" data-k="notfall stromunfall unfall erste hilfe 112">
     <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg></span><span class="t"><b>Notfall &amp; Unfall</b><small>Stromunfall, Erste Hilfe, Unfall melden</small></span></summary>
     <div class="body">
       <h3>Bei einem Stromunfall</h3>
@@ -313,7 +687,102 @@ header.top{position:static!important;border-bottom:0!important}
     </div>
   </details>
 
-  <details data-k="sicherheit 5 sicherheitsregeln freischalten spannungsfreiheit erden psa">
+  <details data-grp="firma" data-k="kunde auftreten baustelle sauber abnahme regiebericht">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span><span class="t"><b>Beim Kunden</b><small>Auftreten, Sauberkeit, Abnahme</small></span></summary>
+    <div class="body">
+      <ul>
+        <li>Pünktlich sein. Bei Verspätung Kunde oder Büro vorher anrufen.</li>
+        <li>Freundlich vorstellen, Arbeitskleidung mit Firmenlogo tragen.</li>
+        <li>In Wohnungen Schuhüberzieher benutzen, Boden abdecken, Möbel schützen.</li>
+        <li>Vor Abschalten kurz Bescheid sagen (Kühlschrank, Heizung, Computer, Aufzug).</li>
+        <li>Nichts versprechen, was nicht abgesprochen ist – Zusatzwünsche ans Büro geben.</li>
+        <li>Arbeitsplatz besenrein hinterlassen, Verpackung und Reste mitnehmen.</li>
+        <li>Zum Schluss mit dem Kunden durchgehen, was gemacht wurde, und abzeichnen lassen.</li>
+      </ul>
+      <div class="box note">Zusatzarbeiten immer auf dem Auftrag bzw. Regiebericht notieren – mit Zeit und Material. Was nicht aufgeschrieben ist, kann nicht abgerechnet werden.</div>
+    </div>
+  </details>
+
+  <details data-grp="firma" data-k="fahrzeug werkzeug leiter vde isoliert prüfplakette ladung">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></span><span class="t"><b>Fahrzeug &amp; Werkzeug</b><small>Pflege, Prüfung, Ladungssicherung</small></span></summary>
+    <div class="body">
+      <h3>Werkzeug</h3>
+      <ul>
+        <li>Nur VDE-isoliertes Werkzeug (1000 V) für Arbeiten an elektrischen Anlagen.</li>
+        <li>Vor Benutzung Sichtprüfung: Isolierung, Leitungen, Stecker. Defektes Werkzeug sofort aussortieren und melden.</li>
+        <li>Elektrische Geräte und Verlängerungen nur mit gültiger Prüfplakette.</li>
+        <li>Leitern vor jedem Einsatz prüfen: Holme, Sprossen, Füße, Spreizsicherung.</li>
+      </ul>
+      <h3>Fahrzeug</h3>
+      <ul>
+        <li>Ladung sichern – lose Kabeltrommeln und Leitern sind bei einer Vollbremsung Geschosse.</li>
+        <li>Fahrzeug sauber und aufgeräumt halten, Material nachfüllen.</li>
+        <li>Schäden, Warnleuchten und Unfälle sofort dem Büro melden.</li>
+        <li>Tanken: <span class="fill">Tankkarte / Regelung eintragen</span></li>
+      </ul>
+    </div>
+  </details>
+
+  <details data-grp="firma" data-k="material abfall entsorgung leuchtmittel batterien lager">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/></svg></span><span class="t"><b>Material &amp; Entsorgung</b><small>Materialschein, Abfall richtig trennen</small></span></summary>
+    <div class="body">
+      <ul>
+        <li>Verbautes Material auf dem Auftrag notieren – Menge und Artikel.</li>
+        <li>Material aus dem Lager: <span class="fill">Regelung eintragen</span></li>
+        <li>Kabelreste und Schrott sammeln und mit in den Betrieb nehmen.</li>
+        <li>Leuchtstoffröhren, Energiesparlampen, Batterien und Akkus getrennt sammeln – nicht in den Hausmüll.</li>
+        <li>Elektro-Altgeräte nur über die Firma entsorgen.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details data-grp="firma" data-k="organisation krank krankmeldung urlaub stundenzettel arbeitszeit notdienst">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg></span><span class="t"><b>Organisation</b><small>Arbeitszeit, Krankmeldung, Urlaub, Notdienst</small></span></summary>
+    <div class="body">
+      <h3>Arbeitszeit</h3>
+      <ul>
+        <li>4-Tage-Woche, Montag bis Donnerstag, 9,25 Stunden pro Tag, 37 Stunden pro Woche.</li>
+        <li>Kernarbeitszeit 7:00–17:00 Uhr, Pausen 9:00–9:15 und 12:00–12:30 Uhr.</li>
+        <li>Stundenzettel jede Woche vollständig abgeben – in der App unter „Stundenzettel“. Abgabe bis <span class="fill">Tag/Uhrzeit eintragen</span></li>
+      </ul>
+      <h3>Krankmeldung</h3>
+      <ol class="steps">
+        <li><span>Am ersten Tag <b>vor Arbeitsbeginn</b> anrufen, nicht nur schreiben: <span class="fill">Nummer eintragen</span></span></li>
+        <li><span>Voraussichtliche Dauer mitteilen und sagen, welche Termine anstehen.</span></li>
+        <li><span>Ab wann eine Arbeitsunfähigkeitsbescheinigung nötig ist: <span class="fill">laut Arbeitsvertrag eintragen</span></span></li>
+      </ol>
+      <h3>Urlaub</h3>
+      <ul>
+        <li>Urlaub in der App unter „Urlaub beantragen“ erstellen und abgeben.</li>
+        <li>Rechtzeitig beantragen – erst nach Genehmigung buchen.</li>
+      </ul>
+      <h3>Notdienst</h3>
+      <ul>
+        <li>Plan und Übergabe: <span class="fill">Regelung eintragen</span></li>
+        <li>Einsätze im Stundenzettel unter „Notdienst“ eintragen.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details data-grp="firma" data-k="kontakte telefon büro chef notdienst großhandel netzbetreiber">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span><span class="t"><b>Wichtige Kontakte</b><small>Büro, Chef, Notdienst, Großhandel</small></span></summary>
+    <div class="body">
+      <div class="tbl"><table>
+        <tbody>
+          <tr><td>Notruf</td><td><a class="tel" href="tel:112">112</a></td></tr>
+          <tr><td>Giftnotruf Nord</td><td><a class="tel" href="tel:+4955119240">0551 19240</a></td></tr>
+          <tr><td>Büro</td><td><span class="fill">Nummer eintragen</span></td></tr>
+          <tr><td>Chef</td><td><span class="fill">Nummer eintragen</span></td></tr>
+          <tr><td>Notdienst-Handy</td><td><span class="fill">Nummer eintragen</span></td></tr>
+          <tr><td>Großhandel</td><td><span class="fill">Nummer eintragen</span></td></tr>
+          <tr><td>Netzbetreiber Störung</td><td><span class="fill">Nummer eintragen</span></td></tr>
+        </tbody>
+      </table></div>
+      <p class="hits" style="margin:0">Nummer antippen zum Anrufen.</p>
+    </div>
+  </details>
+
+  <details data-grp="elektro" data-k="sicherheit 5 sicherheitsregeln freischalten spannungsfreiheit erden psa">
     <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span><span class="t"><b>Die 5 Sicherheitsregeln</b><small>Vor jeder Arbeit an elektrischen Anlagen</small></span></summary>
     <div class="body">
       <p>Nach DIN VDE 0105-100. Immer in dieser Reihenfolge, auch wenn es „nur kurz“ ist.</p>
@@ -343,7 +812,7 @@ header.top{position:static!important;border-bottom:0!important}
     </div>
   </details>
 
-  <details data-k="prüfen messen erstprüfung isolationswiderstand rcd fi schleifenimpedanz protokoll dguv v3 vde 0100-600">
+  <details data-grp="elektro" data-k="prüfen messen erstprüfung isolationswiderstand rcd fi schleifenimpedanz protokoll dguv v3 vde 0100-600">
     <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4M12 2v3"/></svg></span><span class="t"><b>Prüfen &amp; Messen</b><small>Erstprüfung, Wiederholungsprüfung, Protokoll</small></span></summary>
     <div class="body">
       <p>Keine Anlage geht ohne Prüfung und Protokoll in Betrieb. Erstprüfung nach DIN VDE 0100-600, in dieser Reihenfolge:</p>
@@ -372,7 +841,7 @@ header.top{position:static!important;border-bottom:0!important}
     </div>
   </details>
 
-  <details data-k="installation zonen din 18015 farben aderfarben rcd afdd überspannung querschnitt verteiler">
+  <details data-grp="elektro" data-k="installation zonen din 18015 farben aderfarben rcd afdd überspannung querschnitt verteiler">
     <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span><span class="t"><b>Installation</b><small>Installationszonen, Aderfarben, Schutzeinrichtungen</small></span></summary>
     <div class="body">
       <h3>Installationszonen (DIN 18015-3)</h3>
@@ -409,116 +878,301 @@ header.top{position:static!important;border-bottom:0!important}
     </div>
   </details>
 
-  <details data-k="kunde auftreten baustelle sauber abnahme regiebericht">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span><span class="t"><b>Beim Kunden</b><small>Auftreten, Sauberkeit, Abnahme</small></span></summary>
+  <details data-grp="bma" data-k="bma vorbereitung anmelden betreiber feuerwehr leitstelle ue übertragungseinrichtung revision">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5V3h6v1.5M9 11l2 2 4-4M9 17h6"/></svg></span><span class="t"><b>Vor der Prüfung</b><small>Anmelden, ÜE abschalten, Steuerungen sichern</small></span></summary>
     <div class="body">
-      <ul>
-        <li>Pünktlich sein. Bei Verspätung Kunde oder Büro vorher anrufen.</li>
-        <li>Freundlich vorstellen, Arbeitskleidung mit Firmenlogo tragen.</li>
-        <li>In Wohnungen Schuhüberzieher benutzen, Boden abdecken, Möbel schützen.</li>
-        <li>Vor Abschalten kurz Bescheid sagen (Kühlschrank, Heizung, Computer, Aufzug).</li>
-        <li>Nichts versprechen, was nicht abgesprochen ist – Zusatzwünsche ans Büro geben.</li>
-        <li>Arbeitsplatz besenrein hinterlassen, Verpackung und Reste mitnehmen.</li>
-        <li>Zum Schluss mit dem Kunden durchgehen, was gemacht wurde, und abzeichnen lassen.</li>
-      </ul>
-      <div class="box note">Zusatzarbeiten immer auf dem Auftrag bzw. Regiebericht notieren – mit Zeit und Material. Was nicht aufgeschrieben ist, kann nicht abgerechnet werden.</div>
-    </div>
-  </details>
-
-  <details data-k="fahrzeug werkzeug leiter vde isoliert prüfplakette ladung">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></span><span class="t"><b>Fahrzeug &amp; Werkzeug</b><small>Pflege, Prüfung, Ladungssicherung</small></span></summary>
-    <div class="body">
-      <h3>Werkzeug</h3>
-      <ul>
-        <li>Nur VDE-isoliertes Werkzeug (1000 V) für Arbeiten an elektrischen Anlagen.</li>
-        <li>Vor Benutzung Sichtprüfung: Isolierung, Leitungen, Stecker. Defektes Werkzeug sofort aussortieren und melden.</li>
-        <li>Elektrische Geräte und Verlängerungen nur mit gültiger Prüfplakette.</li>
-        <li>Leitern vor jedem Einsatz prüfen: Holme, Sprossen, Füße, Spreizsicherung.</li>
-      </ul>
-      <h3>Fahrzeug</h3>
-      <ul>
-        <li>Ladung sichern – lose Kabeltrommeln und Leitern sind bei einer Vollbremsung Geschosse.</li>
-        <li>Fahrzeug sauber und aufgeräumt halten, Material nachfüllen.</li>
-        <li>Schäden, Warnleuchten und Unfälle sofort dem Büro melden.</li>
-        <li>Tanken: <span class="fill">Tankkarte / Regelung eintragen</span></li>
-      </ul>
-    </div>
-  </details>
-
-  <details data-k="material abfall entsorgung leuchtmittel batterien lager">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/></svg></span><span class="t"><b>Material &amp; Entsorgung</b><small>Materialschein, Abfall richtig trennen</small></span></summary>
-    <div class="body">
-      <ul>
-        <li>Verbautes Material auf dem Auftrag notieren – Menge und Artikel.</li>
-        <li>Material aus dem Lager: <span class="fill">Regelung eintragen</span></li>
-        <li>Kabelreste und Schrott sammeln und mit in den Betrieb nehmen.</li>
-        <li>Leuchtstoffröhren, Energiesparlampen, Batterien und Akkus getrennt sammeln – nicht in den Hausmüll.</li>
-        <li>Elektro-Altgeräte nur über die Firma entsorgen.</li>
-      </ul>
-    </div>
-  </details>
-
-  <details data-k="organisation krank krankmeldung urlaub stundenzettel arbeitszeit notdienst">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg></span><span class="t"><b>Organisation</b><small>Arbeitszeit, Krankmeldung, Urlaub, Notdienst</small></span></summary>
-    <div class="body">
-      <h3>Arbeitszeit</h3>
-      <ul>
-        <li>4-Tage-Woche, Montag bis Donnerstag, 9,25 Stunden pro Tag, 37 Stunden pro Woche.</li>
-        <li>Kernarbeitszeit 7:00–17:00 Uhr, Pausen 9:00–9:15 und 12:00–12:30 Uhr.</li>
-        <li>Stundenzettel jede Woche vollständig abgeben – in der App unter „Stundenzettel“. Abgabe bis <span class="fill">Tag/Uhrzeit eintragen</span></li>
-      </ul>
-      <h3>Krankmeldung</h3>
       <ol class="steps">
-        <li><span>Am ersten Tag <b>vor Arbeitsbeginn</b> anrufen, nicht nur schreiben: <span class="fill">Nummer eintragen</span></span></li>
-        <li><span>Voraussichtliche Dauer mitteilen und sagen, welche Termine anstehen.</span></li>
-        <li><span>Ab wann eine Arbeitsunfähigkeitsbescheinigung nötig ist: <span class="fill">laut Arbeitsvertrag eintragen</span></span></li>
+        <li><span><b>Beim Betreiber anmelden</b> – Ansprechpartner, Zugang zu allen Räumen, Schlüssel. Nutzer vorwarnen, dass Signalgeber ertönen können.</span></li>
+        <li><span><b>Leitstelle informieren</b> und die <b>Übertragungseinrichtung (ÜE) abschalten</b>, damit kein Alarm zur Feuerwehr geht. Zeit und Namen des Gesprächspartners notieren.</span></li>
+        <li><span><b>Brandfallsteuerungen sichern:</b> Aufzüge, RWA, Türfeststeller, Lüftung, Löschanlagen, Gaswarnanlagen – nach Absprache abschalten oder in Revision setzen.</span></li>
+        <li><span><b>Zentrale prüfen:</b> anstehende Störungen und Abschaltungen notieren, bevor du etwas veränderst.</span></li>
+        <li><span><b>Gruppen in Revision schalten</b>, die du prüfst – nicht die ganze Anlage, wenn es nicht nötig ist.</span></li>
       </ol>
-      <h3>Urlaub</h3>
+      <div class="box warn"><b>Nie eine Löschanlage auslösen lassen.</b> Löschbereiche immer vorher mit dem Betreiber bzw. Errichter der Löschanlage absichern.</div>
+    </div>
+  </details>
+
+  <details data-grp="bma" data-k="bma fristen inspektion wartung vierteljährlich jährlich din vde 0833 14675">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg></span><span class="t"><b>Fristen</b><small>Inspektion, Wartung, Melderprüfung</small></span></summary>
+    <div class="body">
+      <div class="tbl"><table>
+        <thead><tr><th>Was</th><th>Wie oft</th></tr></thead>
+        <tbody>
+          <tr><td>Inspektion</td><td>vierteljährlich (4× im Jahr)</td></tr>
+          <tr><td>Wartung</td><td>jährlich</td></tr>
+          <tr><td>Automatische Melder</td><td>jeder Melder mindestens 1× im Jahr – meist ¼ der Melder pro Quartal</td></tr>
+          <tr><td>Handfeuermelder</td><td>jeder mindestens 1× im Jahr</td></tr>
+          <tr><td>Akkus</td><td>bei jeder Inspektion prüfen, Tausch nach Herstellerangabe (oft alle 4 Jahre)</td></tr>
+        </tbody>
+      </table></div>
+      <p>Grundlage sind DIN VDE 0833-1/-2 und DIN 14675. Abweichende Vorgaben aus Brandschutzkonzept, Baugenehmigung oder Versicherer (z. B. VdS) gehen vor.</p>
+      <div class="box note">In der App: Unter Brandmeldeanlagen → Anlage → <b>Quartale</b> verteilt die App die Melder automatisch auf Q1–Q4.</div>
+    </div>
+  </details>
+
+  <details data-grp="bma" data-k="bma melder prüfen rauchmelder prüfgas wärmemelder handfeuermelder druckknopf mehrkriterien ansaug linienmelder">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.5M12 18v2.5M3.5 12H6M18 12h2.5"/></svg></span><span class="t"><b>Melder prüfen</b><small>Rauch, Wärme, Handfeuermelder, Sichtprüfung</small></span></summary>
+    <div class="body">
+      <div class="tbl"><table>
+        <thead><tr><th>Melder</th><th>Prüfung</th></tr></thead>
+        <tbody>
+          <tr><td>Rauchmelder (O)</td><td>Prüfaerosol mit Prüfstange/Prüfgerät, nicht direkt aufsprühen</td></tr>
+          <tr><td>Wärmemelder (W)</td><td>Wärmeprüfgerät – keine offene Flamme</td></tr>
+          <tr><td>Mehrkriterienmelder (OT)</td><td>alle Sensoren nach Herstellerangabe auslösen</td></tr>
+          <tr><td>Handfeuermelder</td><td>mit Prüfschlüssel auslösen, Scheibe/Klappe heil?</td></tr>
+          <tr><td>Linien-/Ansaugrauchmelder</td><td>nach Prüfverfahren des Herstellers</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Bei jedem Melder</h3>
       <ul>
-        <li>Urlaub in der App unter „Urlaub beantragen“ erstellen und abgeben.</li>
-        <li>Rechtzeitig beantragen – erst nach Genehmigung buchen.</li>
+        <li>Auslösen, an der Zentrale <b>richtige Gruppe und Meldernummer</b> kontrollieren, danach zurückstellen.</li>
+        <li>Sichtprüfung: verschmutzt, beschädigt, verdreckt, übermalt, Sockel fest?</li>
+        <li><b>Staubschutzkappe</b> nach Bauarbeiten entfernt?</li>
+        <li>Freiraum unter dem Melder (mind. 0,5 m) und keine Umbauten, die den Melder abschirmen.</li>
+        <li>Meldertext und Einbauort stimmen mit Laufkarte und Zentrale überein?</li>
       </ul>
-      <h3>Notdienst</h3>
+      <div class="box note">In der App: Melder abhaken, bei Problemen „Mangel“ tippen und kurz beschreiben – mit Datum, Uhrzeit und Prüfer.</div>
+    </div>
+  </details>
+
+  <details data-grp="bma" data-k="bma zentrale bmz energieversorgung akku notstrom überbrückung signalgeber schallpegel db">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h3M14 11h2M8 15h3M14 15h2"/></svg></span><span class="t"><b>Zentrale, Akkus &amp; Signalgeber</b><small>Energieversorgung, Überbrückung, Schallpegel</small></span></summary>
+    <div class="body">
+      <h3>Zentrale (BMZ)</h3>
       <ul>
-        <li>Plan und Übergabe: <span class="fill">Regelung eintragen</span></li>
-        <li>Einsätze im Stundenzettel unter „Notdienst“ eintragen.</li>
+        <li>Anzeigen, Bedienteil, Drucker und Uhrzeit prüfen.</li>
+        <li>Netzausfall simulieren: Umschaltung auf Akku muss klappen, Störung muss angezeigt werden.</li>
+        <li>Ereignisspeicher auslesen und mit deinen Prüfungen abgleichen.</li>
+      </ul>
+      <h3>Akkus</h3>
+      <ul>
+        <li>Spannung messen, Sichtprüfung (aufgebläht, ausgelaufen, Klemmen fest).</li>
+        <li>Einbaudatum auf dem Akku vermerken.</li>
+        <li>Kapazität muss für die geforderte Überbrückungszeit plus Alarmbetrieb reichen – Wert aus Konzept bzw. Herstellerunterlagen.</li>
+      </ul>
+      <h3>Akustische Signalgeber</h3>
+      <div class="tbl"><table>
+        <tbody>
+          <tr><td>Mindestens</td><td>65 dB(A) bzw. 10 dB über Umgebungsgeräusch</td></tr>
+          <tr><td>Schlafbereich</td><td>75 dB(A) am Kopfende</td></tr>
+          <tr><td>Höchstens</td><td>120 dB(A)</td></tr>
+        </tbody>
+      </table></div>
+      <div class="box note">In der App: Anlage → <b>Schallpegel</b> für Messpunkte und Messungen, <b>Akku</b> für Tauschdatum und Überbrückungsrechnung.</div>
+    </div>
+  </details>
+
+  <details data-grp="bma" data-k="bma feuerwehr fsd fbf fat fse laufkarten schlüsseldepot freischaltelement bedienfeld">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c2 3 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-8z"/></svg></span><span class="t"><b>Feuerwehr-Peripherie</b><small>FSD, FBF, FAT, FSE, Laufkarten</small></span></summary>
+    <div class="body">
+      <ul>
+        <li><b>FSD</b> (Feuerwehr-Schlüsseldepot): Funktion und Schlüssel prüfen – nur nach Absprache mit Betreiber und Feuerwehr öffnen.</li>
+        <li><b>FBF</b> (Feuerwehr-Bedienfeld): alle Tasten und Anzeigen prüfen.</li>
+        <li><b>FAT</b> (Feuerwehr-Anzeigetableau): Anzeige der Meldungen kontrollieren.</li>
+        <li><b>FSE</b> (Freischaltelement) und <b>Blitzleuchte</b> am Zugang prüfen.</li>
+        <li><b>Laufkarten</b>: vollständig, aktuell, Meldernummern und Wege stimmen.</li>
       </ul>
     </div>
   </details>
 
-  <details data-k="kontakte telefon büro chef notdienst großhandel netzbetreiber">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span><span class="t"><b>Wichtige Kontakte</b><small>Büro, Chef, Notdienst, Großhandel</small></span></summary>
+  <details data-grp="bma" data-k="bma abschluss ue einschalten rückstellen betriebsbuch protokoll mängel">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><span class="t"><b>Nach der Prüfung</b><small>Zurückschalten, Betriebsbuch, Mängel</small></span></summary>
+    <div class="body">
+      <ol class="steps">
+        <li><span>Alle <b>Revisionen und Abschaltungen aufheben</b> – Gruppen, Steuerungen, Signalgeber.</span></li>
+        <li><span>Zentrale <b>ohne Störung und ohne Abschaltung</b>? Erst dann weiter.</span></li>
+        <li><span><b>ÜE wieder einschalten</b> und mit der Leitstelle abstimmen (ggf. Probealarm nach Absprache).</span></li>
+        <li><span><b>Betriebsbuch</b> ausfüllen: Datum, was geprüft wurde, Mängel, Unterschrift.</span></li>
+        <li><span>Mängel dem Betreiber mitteilen und Frist zur Behebung festhalten.</span></li>
+      </ol>
+      <div class="box warn"><b>Nie gehen, solange die ÜE abgeschaltet ist.</b> Lieber einmal mehr an der Zentrale nachschauen.</div>
+    </div>
+  </details>
+
+  <details data-grp="bma" data-k="bma täuschungsalarm falschalarm bauarbeiten staub abdecken heißarbeiten">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg></span><span class="t"><b>Täuschungsalarme vermeiden</b><small>Staub, Dampf, Arbeiten in der Nähe von Meldern</small></span></summary>
+    <div class="body">
+      <ul>
+        <li>Bei Bohr-, Schleif- und Stemmarbeiten: betroffene Melder nach Absprache mit dem Betreiber <b>abdecken oder Gruppe abschalten</b>.</li>
+        <li>Abschaltung immer dokumentieren und <b>nach den Arbeiten sofort aufheben</b> – Abdeckungen entfernen!</li>
+        <li>Heißarbeiten (Schweißen, Trennen) nur mit Erlaubnis des Betreibers.</li>
+        <li>Wird trotzdem ein Alarm ausgelöst: Ruhe bewahren, Leitstelle bzw. Feuerwehr informieren, dass es ein Täuschungsalarm ist, Betreiber benachrichtigen.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details data-grp="bma" data-k="bma begriffe glossar bmz ue fsd fbf fat fse rwa revision abschaltung">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M8.5 7.5h7M8.5 11h5"/></svg></span><span class="t"><b>Begriffe</b><small>Abkürzungen kurz erklärt</small></span></summary>
     <div class="body">
       <div class="tbl"><table>
         <tbody>
-          <tr><td>Notruf</td><td><a class="tel" href="tel:112">112</a></td></tr>
-          <tr><td>Giftnotruf Nord</td><td><a class="tel" href="tel:+4955119240">0551 19240</a></td></tr>
-          <tr><td>Büro</td><td><span class="fill">Nummer eintragen</span></td></tr>
-          <tr><td>Chef</td><td><span class="fill">Nummer eintragen</span></td></tr>
-          <tr><td>Notdienst-Handy</td><td><span class="fill">Nummer eintragen</span></td></tr>
-          <tr><td>Großhandel</td><td><span class="fill">Nummer eintragen</span></td></tr>
-          <tr><td>Netzbetreiber Störung</td><td><span class="fill">Nummer eintragen</span></td></tr>
+          <tr><td>BMA / BMZ</td><td>Brandmeldeanlage / Brandmelderzentrale</td></tr>
+          <tr><td>ÜE</td><td>Übertragungseinrichtung zur Leitstelle der Feuerwehr</td></tr>
+          <tr><td>FSD</td><td>Feuerwehr-Schlüsseldepot</td></tr>
+          <tr><td>FBF</td><td>Feuerwehr-Bedienfeld</td></tr>
+          <tr><td>FAT</td><td>Feuerwehr-Anzeigetableau</td></tr>
+          <tr><td>FSE</td><td>Freischaltelement</td></tr>
+          <tr><td>RWA</td><td>Rauch- und Wärmeabzugsanlage</td></tr>
+          <tr><td>Revision</td><td>Gruppe/Melder meldet nur an die Zentrale, nicht weiter</td></tr>
+          <tr><td>Abschaltung</td><td>Teil der Anlage ist außer Betrieb – immer dokumentieren</td></tr>
         </tbody>
       </table></div>
-      <p class="hits" style="margin:0">Nummer antippen zum Anrufen.</p>
+    </div>
+  </details>
+
+  <details data-grp="sat" data-k="sat ausrichtung astra hotbird azimut elevation skew satellit">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3"/><path d="M12 12l3-5"/></svg></span><span class="t"><b>Ausrichtung</b><small>Astra, Hotbird, Azimut, Elevation</small></span></summary>
+    <div class="body">
+      <p>Richtwerte für Schleswig-Holstein (um Rendsburg). Für andere Orte Werte mit einer SAT-Rechner-App bestimmen.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Satellit</th><th>Azimut</th><th>Elevation</th></tr></thead>
+        <tbody>
+          <tr><td>Astra 19,2° Ost</td><td>ca. 168°</td><td>ca. 27°</td></tr>
+          <tr><td>Hotbird 13° Ost</td><td>ca. 176°</td><td>ca. 28°</td></tr>
+        </tbody>
+      </table></div>
+      <ol class="steps">
+        <li><span>Freie Sicht Richtung Süden prüfen – Bäume, Nachbarhäuser, künftiger Bewuchs.</span></li>
+        <li><span>Mast lotrecht ausrichten (Wasserwaage), sonst stimmt die Elevation nicht.</span></li>
+        <li><span>Elevation an der Skala einstellen – bei Offset-Spiegeln die Herstellerskala nutzen, nicht den Spiegelwinkel.</span></li>
+        <li><span>Azimut langsam schwenken, bis das Messgerät den richtigen Satelliten erkennt.</span></li>
+        <li><span>LNB-Skew (Drehung) und Feinjustage auf beste Signalqualität (MER) – nicht nur auf höchsten Pegel.</span></li>
+        <li><span>Alle Schrauben fest anziehen und Werte nach dem Festziehen noch einmal messen.</span></li>
+      </ol>
+    </div>
+  </details>
+
+  <details data-grp="sat" data-k="sat lnb multischalter unicable einkabel quattro quad sat>ip ebenen 13v 18v 22khz zf">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="8" rx="2"/><path d="M7 16v3M12 16v3M17 16v3M12 8V5"/></svg></span><span class="t"><b>LNB &amp; Verteilung</b><small>Quad, Quattro, Multischalter, Unicable</small></span></summary>
+    <div class="body">
+      <h3>Die 4 SAT-Ebenen</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Ebene</th><th>Umschaltung</th></tr></thead>
+        <tbody>
+          <tr><td>Low Band vertikal</td><td>13 V, kein 22 kHz</td></tr>
+          <tr><td>Low Band horizontal</td><td>18 V, kein 22 kHz</td></tr>
+          <tr><td>High Band vertikal</td><td>13 V + 22 kHz</td></tr>
+          <tr><td>High Band horizontal</td><td>18 V + 22 kHz</td></tr>
+        </tbody>
+      </table></div>
+      <p>Empfang 10,7–12,75 GHz, im Kabel als ZF 950–2150 MHz (LNB-Oszillator 9,75 / 10,6 GHz).</p>
+      <h3>Welches System?</h3>
+      <div class="tbl"><table>
+        <tbody>
+          <tr><td>Quad-LNB</td><td>bis 4 Teilnehmer direkt, je ein Kabel</td></tr>
+          <tr><td>Quattro-LNB + Multischalter</td><td>beliebig viele Teilnehmer sternförmig, z. B. Multischalter 5/8 (4 SAT-Ebenen + terrestrisch, 8 Ausgänge)</td></tr>
+          <tr><td>Unicable / Einkabel (EN 50494 / EN 50607)</td><td>mehrere Tuner an einem Kabel – Receiver muss das unterstützen, jedem Tuner ein eigenes Userband zuweisen</td></tr>
+          <tr><td>SAT&gt;IP</td><td>Verteilung über das Netzwerk an Smart-TV, Tablet usw.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="box note">Twin-Receiver oder Aufnahme-Funktion brauchen zwei Leitungen bzw. zwei Userbands.</div>
+    </div>
+  </details>
+
+  <details data-grp="sat" data-k="sat kabel koax f-stecker kompression dose 75 ohm schirmung abschluss">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="7"/><path d="M19 12h3"/></svg></span><span class="t"><b>Kabel &amp; Stecker</b><small>Koax, F-Stecker, Dosen</small></span></summary>
+    <div class="body">
+      <ul>
+        <li>Koaxkabel 75 Ω mit hoher Schirmung (Klasse A+), für längere Strecken dämpfungsarm.</li>
+        <li>F-Kompressionsstecker mit passendem Werkzeug – keine Aufdrehstecker im Außenbereich.</li>
+        <li>Geflecht sauber zurücklegen: <b>kein einzelnes Drähtchen</b> darf den Innenleiter berühren (Kurzschluss der LNB-Speisung).</li>
+        <li>Innenleiter ca. 1–2 mm Überstand, nicht verbogen.</li>
+        <li>Außen: Stecker mit Gummitülle oder Vulkanisierband gegen Feuchtigkeit, Kabel mit Tropfschlaufe einführen.</li>
+        <li>Biegeradius einhalten, Kabel nicht quetschen (Schellen, Türen, Fensterrahmen).</li>
+        <li>Freie Ausgänge am Multischalter bzw. Verteiler mit 75-Ω-Abschlusswiderstand versehen.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details data-grp="sat" data-k="sat erdung potentialausgleich blitzschutz din en 60728-11 vde 0855 16 mm²">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v10M6 13h12M8 17h8M10.5 21h3"/></svg></span><span class="t"><b>Erdung &amp; Potentialausgleich</b><small>DIN EN 60728-11 (VDE 0855-1)</small></span></summary>
+    <div class="body">
+      <ul>
+        <li><b>Antennenerdung:</b> Mast bzw. Halterung über einen Erdungsleiter mit mind. <b>16 mm² Cu</b> (oder 25 mm² Al bzw. 50 mm² Stahl) auf kürzestem Weg mit der Erdungsanlage verbinden.</li>
+        <li><b>Ausnahme:</b> Antenne mindestens 2 m unter der Dachkante und höchstens 1,5 m von der Gebäudewand entfernt – dann ist keine Erdung des Mastes nötig.</li>
+        <li><b>Potentialausgleich:</b> Schirme aller Koaxkabel z. B. über Erdungsblock am Multischalter mit mind. <b>4 mm² Cu</b> an den Potentialausgleich anschließen.</li>
+        <li>Ist eine <b>Blitzschutzanlage</b> vorhanden: Trennungsabstand beachten bzw. Anschluss nur nach Blitzschutzkonzept.</li>
+        <li>Erdungsleiter nie durch das Gebäudeinnere führen, Verbindungen korrosionsgeschützt.</li>
+      </ul>
+      <div class="box warn"><b>Die Erdung ist Pflicht und wird bei Schäden geprüft.</b> Ohne Erdung kein Abschluss der Anlage.</div>
+    </div>
+  </details>
+
+  <details data-grp="sat" data-k="sat messen pegel dbµv mer cn ber messgerät protokoll">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4M12 2v3"/></svg></span><span class="t"><b>Messen</b><small>Pegel, Signalqualität, Protokoll</small></span></summary>
+    <div class="body">
+      <ul>
+        <li><b>Pegel</b> an jeder Teilnehmerdose messen, alle 4 Ebenen. Üblicher Bereich für DVB-S/S2: ca. <b>47–77 dBµV</b>.</li>
+        <li><b>Signalqualität</b> (MER bzw. C/N und BER) ist wichtiger als der Pegel – Richtwerte zeigt das Messgerät (Ampel) bzw. der Hersteller.</li>
+        <li>Zu hoher Pegel ist genauso schlecht wie zu niedriger: ggf. Dämpfungsglied setzen.</li>
+        <li>Messwerte je Dose ins Protokoll eintragen und dem Kunden übergeben.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details data-grp="sat" data-k="sat störung fehlersuche kein signal bild friert sender fehlen regen">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></span><span class="t"><b>Fehlersuche</b><small>Kein Signal, Sender fehlen, Bild friert ein</small></span></summary>
+    <div class="body">
+      <div class="tbl"><table>
+        <thead><tr><th>Fehler</th><th>Ursache prüfen</th></tr></thead>
+        <tbody>
+          <tr><td>Überall kein Signal</td><td>Ausrichtung verstellt (Sturm), LNB defekt, Netzteil Multischalter aus</td></tr>
+          <tr><td>Eine Dose ohne Signal</td><td>Kurzschluss im F-Stecker, Kabel beschädigt, Speisespannung an der Dose messen (13/18 V)</td></tr>
+          <tr><td>Nur manche Sender fehlen</td><td>Eine Ebene fehlt: LNB-Ausgang, Multischalter-Eingang, Receiver-Einstellung (DiSEqC, Unicable)</td></tr>
+          <tr><td>Bild friert bei Regen ein</td><td>Signalqualität zu knapp: Feinjustage, größerer Spiegel, Hindernisse</td></tr>
+          <tr><td>Nach Umbau Störungen</td><td>Freie Ausgänge ohne Abschlusswiderstand, schlechte Stecker</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </details>
+
+  <details data-grp="sat" data-k="sat dach sicherheit absturz leiter wetter gewitter">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg></span><span class="t"><b>Arbeiten auf dem Dach</b><small>Absturz, Wetter, Leitern</small></span></summary>
+    <div class="body">
+      <ul>
+        <li>Vor dem Aufstieg Gefährdung beurteilen: Absturzkante, Dachneigung, Tragfähigkeit, Zugang.</li>
+        <li>Absturzsicherung nach Gefährdungsbeurteilung – Persönliche Schutzausrüstung gegen Absturz nur mit Unterweisung und Anschlagpunkt.</li>
+        <li><b>Nicht aufs Dach</b> bei Gewitter, Sturm, Nässe, Eis oder Schnee.</li>
+        <li>Leiter sichern und mind. 1 m über die Austrittsstelle hinausragen lassen.</li>
+        <li>Werkzeug und Material gegen Herabfallen sichern, Bereich unten absperren.</li>
+        <li>Nach Möglichkeit nicht allein auf dem Dach arbeiten.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details data-grp="sat" data-k="sat abschluss kunde sendersuchlauf übergabe">
+    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><span class="t"><b>Abschluss beim Kunden</b><small>Sendersuchlauf, Übergabe, Doku</small></span></summary>
+    <div class="body">
+      <ol class="steps">
+        <li><span>Sendersuchlauf an jedem Gerät, Senderliste nach Wunsch sortieren.</span></li>
+        <li><span>Alle Räume testen, auch Aufnahme und Twin-Funktion.</span></li>
+        <li><span>Erdung und Potentialausgleich kontrolliert? Fotos machen.</span></li>
+        <li><span>Messprotokoll und Material auf dem Auftrag notieren, Kunde abzeichnen lassen.</span></li>
+      </ol>
     </div>
   </details>
 
   </div>
   <p class="empty" id="none" hidden>Nichts gefunden. Versuch ein anderes Wort.</p>
-  <p class="foot" id="foot">Der Leitfaden ersetzt keine Unterweisung und nicht die geltenden Normen und Vorschriften. Im Zweifel: fragen.</p>
+  <p class="foot">Der Leitfaden ersetzt keine Unterweisung und nicht die geltenden Normen und Vorschriften. Im Zweifel: fragen.</p>
 </main>
-<nav class="appnav" id="nav" aria-label="Firmenleitfaden"><div class="in" role="tablist">
-  <button type="button" role="tab" data-view="kapitel" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 22H20v-4"/><path d="M8.5 7.5h7M8.5 11h5"/></svg>Kapitel</button>
+<nav class="appnav" id="nav" aria-label="Leitfäden"><div class="in" role="tablist">
+  <button type="button" role="tab" data-view="firma" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>Firma</button>
+  <button type="button" role="tab" data-view="elektro" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>Elektro</button>
+  <button type="button" role="tab" data-view="bma" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M12 3c2 3 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-8z"/></svg>BMA</button>
+  <button type="button" role="tab" data-view="sat" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M4 10a10 10 0 0 0 10 10L4 10z"/><path d="M9 15l4-4M13 7a4 4 0 0 1 4 4M13 3a8 8 0 0 1 8 8"/></svg>SAT</button>
   <button type="button" role="tab" data-view="notfall" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg>Notfall</button>
-  <button type="button" role="tab" data-view="kontakte" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>Kontakte</button>
 </div></nav>
 <script>
 (function(){
   const q = document.getElementById("q"), list = document.getElementById("list"), hits = document.getElementById("hits"), none = document.getElementById("none");
+  const nav = document.getElementById("nav"), title = document.getElementById("pageTitle");
+  const TITLES = {'firma': 'Firma', 'elektro': 'Elektro', 'bma': 'Brandmeldeanlagen', 'sat': 'SAT-Technik', 'notfall': 'Notfall'};
+  const LEADS = {"notfall": "Was zu tun ist bei Stromunfall, Verletzung oder Unfall. Im Ernstfall zuerst: Notruf 112.", "firma": "Regeln und Abläufe im Betrieb – kurz nachschlagen, was gilt und wie es bei uns läuft.", "elektro": "Für Elektroniker/innen für Energie- und Gebäudetechnik. Maßgeblich sind die geltenden DIN-VDE-Normen und die Unterweisungen im Betrieb.", "bma": "Leitfaden für Inspektion und Wartung von Brandmeldeanlagen. Maßgeblich sind immer DIN 14675, DIN VDE 0833-1/-2, das Brandschutzkonzept und die Unterlagen des Herstellers.", "sat": "Leitfaden für SAT-Empfangsanlagen. Maßgeblich sind DIN EN 60728-11 (VDE 0855-1) für Erdung und Potentialausgleich sowie die Unterlagen der Hersteller."};
   const items = [...list.querySelectorAll("details")];
   const orig = new Map(items.map(d => [d, d.querySelector(".body").innerHTML]));
   const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  let view = "firma";
   function mark(el, re){
     const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); const nodes = [];
     while(w.nextNode()) nodes.push(w.currentNode);
@@ -526,31 +1180,27 @@ header.top{position:static!important;border-bottom:0!important}
       const span = document.createElement("span"); span.innerHTML = n.nodeValue.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"})[c]).replace(re, m => "<mark>" + m + "</mark>");
       n.replaceWith(...span.childNodes); re.lastIndex = 0; }
   }
+  function show(){ const vis = items.filter(d => d.dataset.grp === view); for(const d of items){ d.querySelector(".body").innerHTML = orig.get(d); d.hidden = d.dataset.grp !== view; d.open = vis.length === 1 && !d.hidden; } }
   q.addEventListener("input", () => {
     const t = q.value.trim().toLowerCase(); let n = 0;
+    if(!t){ show(); hits.hidden = true; none.hidden = true; return; }
     for(const d of items){
       const b = d.querySelector(".body"); b.innerHTML = orig.get(d);
-      if(!t){ d.hidden = false; d.open = false; continue; }
       const hit = d.textContent.toLowerCase().includes(t) || (d.dataset.k || "").includes(t);
       d.hidden = !hit; d.open = hit; if(hit){ n++; mark(b, new RegExp(esc(t), "gi")); }
     }
-    hits.hidden = !t; hits.textContent = n === 1 ? "1 Kapitel gefunden" : n + " Kapitel gefunden"; none.hidden = !t || n > 0;
+    hits.hidden = false; hits.textContent = n === 1 ? "1 Kapitel gefunden" : n + " Kapitel gefunden"; none.hidden = n > 0;
   });
-  // Ansichten über die Leiste unten
-  const nav = document.getElementById("nav"), title = document.getElementById("pageTitle");
-  const lead = document.querySelector(".lead"), search = document.querySelector(".search");
-  const only = {notfall: "notfall", kontakte: "kontakte"};
-  function setView(v){
-    nav.querySelectorAll("[data-view]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === v)));
-    title.textContent = v === "notfall" ? "Notfall" : v === "kontakte" ? "Kontakte" : "Kapitel";
-    q.value = ""; hits.hidden = true; none.hidden = true;
-    lead.hidden = search.hidden = v !== "kapitel";
-    for(const d of items){ d.querySelector(".body").innerHTML = orig.get(d);
-      if(v === "kapitel"){ d.hidden = false; d.open = false; }
-      else { const hit = (d.dataset.k || "").startsWith(only[v]); d.hidden = !hit; d.open = hit; } }
-    window.scrollTo(0, 0);
-  }
-  nav.addEventListener("click", ev => { const b = ev.target.closest("[data-view]"); if(b) setView(b.dataset.view); });
+  nav.addEventListener("click", ev => { const b = ev.target.closest("[data-view]"); if(!b) return; view = b.dataset.view;
+    nav.querySelectorAll("[data-view]").forEach(x => x.setAttribute("aria-selected", String(x === b)));
+    title.textContent = TITLES[view]; document.getElementById("lead").textContent = LEADS[view]; q.value = ""; hits.hidden = true; none.hidden = true; show(); window.scrollTo(0, 0); });
+  show();
+  setTimeout(() => GT.tour("lf", [
+    {sel:"#nav", fixed:true, title:"Leitfaden wählen", text:"Unten wählst du: Firma, Elektro, BMA und SAT."},
+    {sel:'#nav [data-view="notfall"]', fixed:true, title:"Notfall", text:"Im Ernstfall hier tippen: Ablauf bei Stromunfall und Erste Hilfe – Notruf 112."},
+    {sel:"#q", title:"Suche", text:"Durchsucht alle Leitfäden auf einmal, z. B. „RCD“, „ÜE“ oder „Unicable“."},
+    {sel:"#list details:not([hidden])", title:"Kapitel", text:"Antippen zum Aufklappen."}
+  ]), 700);
 })();
 </script>
 </body>

@@ -112,8 +112,380 @@
     if(hiddenAt && Date.now() - hiddenAt > 15*60*1000 && !/(^|\/)(index\.html)?$/.test(location.pathname)){ location.replace("index.html"); }
     hiddenAt = 0;
   });
-  window.GT = {toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home};
+
+  // ---------- Geführte Einführung (Tour) ----------
+  function tourCss(){
+    if(document.getElementById("gtTourCss")) return;
+    const st = document.createElement("style"); st.id = "gtTourCss";
+    st.textContent = ".gt-tour{position:fixed;inset:0;z-index:200}"
+      + ".gt-blur{position:fixed;inset:0;-webkit-backdrop-filter:blur(6px) saturate(.8);backdrop-filter:blur(6px) saturate(.8);transition:clip-path .25s}"
+      + ".gt-tour.nospot{background:rgba(5,15,30,.5)}"
+      + ".gt-spot{position:fixed;border-radius:18px;box-shadow:0 0 0 2px rgba(255,255,255,.85),0 0 24px 4px rgba(255,255,255,.25),0 0 0 9999px rgba(5,15,30,.5);pointer-events:none;transition:left .25s,top .25s,width .25s,height .25s}"
+      + ".gt-card{position:fixed;left:16px;right:16px;max-width:420px;margin:0 auto;background:var(--surface,#fff);color:var(--ink,#111);border-radius:22px;padding:16px 16px 14px;box-shadow:0 14px 40px rgba(0,0,0,.35);display:grid;gap:6px;font:15px/1.45 var(--f-body,system-ui,sans-serif)}"
+      + ".gt-step{font-size:12px;color:var(--muted,#667);letter-spacing:.04em}"
+      + ".gt-title{font:700 18px/1.25 var(--f-display,system-ui,sans-serif);color:var(--brand,var(--ink,#111))}"
+      + ".gt-text{margin:0}"
+      + ".gt-row{display:flex;gap:8px;align-items:center;margin-top:6px}"
+      + ".gt-row button{border:0;border-radius:99px;height:42px;padding:0 16px;font:600 15px/1 var(--f-body,system-ui,sans-serif);cursor:pointer}"
+      + ".gt-skip{background:none;color:var(--muted,#667);padding:0 4px!important}"
+      + ".gt-back{background:var(--sunk,#eef);color:var(--ink,#111)}"
+      + ".gt-next{background:var(--accent,#003769);color:var(--accent-ink,#fff)}";
+    document.head.appendChild(st);
+  }
+  function tourDone(id){ try{ return !!(localStorage.getItem("app.tour.off") || localStorage.getItem("app.tour." + id)); }catch(e){ return true; } }
+  let lastTour = null;
+  function helpBtn(){
+    if(document.getElementById("gtHelp")) return;
+    const st = document.createElement("style");
+    st.textContent = '#gtHelp{position:fixed;z-index:40;top:calc(10px + env(safe-area-inset-top,0px));right:max(16px,calc(50vw - 304px));width:40px;height:40px;border-radius:50%;border:0;display:grid;place-items:center;background:var(--surface,#fff);color:var(--ink,#0d1b2e);box-shadow:0 6px 18px rgba(0,30,60,.18);font:700 18px/1 system-ui,-apple-system,sans-serif;cursor:pointer}#gtHelp:focus-visible{outline:2px solid var(--accent,#003769);outline-offset:2px}:root[data-design="neon"] #gtHelp{background:rgba(15,18,32,.92);color:#8e95ba;border:1px solid #242a45}@media print{#gtHelp{display:none}}';
+    document.head.appendChild(st);
+    const b = document.createElement("button"); b.type = "button"; b.id = "gtHelp"; b.textContent = "?";
+    b.setAttribute("aria-label", "Einführung für diesen Bereich starten"); b.title = "Einführung starten";
+    b.addEventListener("click", () => { if(lastTour) tour(lastTour.id, lastTour.steps, {force:true}); });
+    document.body.appendChild(b);
+  }
+  // Fläche mit Loch: alles außer dem erklärten Bereich wird unscharf
+  function holePath(x, y, w, h, rad){
+    rad = Math.max(0, Math.min(rad, w/2, h/2)); const pts = [], N = 6;
+    const arc = (cx, cy, a0) => { for(let k = 0; k <= N; k++){ const a = (a0 - k*90/N) * Math.PI/180; pts.push((cx + rad*Math.cos(a)).toFixed(1) + "px " + (cy - rad*Math.sin(a)).toFixed(1) + "px"); } };
+    arc(x + rad, y + rad, 180); arc(x + w - rad, y + rad, 90); arc(x + w - rad, y + h - rad, 0); arc(x + rad, y + h - rad, -90);
+    return "polygon(evenodd,0 0,100% 0,100% 100%,0 100%,0 0," + pts.join(",") + "," + pts[0] + ",0 0)";
+  }
+  function tour(id, steps, opts){
+    opts = opts || {};
+    lastTour = {id, steps}; helpBtn();
+    if(!opts.force && tourDone(id)) return;
+    if(document.querySelector(".gt-tour")) return;
+    tourCss();
+    const ov = document.createElement("div"); ov.className = "gt-tour";
+    ov.innerHTML = '<div class="gt-blur"></div><div class="gt-spot"></div><div class="gt-card" role="dialog" aria-modal="true" aria-labelledby="gtTitle"><div class="gt-step"></div><b class="gt-title" id="gtTitle"></b><p class="gt-text"></p><div class="gt-row"><button type="button" class="gt-skip">Überspringen</button><span style="flex:1"></span><button type="button" class="gt-back">Zurück</button><button type="button" class="gt-next">Weiter</button></div></div>';
+    document.body.appendChild(ov);
+    const spot = ov.querySelector(".gt-spot"), blur = ov.querySelector(".gt-blur"), card = ov.querySelector(".gt-card");
+    let i = 0, el = null;
+    const find = s => { if(!s.sel) return null; const e = typeof s.sel === "function" ? s.sel() : document.querySelector(s.sel); if(!e) return s.center ? null : undefined; const r = e.getBoundingClientRect(); return (r.width || r.height) ? e : (s.center ? null : undefined); };
+    function place(){
+      const H = innerHeight, cr = card.getBoundingClientRect();
+      if(!el){ ov.classList.add("nospot"); spot.hidden = true; blur.style.clipPath = "none"; card.style.top = Math.max(16, (H - cr.height) / 2) + "px"; card.style.bottom = ""; return; }
+      ov.classList.remove("nospot"); spot.hidden = false;
+      const r = el.getBoundingClientRect(), pad = 6;
+      const top = Math.max(4, r.top - pad), bot = Math.min(H - 4, r.bottom + pad);
+      const L = Math.max(4, r.left - pad), W = Math.min(innerWidth - 8, r.width + 2*pad), Hh = Math.max(0, bot - top);
+      Object.assign(spot.style, {left: L + "px", top: top + "px", width: W + "px", height: Hh + "px"});
+      blur.style.clipPath = holePath(L, top, W, Hh, 18);
+      if(bot + 14 + cr.height < H - 8){ card.style.top = (bot + 14) + "px"; }
+      else if(top - 14 - cr.height > 8){ card.style.top = (top - 14 - cr.height) + "px"; }
+      else { card.style.top = Math.max(16, H - cr.height - 16) + "px"; }
+    }
+    function show(n, dir){
+      i = n; if(i < 0) i = 0;
+      if(i >= steps.length){ return end(); }
+      const s = steps[i];
+      if(s.before){ try{ s.before(); }catch(e){} }
+      const f = find(s);
+      if(f === undefined){ return show(i + (dir || 1), dir); }
+      el = f;
+      ov.querySelector(".gt-step").textContent = "Schritt " + (i + 1) + " von " + steps.length;
+      ov.querySelector(".gt-title").textContent = s.title;
+      ov.querySelector(".gt-text").textContent = s.text;
+      ov.querySelector(".gt-back").hidden = i === 0;
+      ov.querySelector(".gt-next").textContent = i === steps.length - 1 ? "Fertig" : "Weiter";
+      if(el && !s.fixed) el.scrollIntoView({block: "center", behavior: "instant"});
+      place(); setTimeout(place, 60); setTimeout(place, 300);
+    }
+    function end(){ try{ localStorage.setItem("app.tour." + id, "1"); }catch(e){} window.removeEventListener("resize", place); window.removeEventListener("scroll", place, true); ov.remove(); if(opts.done) opts.done(); }
+    ov.querySelector(".gt-next").onclick = () => show(i + 1, 1);
+    ov.querySelector(".gt-back").onclick = () => show(i - 1, -1);
+    ov.querySelector(".gt-skip").onclick = end;
+    window.addEventListener("pageshow",()=>{try{window.WB_look(localStorage.getItem("app.design")||"modern",localStorage.getItem("app.mode")||"system")}catch(e){}});
+window.addEventListener("resize", place); window.addEventListener("scroll", place, true);
+    show(0, 1);
+  }
+  function tourReset(){ try{ Object.keys(localStorage).filter(k => k.indexOf("app.tour.") === 0).forEach(k => localStorage.removeItem(k)); }catch(e){} }
+  window.GT = {toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home, tour, tourDone, tourReset};
   persist(); registerSW();
+})();
+
+/* App-Sperre: PIN, Passwort und Biometrie (Face ID / Fingerabdruck über WebAuthn). Alles bleibt auf dem Gerät. */
+(function(){
+  "use strict";
+  const KEY = "app.lock", FAILS = "app.lock.fails", S_UNL = "app.unlockedAt", S_HID = "app.hiddenAt", S_NAV = "app.navAt";
+  const lget = k => { try{ return JSON.parse(localStorage.getItem(k) || "null"); }catch(e){ return null; } };
+  const lset = (k, v) => { try{ v == null ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); }catch(e){} };
+  const sget = k => { try{ return Number(sessionStorage.getItem(k) || 0); }catch(e){ return 0; } };
+  const sset = (k, v) => { try{ v == null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, String(v)); }catch(e){} };
+  const cfg = () => { const c = lget(KEY); return c && (c.type === "pin" || c.type === "pw") && c.hash ? c : null; };
+  const b64 = buf => { const a = new Uint8Array(buf); let s = ""; for(let i = 0; i < a.length; i++) s += String.fromCharCode(a[i]); return btoa(s); };
+  const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  const rand = n => crypto.getRandomValues(new Uint8Array(n));
+  const ITER = 150000, MAXF = 10;
+  const vers = n => "Noch " + n + (n === 1 ? " Versuch" : " Versuche") + ", dann werden alle Daten gelöscht.";
+  async function derive(secret, salt, iter){
+    const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), "PBKDF2", false, ["deriveBits"]);
+    return b64(await crypto.subtle.deriveBits({name:"PBKDF2", salt:unb64(salt), iterations:iter, hash:"SHA-256"}, k, 256));
+  }
+  async function makeSecret(type, secret, keep){
+    const salt = b64(rand(16)); const hash = await derive(secret, salt, ITER);
+    const c = Object.assign({after:0, bio:null}, keep || {}, {type, salt, hash, iter:ITER, len: type === "pin" ? secret.length : 0});
+    lset(KEY, c); lset(FAILS, null); return c;
+  }
+  async function checkSecret(secret){ const c = cfg(); if(!c) return true; return (await derive(secret, c.salt, c.iter || ITER)) === c.hash; }
+
+  // ---------- Biometrie ----------
+  async function bioAvailable(){
+    try{ return !!(window.PublicKeyCredential && window.isSecureContext && await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()); }catch(e){ return false; }
+  }
+  async function bioRegister(){
+    const cred = await navigator.credentials.create({publicKey:{
+      challenge: rand(32), rp:{name:"Oh-MyGosch"},
+      user:{id: rand(16), name:"Oh-MyGosch", displayName:"Oh-MyGosch"},
+      pubKeyCredParams:[{type:"public-key", alg:-7}, {type:"public-key", alg:-257}],
+      authenticatorSelection:{authenticatorAttachment:"platform", userVerification:"required", residentKey:"discouraged"},
+      timeout:60000, attestation:"none"}});
+    if(!cred) throw new Error("abgebrochen");
+    return b64(cred.rawId);
+  }
+  async function bioCheck(){
+    const c = cfg(); if(!c || !c.bio) return false;
+    const a = await navigator.credentials.get({publicKey:{challenge: rand(32), allowCredentials:[{type:"public-key", id: unb64(c.bio), transports:["internal","hybrid"]}], userVerification:"required", timeout:60000}});
+    if(!a || b64(a.rawId) !== c.bio) return false;
+    const ad = new Uint8Array(a.response.authenticatorData);
+    return ad.length > 32 && !!(ad[32] & 0x04); // Benutzer wurde geprüft (Face ID / Fingerabdruck / Geräte-Code)
+  }
+
+  // ---------- Fehlversuche ----------
+  function failInfo(){ return lget(FAILS) || {n:0, until:0}; }
+  function addFail(){ const f = failInfo(); f.n++; if(f.n >= 5) f.until = Date.now() + Math.min(300, 30 * Math.pow(2, f.n - 5)) * 1000; lset(FAILS, f); return f; }
+
+  // ---------- Oberfläche ----------
+  const CSS = 'html.gt-locked body>*:not(#gtLock):not(#gtToast){visibility:hidden!important}html.gt-locked,html.gt-locked body{overflow:hidden!important}'
+    + '#gtLock{position:fixed;inset:0;z-index:1000;background:var(--bg,#f3f5f8);color:var(--ink,#0d1b2e);display:flex;align-items:center;justify-content:center;padding:calc(20px + env(safe-area-inset-top,0px)) 20px calc(20px + env(safe-area-inset-bottom,0px));font:16px/1.4 var(--f-body,system-ui,-apple-system,sans-serif);overflow:auto}'
+    + '#gtLock .gl-in{width:100%;max-width:340px;display:grid;justify-items:center;gap:12px;text-align:center}'
+    + '#gtLock .gl-ic{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:var(--accent,#003769);color:var(--accent-ink,#fff)}'
+    + '#gtLock .gl-ic svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}'
+    + '#gtLock h2{margin:4px 0 0;font:800 24px/1.2 var(--f-display,system-ui,sans-serif);color:var(--brand,var(--ink,#0d1b2e));letter-spacing:-.02em}'
+    + '#gtLock .gl-sub{margin:0;color:var(--muted,#5d6b7c);font-size:15px;min-height:1.4em}'
+    + '#gtLock .gl-dots{display:flex;justify-content:center;gap:14px;height:18px;align-items:center;margin:6px 0 4px}'
+    + '#gtLock .gl-dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--accent,#003769);display:block}'
+    + '#gtLock .gl-dots i.on{background:var(--accent,#003769)}'
+    + '#gtLock .gl-dots.shake{animation:glShake .35s}@keyframes glShake{25%{transform:translateX(-10px)}50%{transform:translateX(10px)}75%{transform:translateX(-6px)}}'
+    + '#gtLock .gl-pad{display:grid;grid-template-columns:repeat(3,72px);gap:14px 22px;margin-top:6px}'
+    + '#gtLock .gl-pad button{width:72px;height:72px;border-radius:50%;border:0;background:var(--surface,#fff);color:var(--ink,#0d1b2e);font:600 28px/1 var(--f-body,system-ui,sans-serif);box-shadow:var(--shadow,0 1px 3px rgba(0,0,0,.1));cursor:pointer;display:grid;place-items:center;-webkit-tap-highlight-color:transparent}'
+    + '#gtLock .gl-pad button:active{background:var(--accent-soft,#e2eaf3)}'
+    + '#gtLock .gl-pad button.fn{background:none;box-shadow:none;font-size:15px;color:var(--muted,#5d6b7c)}'
+    + '#gtLock .gl-pad button svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}'
+    + '#gtLock .gl-pad button:disabled{opacity:.35}'
+    + '#gtLock .gl-pw{display:grid;gap:10px;width:100%}'
+    + '#gtLock input{height:52px;border:1px solid transparent;border-radius:16px;background:var(--surface,#fff);box-shadow:var(--shadow,none);padding:0 16px;font-size:17px;color:var(--ink,#0d1b2e);width:100%;box-sizing:border-box}'
+    + '#gtLock input:focus{outline:none;border-color:var(--accent,#003769)}'
+    + '#gtLock .gl-btn{height:52px;border-radius:99px;border:0;background:var(--accent,#003769);color:var(--accent-ink,#fff);font:650 16px/1 var(--f-body,system-ui,sans-serif);width:100%;cursor:pointer}'
+    + '#gtLock .gl-btn:disabled{opacity:.45}'
+    + '#gtLock .gl-btn.sec{background:var(--sunk,#eef2f6);color:var(--ink,#0d1b2e)}'
+    + '#gtLock .gl-btn.danger{background:var(--danger,#c62f2f);color:#fff}'
+    + '#gtLock .gl-link{border:0;background:none;color:var(--muted,#5d6b7c);font:600 14px/1.2 var(--f-body,system-ui,sans-serif);padding:10px;cursor:pointer}'
+    + '#gtLock .gl-err{margin:0;color:var(--danger,#c62f2f);font-size:14px;min-height:1.4em}'
+    + '#gtLock .gl-forgot{display:grid;gap:10px;width:100%}#gtLock .gl-forgot p{margin:0;font-size:14px;color:var(--muted,#5d6b7c)}'
+    + ':root[data-design="neon"] #gtLock .gl-ic,:root[data-design="neon"] #gtLock .gl-btn:not(.sec):not(.danger){background:linear-gradient(100deg,var(--neon-blue,#2f7bff),var(--neon-cyan,#35c8ff));color:#fff}'
+    + ':root[data-design="neon"] #gtLock .gl-dots i{border-color:var(--neon-cyan,#35c8ff)}:root[data-design="neon"] #gtLock .gl-dots i.on{background:var(--neon-cyan,#35c8ff)}';
+  const CSS_W = '#gtLockWarn{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,15,30,.45);-webkit-backdrop-filter:blur(8px) saturate(.8);backdrop-filter:blur(8px) saturate(.8);font:15px/1.5 var(--f-body,system-ui,-apple-system,sans-serif)}'
+    + '#gtLockWarn .glw-card{width:100%;max-width:400px;background:var(--surface,#fff);color:var(--ink,#0d1b2e);border-radius:24px;padding:22px 20px 16px;box-shadow:0 18px 50px rgba(0,0,0,.35);display:grid;gap:10px;border-top:6px solid var(--danger,#c62f2f)}'
+    + '#gtLockWarn .glw-ic{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--danger-soft,#fbe9e9);color:var(--danger,#c62f2f)}'
+    + '#gtLockWarn .glw-ic svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}'
+    + '#gtLockWarn #glwT{font:800 21px/1.25 var(--f-display,system-ui,sans-serif);color:var(--danger,#c62f2f)}'
+    + '#gtLockWarn p{margin:0 0 8px}#gtLockWarn p b{color:var(--ink,#0d1b2e)}'
+    + '#gtLockWarn .glw-row{display:flex;gap:10px;margin-top:4px}'
+    + '#gtLockWarn .glw-row button{flex:1;height:50px;border:0;border-radius:99px;font:650 16px/1 var(--f-body,system-ui,sans-serif);cursor:pointer}'
+    + '#gtLockWarn .glw-no{background:var(--sunk,#eef2f6);color:var(--ink,#0d1b2e)}#gtLockWarn .glw-ok{background:var(--danger,#c62f2f);color:#fff}';
+  const IC_LOCK = '<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+  const IC_BIO = '<svg viewBox="0 0 24 24"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><path d="M9 9.5v1M15 9.5v1M12 9.5v3.5h-1M9.5 16c1.4 1 3.6 1 5 0"/></svg>';
+  const IC_DEL = '<svg viewBox="0 0 24 24"><path d="M21 5H9l-6 7 6 7h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1z"/><path d="M17 9.5l-5 5M12 9.5l5 5"/></svg>';
+  function css(){ if(document.getElementById("gtLockCss")) return; const s = document.createElement("style"); s.id = "gtLockCss"; s.textContent = CSS + CSS_W; (document.head || document.documentElement).appendChild(s); }
+
+  let box = null, busy = null;
+  // mode: unlock | verify | setPin | setPw
+  function open(mode, opts){
+    opts = opts || {};
+    return new Promise(resolve => {
+      css(); if(box) box.remove();
+      const c = cfg(), type = mode === "setPin" ? "pin" : mode === "setPw" ? "pw" : (c ? c.type : "pin");
+      box = document.createElement("div"); box.id = "gtLock"; box.setAttribute("role", "dialog"); box.setAttribute("aria-modal", "true"); box.setAttribute("aria-labelledby", "gtLockT");
+      box.innerHTML = '<div class="gl-in"><div class="gl-ic">' + IC_LOCK + '</div><h2 id="gtLockT"></h2><p class="gl-sub"></p>'
+        + '<div class="gl-main"></div><p class="gl-err" role="alert"></p>'
+        + '<button type="button" class="gl-link gl-bio" hidden></button>'
+        + '<button type="button" class="gl-link gl-fg" hidden></button>'
+        + '<button type="button" class="gl-link gl-cancel" hidden>Abbrechen</button></div>';
+      document.body.appendChild(box);
+      const $q = s => box.querySelector(s), title = $q("#gtLockT"), sub = $q(".gl-sub"), main = $q(".gl-main"), err = $q(".gl-err");
+      const bioBtn = $q(".gl-bio"), fgBtn = $q(".gl-fg"), cancel = $q(".gl-cancel");
+      const isSet = mode === "setPin" || mode === "setPw";
+      const done = ok => { const b = box; box = null; if(b) b.remove(); document.removeEventListener("keydown", onKey, true); resolve(ok); };
+      cancel.hidden = mode === "unlock"; cancel.onclick = () => done(false);
+      let step = 1, first = "", val = "", onKey = () => {};
+      const blocked = () => { const f = failInfo(); return f.until > Date.now() ? Math.ceil((f.until - Date.now()) / 1000) : 0; };
+      const left = () => MAXF - failInfo().n;
+      const showBlock = () => { const s = blocked(); if(!s) return false; err.textContent = "Zu viele Fehlversuche. Bitte " + s + " Sekunden warten. " + vers(left()); setTimeout(() => { if(box && !blocked()) err.textContent = ""; else if(box) showBlock(); }, 1000); return true; };
+      async function tryUnlock(secret){
+        if(showBlock()) return false;
+        if(await checkSecret(secret)){ lset(FAILS, null); done(true); return true; }
+        const f = addFail();
+        if(f.n >= MAXF){ main.innerHTML = ""; bioBtn.hidden = true; fgBtn.hidden = true; cancel.hidden = true; title.textContent = "Daten gelöscht"; sub.textContent = "";
+          err.textContent = MAXF + "-mal falsch eingegeben. Alle Daten der App wurden auf diesem Gerät gelöscht."; setTimeout(wipe, 2500); return false; }
+        err.textContent = (type === "pin" ? "Falsche PIN." : "Falsches Passwort.") + (f.n >= 3 ? " " + vers(MAXF - f.n) : "");
+        showBlock(); return false;
+      }
+      const texts = () => {
+        if(mode === "unlock"){ title.textContent = "Oh-MyGosch ist gesperrt"; sub.textContent = type === "pin" ? "PIN eingeben" : "Passwort eingeben"; }
+        else if(mode === "verify"){ title.textContent = opts.title || "Bestätigen"; sub.textContent = type === "pin" ? "Aktuelle PIN eingeben" : "Aktuelles Passwort eingeben"; }
+        else if(mode === "setPin"){ title.textContent = step === 1 ? "Neue PIN" : "PIN wiederholen"; sub.textContent = step === 1 ? "4 bis 6 Ziffern" : "Zur Sicherheit noch einmal eingeben"; }
+        else { title.textContent = "Neues Passwort"; sub.textContent = "Mindestens 6 Zeichen"; }
+      };
+      texts();
+      if(type === "pin"){
+        const maxLen = isSet ? (step === 1 ? 6 : first.length) : (c && c.len) || 6;
+        main.innerHTML = '<div class="gl-dots" aria-hidden="true"></div><div class="gl-pad"></div>';
+        const dots = $q(".gl-dots"), pad = $q(".gl-pad");
+        const keys = ["1","2","3","4","5","6","7","8","9", "L", "0", "del"];
+        pad.innerHTML = keys.map(k => k === "del" ? '<button type="button" class="fn" data-k="del" aria-label="Löschen">' + IC_DEL + '</button>'
+          : k === "L" ? '<button type="button" class="fn" data-k="L"></button>'
+          : '<button type="button" data-k="' + k + '">' + k + '</button>').join("");
+        const L = pad.querySelector('[data-k="L"]');
+        const lenNow = () => isSet ? (step === 1 ? 6 : first.length) : maxLen;
+        const paint = () => { const n = isSet && step === 1 ? Math.max(4, val.length) : lenNow(); dots.innerHTML = Array.from({length:n}, (_, i) => '<i class="' + (i < val.length ? "on" : "") + '"></i>').join("");
+          dots.setAttribute("aria-label", val.length + " Ziffern eingegeben");
+          if(isSet && step === 1){ L.textContent = "OK"; L.disabled = val.length < 4; L.setAttribute("aria-label", "Weiter"); }
+          else if(mode !== "setPin" && c && c.bio){ L.innerHTML = IC_BIO; L.disabled = false; L.setAttribute("aria-label", "Mit Biometrie entsperren"); }
+          else { L.textContent = ""; L.disabled = true; L.removeAttribute("aria-label"); } };
+        const shake = () => { dots.classList.remove("shake"); void dots.offsetWidth; dots.classList.add("shake"); if(navigator.vibrate) try{ navigator.vibrate(80); }catch(e){} };
+        async function full(){
+          if(isSet){
+            if(step === 1){ if(val.length < 4) return; first = val; val = ""; step = 2; err.textContent = ""; texts(); paint(); return; }
+            if(val === first){ await makeSecret("pin", val, opts.keep); done(true); }
+            else { err.textContent = "Die PINs stimmen nicht überein. Bitte neu eingeben."; shake(); step = 1; first = ""; val = ""; texts(); paint(); }
+            return;
+          }
+          const v = val; val = ""; const ok = await tryUnlock(v); if(!ok){ shake(); paint(); }
+        }
+        function press(k){
+          if(k === "del"){ val = val.slice(0, -1); paint(); return; }
+          if(k === "L"){ if(isSet && step === 1) full(); else if(c && c.bio) runBio(); return; }
+          if(blocked()){ showBlock(); return; }
+          if(val.length >= lenNow()) return;
+          val += k; err.textContent = err.textContent && val.length === 1 ? "" : err.textContent; paint();
+          if(val.length === lenNow() && !(isSet && step === 1)) setTimeout(full, 120);
+          else if(isSet && step === 1 && val.length === 6) setTimeout(full, 120);
+        }
+        pad.addEventListener("click", ev => { const b = ev.target.closest("[data-k]"); if(b && !b.disabled) press(b.dataset.k); });
+        onKey = ev => { if(!box) return; if(/^[0-9]$/.test(ev.key)){ ev.preventDefault(); press(ev.key); } else if(ev.key === "Backspace"){ ev.preventDefault(); press("del"); } else if(ev.key === "Enter" && isSet && step === 1){ ev.preventDefault(); full(); } else if(ev.key === "Escape" && mode !== "unlock"){ done(false); } };
+        document.addEventListener("keydown", onKey, true);
+        paint();
+      } else {
+        if(mode === "setPw"){
+          main.innerHTML = '<form class="gl-pw"><input type="password" id="glP1" autocomplete="new-password" placeholder="Neues Passwort" aria-label="Neues Passwort"><input type="password" id="glP2" autocomplete="new-password" placeholder="Passwort wiederholen" aria-label="Passwort wiederholen"><button class="gl-btn" type="submit">Passwort speichern</button></form>';
+        } else {
+          main.innerHTML = '<form class="gl-pw"><input type="password" id="glP1" autocomplete="current-password" placeholder="Passwort" aria-label="Passwort"><button class="gl-btn" type="submit">Entsperren</button></form>';
+        }
+        const f = main.querySelector("form"), p1 = main.querySelector("#glP1"), p2 = main.querySelector("#glP2");
+        f.addEventListener("submit", async ev => { ev.preventDefault();
+          if(mode === "setPw"){
+            if(p1.value.length < 6){ err.textContent = "Bitte mindestens 6 Zeichen."; p1.focus(); return; }
+            if(p1.value !== p2.value){ err.textContent = "Die Passwörter stimmen nicht überein."; p2.value = ""; p2.focus(); return; }
+            await makeSecret("pw", p1.value, opts.keep); done(true); return;
+          }
+          const ok = await tryUnlock(p1.value); if(!ok){ p1.value = ""; p1.focus(); } });
+        onKey = ev => { if(ev.key === "Escape" && mode !== "unlock") done(false); };
+        document.addEventListener("keydown", onKey, true);
+        setTimeout(() => { if(mode !== "unlock" || !(c && c.bio)) p1.focus(); }, 60);
+      }
+      // Biometrie
+      async function runBio(){
+        if(busy) return; busy = true; err.textContent = "";
+        try{ if(await bioCheck()){ lset(FAILS, null); done(true); } else err.textContent = "Nicht erkannt. Bitte erneut versuchen oder " + (type === "pin" ? "PIN" : "Passwort") + " eingeben."; }
+        catch(e){ if(e && e.name !== "NotAllowedError" && e.name !== "AbortError") err.textContent = "Biometrie ist gerade nicht möglich. Bitte " + (type === "pin" ? "PIN" : "Passwort") + " eingeben."; }
+        finally{ busy = null; }
+      }
+      if(!isSet && c && c.bio){ bioBtn.hidden = false; bioBtn.textContent = "Mit Face ID / Fingerabdruck entsperren"; bioBtn.onclick = runBio; if(opts.autoBio) setTimeout(runBio, 250); }
+      // Vergessen
+      if(mode === "unlock"){
+        fgBtn.hidden = false; fgBtn.textContent = type === "pin" ? "PIN vergessen?" : "Passwort vergessen?";
+        fgBtn.onclick = () => {
+          const keep = main.innerHTML; fgBtn.hidden = true; bioBtn.hidden = true; err.textContent = "";
+          title.textContent = type === "pin" ? "PIN vergessen" : "Passwort vergessen"; sub.textContent = "";
+          main.innerHTML = '<div class="gl-forgot"><p>Ohne ' + (type === "pin" ? "PIN" : "Passwort") + ' kommt niemand an die Daten – auch nicht der Entwickler. Du kannst nur alle Daten der App auf diesem Gerät löschen und neu anfangen. Achtung: Nach ' + MAXF + ' falschen Eingaben passiert das automatisch. Danach kannst du eine Datensicherung einlesen, falls du eine hast.</p><button type="button" class="gl-btn danger" id="glWipe">Alle Daten löschen</button><button type="button" class="gl-btn sec" id="glBack">Zurück</button></div>';
+          main.querySelector("#glBack").onclick = () => { document.removeEventListener("keydown", onKey, true); if(box){ box.remove(); box = null; } showing = false; lockNow(); };
+          const w = main.querySelector("#glWipe");
+          w.onclick = () => { if(w.dataset.armed !== "1"){ w.dataset.armed = "1"; w.textContent = "Wirklich alles löschen?"; return; } wipe(); };
+        };
+      }
+    });
+  }
+  // Warnung vor dem Einrichten: Hintergrund unscharf wie im Tutorial
+  function warn(){
+    return new Promise(resolve => {
+      css();
+      const w = document.createElement("div"); w.id = "gtLockWarn"; w.setAttribute("role", "alertdialog"); w.setAttribute("aria-modal", "true"); w.setAttribute("aria-labelledby", "glwT"); w.setAttribute("aria-describedby", "glwD");
+      w.innerHTML = '<div class="glw-card"><div class="glw-ic"><svg viewBox="0 0 24 24"><path d="M12 3.5 2.5 20h19L12 3.5z"/><path d="M12 10v4.5M12 17.3v.2"/></svg></div>'
+        + '<b id="glwT">Wichtig – bitte lesen</b>'
+        + '<div id="glwD"><p>Nach <b>' + MAXF + ' falschen Eingaben</b> von PIN oder Passwort werden <b>alle Daten der App auf diesem Gerät gelöscht</b>: Stundenzettel, Urlaubsanträge, Brandmeldeanlagen mit Grundrissen und deine Unterschrift.</p>'
+        + '<p>Das lässt sich <b>nicht rückgängig machen</b>. Merk dir PIN oder Passwort gut und mach regelmäßig eine Datensicherung (Einstellungen → Datensicherung).</p></div>'
+        + '<div class="glw-row"><button type="button" class="glw-no">Abbrechen</button><button type="button" class="glw-ok">Verstanden</button></div></div>';
+      document.body.appendChild(w);
+      const end = ok => { w.remove(); document.removeEventListener("keydown", k, true); resolve(ok); };
+      const k = ev => { if(ev.key === "Escape"){ ev.preventDefault(); end(false); } };
+      document.addEventListener("keydown", k, true);
+      w.querySelector(".glw-ok").onclick = () => end(true); w.querySelector(".glw-no").onclick = () => end(false);
+      setTimeout(() => w.querySelector(".glw-ok").focus(), 50);
+    });
+  }
+  async function wipe(){
+    try{ localStorage.clear(); }catch(e){} try{ sessionStorage.clear(); }catch(e){}
+    try{ await new Promise(r => { const q = indexedDB.deleteDatabase("gosch-tools"); q.onsuccess = q.onerror = q.onblocked = () => r(); setTimeout(r, 1500); }); }catch(e){}
+    location.href = "index.html";
+  }
+
+  // ---------- Wann sperren ----------
+  const grace = c => Math.max(5, (c.after || 0)) * 1000;
+  function needLockNow(){
+    const c = cfg(); if(!c) return false;
+    const u = sget(S_UNL); if(!u) return true;
+    const h = sget(S_HID); if(!h) return false;
+    if(sget(S_NAV) >= h - 1500) return false; // Wechsel zwischen den Seiten der App
+    return Date.now() - h > grace(c);
+  }
+  function unlocked(){ sset(S_UNL, Date.now()); sset(S_HID, null); document.documentElement.classList.remove("gt-locked"); }
+  let showing = false;
+  async function lockNow(){
+    if(showing || !cfg()) return; showing = true; sset(S_UNL, null);
+    css(); document.documentElement.classList.add("gt-locked");
+    const ok = await open("unlock", {autoBio:true}); showing = false; if(ok) unlocked();
+  }
+  function start(){
+    if(!cfg()) return;
+    if(needLockNow()){ css(); document.documentElement.classList.add("gt-locked"); const go = () => lockNow(); if(document.body) go(); else document.addEventListener("DOMContentLoaded", go); }
+    else sset(S_HID, null);
+    document.addEventListener("visibilitychange", () => {
+      if(!cfg()) return;
+      if(document.visibilityState === "hidden"){ if(!showing) sset(S_HID, Date.now()); }
+      else { const h = sget(S_HID); if(h && !showing && Date.now() - h > grace(cfg())) lockNow(); else sset(S_HID, null); }
+    });
+    window.addEventListener("pagehide", () => sset(S_NAV, Date.now()));
+    document.addEventListener("click", ev => { const a = ev.target.closest && ev.target.closest("a[href]"); if(a) sset(S_NAV, Date.now()); }, true);
+    window.addEventListener("pageshow", ev => { if(ev.persisted && needLockNow()) lockNow(); });
+  }
+
+  // ---------- Schnittstelle für die Einstellungen ----------
+  const API = {
+    config: () => { const c = cfg(); return c ? {type:c.type, bio:!!c.bio, after:c.after || 0} : null; },
+    verify: title => cfg() ? open("verify", {title}) : Promise.resolve(true),
+    setup: async type => { const old = cfg(); const keep = old ? {after:old.after || 0, bio:old.bio || null} : {after:0, bio:null}; if(!(await warn())) return false; const ok = await open(type === "pw" ? "setPw" : "setPin", {keep}); if(ok) unlocked(); return ok; },
+    off: () => { lset(KEY, null); lset(FAILS, null); },
+    setAfter: s => { const c = cfg(); if(c){ c.after = s; lset(KEY, c); } },
+    bioAvailable,
+    bioOn: async () => { const c = cfg(); if(!c) return false; const id = await bioRegister(); c.bio = id; lset(KEY, c); return true; },
+    bioOff: () => { const c = cfg(); if(c){ c.bio = null; lset(KEY, c); } },
+    lockNow
+  };
+  const attach = () => { if(window.GT) window.GT.lock = API; else setTimeout(attach, 0); };
+  attach();
+  try{ start(); }catch(e){}
 })();
 </script>
 <title>Stundenzettel – Oh-MyGosch</title>
@@ -192,11 +564,16 @@ main .wrap{padding-block:16px 40px;display:grid;gap:14px}
 .daydate{color:var(--muted);font-size:14px}
 .dayh{margin-left:auto;font-weight:600}
 .dfrei{font-size:12px;font-weight:600;padding:2px 7px;border-radius:99px;background:var(--accent-soft);color:var(--muted);align-self:center}
+.dfrei.abs-urlaub{background:var(--ok-soft,#e3f3ea);color:var(--ok)}
+.dfrei.abs-krank{background:var(--danger-soft,#fbe9e9);color:var(--danger)}
+.seg.absseg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:0 0 10px}
+.absseg button{height:36px;font-size:14px}
 .dayh{white-space:nowrap;font-size:15px}
 .prow .ph.okh{color:var(--ok)} .prow .ph.parth{color:var(--warn)}
 .dayh.ok{color:var(--ok)} .dayh.part{color:var(--warn)}
 .soll{font-size:13px;color:var(--muted);margin-top:6px}
 .soll .pp,#perDays .pp{color:var(--ok);font-weight:600} .soll .pn,#perDays .pn{color:var(--danger);font-weight:600}
+.pdfhint{margin:2px 0 8px;font-size:12px;line-height:1.4;color:var(--muted)}
 .daycount{font-size:12px;color:var(--muted);min-width:30px;text-align:right}
 .entries{display:grid}
 .entry{padding:8px 14px;border-top:1px solid var(--line);display:grid;gap:8px}
@@ -438,6 +815,9 @@ button.prow:hover{background:var(--accent-soft)}
 :root[data-design="modern"] .brand{display:flex;justify-content:flex-start;padding:0}
 @media (prefers-color-scheme: dark){:root[data-design="modern"]:not([data-theme="light"]):not([data-mode="light"]) .brand img{filter:brightness(0) invert(.92)}}
 :root[data-design="modern"][data-mode="dark"] .brand img,:root[data-design="modern"][data-theme="dark"]:not([data-mode="light"]) .brand img{filter:brightness(0) invert(.92)}
+/* Gosch-Logo auch im Neon-Design: weiß mit leichtem Leuchten */
+:root[data-design="neon"] .brand{display:flex;justify-content:flex-start;padding:0}
+:root[data-design="neon"] .brand img{filter:brightness(0) invert(1) drop-shadow(0 0 6px rgba(53,200,255,.55)) drop-shadow(0 0 14px rgba(47,123,255,.35))}
 
 /* ===== Gemeinsamer Aufbau wie bei den Brandmeldeanlagen: großer Seitentitel + Navigationsleiste unten ===== */
 .pagehead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:6px 2px 2px;min-width:0}
@@ -531,7 +911,6 @@ window.WB_look(d,m);})();
     <div class="bar inflow" id="bar">
       <div class="tot" hidden><div id="barKw">KW –</div><div id="barTotal">0,00 h</div></div>
       <button class="btn primary" type="button" id="exportBtn">Stundenzettel erstellen</button>
-      <button class="btn primary" type="button" id="saveBtn">Speichern</button>
     </div>
   </section>
 
@@ -638,6 +1017,13 @@ window.WB_look(d,m);})();
 (function(){
 "use strict";
 // ---------- constants ----------
+const PDFROWS=30; // Zeilen für alle Tage zusammen im Ausdruck (unverändert)
+function weekFree(r,skip){return PDFROWS-DAYS.reduce((a,d)=>a+(d.k===skip?0:Math.max(r.days[d.k].length,1)),0)}
+function dayCap(r,k){return weekFree(r,k)}
+function rowPlan(r){const len=k=>r.days[k].length;const al={};DAYS.forEach(d=>al[d.k]=d.max);
+  const donors=["sa","so","fr","do","mi","di","mo"];
+  DAYS.forEach(d=>{let need=len(d.k)-al[d.k];for(const k of donors){if(need<=0)break;if(k===d.k)continue;const spare=al[k]-Math.max(len(k),1);if(spare>0){const t=Math.min(spare,need);al[k]-=t;al[d.k]+=t;need-=t}}});
+  let row=10;const P={};DAYS.forEach(d=>{P[d.k]={row,n:al[d.k]};row+=al[d.k]});return P}
 const DAYS=[{k:"mo",n:"Montag",max:5,row:10},{k:"di",n:"Dienstag",max:5,row:15},{k:"mi",n:"Mittwoch",max:5,row:20},{k:"do",n:"Donnerstag",max:5,row:25},{k:"fr",n:"Freitag",max:5,row:30},{k:"sa",n:"Samstag",max:3,row:35},{k:"so",n:"Sonntag",max:2,row:38}];
 const NUMF=["ues","mk","ul","fz","nd"];
 const NUMLBL={ues:"ÜS",mk:"MK",ul:"UL",fz:"FZ",nd:"Notdienst"};
@@ -676,8 +1062,8 @@ const openExtras=new Set();
 let openDays=null; // Set of expanded day keys
 function defaultOpenDays(){const o=new Set();const t=new Date();if(ymd(mondayOf(t))===curId&&sollTag(t).soll>0)o.add(DAYS[(t.getDay()+6)%7].k);return o}
 
-function emptyReport(id){const r={week:id,carry:{},days:{}};DAYS.forEach(d=>r.days[d.k]=[]);return r}
-function normReport(r,id){const o=emptyReport(id);if(!r)return o;o.carry={...(r.carry||{})};DAYS.forEach(d=>{o.days[d.k]=Array.isArray(r.days&&r.days[d.k])?r.days[d.k].map(e=>({...e})):[]});o.updatedAt=r.updatedAt;if(r.sig){o.sig=r.sig;o.signedAt=r.signedAt;o.sigStale=!!r.sigStale}return o}
+function emptyReport(id){const r={week:id,carry:{},days:{},abs:{}};DAYS.forEach(d=>r.days[d.k]=[]);return r}
+function normReport(r,id){const o=emptyReport(id);if(!r)return o;o.carry={...(r.carry||{})};o.abs={...(r.abs||{})};DAYS.forEach(d=>{o.days[d.k]=Array.isArray(r.days&&r.days[d.k])?r.days[d.k].map(e=>({...e})):[]});o.updatedAt=r.updatedAt;if(r.sig){o.sig=r.sig;o.signedAt=r.signedAt;o.sigStale=!!r.sigStale}if(r.absAuto)o.absAuto={...r.absAuto};if(r.absSkip)o.absSkip={...r.absSkip};return o}
 function touch(){}
 const fmtStamp=ms=>{const d=new Date(ms);return fmtDate(d)+", "+pad(d.getHours())+":"+pad(d.getMinutes())+" Uhr"};
 const imgCache={};
@@ -750,6 +1136,10 @@ function feiertage(y){if(FTC[y])return FTC[y];const e=easterD(y),o=n=>ymd(addDay
 function sollTag(date){const az=azGet();const wd=date.getDay()||7;const f=feiertage(date.getFullYear()).get(ymd(date));if(!az.tage.includes(wd))return{soll:0,label:"frei"};if(f)return{soll:0,label:f};return{soll:az.std,label:""}}
 // Erledigte Zeit eines Tages: Arbeitszeit + Urlaub + Freizeitausgleich (Überstunden/MK zählen extra)
 const deckt=e=>num(e.zeit)+num(e.ul)+num(e.fz);
+// Abwesenheit pro Tag: Urlaub zählt als erfüllt, Krank nimmt den Tag aus dem Soll
+const absOf=(r,k)=>(r&&r.abs&&r.abs[k])||"";
+function daySoll(r,k,date){const st=sollTag(date);if(st.soll&&absOf(r,k)==="krank")return{soll:0,label:"krank"};return st}
+function dayIst(r,k,date){const a=absOf(r,k);const list=r.days[k]||[];if(a==="urlaub")return sollTag(date).soll+list.reduce((x,e)=>x+num(e.zeit)+num(e.fz),0);if(a==="krank")return list.reduce((x,e)=>x+num(e.zeit),0);return list.reduce((x,e)=>x+deckt(e),0)}
 
 // ---------- render: header ----------
 function renderHeader(){
@@ -785,10 +1175,13 @@ function renderEdit(){
     const list=cur.days[d.k];
     const open=openDays.has(d.k);
     const orte=[...new Set(list.map(e=>(e.ort||"").trim()).filter(Boolean))].join(", ");
-    h+='<section class="day'+(di>4?" weekend":"")+(open?"":" collapsed")+'" data-day="'+d.k+'"><button type="button" class="dayhead" data-act="toggle" data-d="'+d.k+'" aria-expanded="'+open+'" aria-controls="db-'+d.k+'"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span class="dayname">'+d.n+'</span><span class="daydate">'+fmtShort(addDays(mon,di))+'</span>'+(sollTag(addDays(mon,di)).label?'<span class="dfrei">'+esc(sollTag(addDays(mon,di)).label)+'</span>':'')+'<span class="dayh" id="dh-'+d.k+'"></span><span class="daycount">'+list.length+'/'+d.max+'</span></button>';
+    h+='<section class="day'+(di>4?" weekend":"")+(open?"":" collapsed")+'" data-day="'+d.k+'"><button type="button" class="dayhead" data-act="toggle" data-d="'+d.k+'" aria-expanded="'+open+'" aria-controls="db-'+d.k+'"><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg><span class="dayname">'+d.n+'</span><span class="daydate">'+fmtShort(addDays(mon,di))+'</span>'+(absOf(cur,d.k)?'<span class="dfrei abs-'+absOf(cur,d.k)+'">'+(absOf(cur,d.k)==="urlaub"?"Urlaub":"Krank")+'</span>':sollTag(addDays(mon,di)).label?'<span class="dfrei">'+esc(sollTag(addDays(mon,di)).label)+'</span>':'')+'<span class="dayh" id="dh-'+d.k+'"></span><span class="daycount">'+list.length+'/'+dayCap(cur,d.k)+'</span></button>';
     h+='<div class="daypeek"'+(open||!orte?" hidden":"")+'>'+esc(orte)+'</div>';
-    h+='<div class="daybody" id="db-'+d.k+'"'+(open?"":" hidden")+'><div class="entries">'+list.map((e,i)=>entryHTML(d.k,i,e)).join("")+'</div>';
-    h+='<div class="addrow"><button class="add" type="button" data-act="add" data-d="'+d.k+'" '+(list.length>=d.max?"disabled":"")+'>'+(list.length>=d.max?"Alle "+d.max+" Zeilen belegt":"+ Eintrag")+'</button></div></div></section>';
+    const isWork=sollTag(addDays(mon,di)).soll>0||!!absOf(cur,d.k);const av=absOf(cur,d.k);
+    h+='<div class="daybody" id="db-'+d.k+'"'+(open?"":" hidden")+'>'+(isWork?'<div class="seg absseg" role="radiogroup" aria-label="Art des Tages">'+[["","Arbeit"],["urlaub","Urlaub"],["krank","Krank"]].map(([v,l])=>'<button type="button" role="radio" data-act="abs" data-d="'+d.k+'" data-v="'+v+'" aria-checked="'+(av===v)+'">'+l+'</button>').join("")+'</div>':'')+'<div class="entries">'+list.map((e,i)=>entryHTML(d.k,i,e)).join("")+'</div>';
+    const cap=dayCap(cur,d.k),full=list.length>=cap,plan=rowPlan(cur);
+    if(plan[d.k].n>d.max){const from=DAYS.filter(x=>plan[x.k].n<x.max).map(x=>x.n);h+='<p class="pdfhint">Im Ausdruck bekommt '+d.n+' '+plan[d.k].n+' statt '+d.max+' Zeilen'+(from.length?' – dafür hat '+from.join(", ")+' weniger.':'.')+'</p>'}
+    h+='<div class="addrow"><button class="add" type="button" data-act="add" data-d="'+d.k+'" '+(full?"disabled":"")+'>'+(full?"Ausdruck voll – alle "+PDFROWS+" Zeilen der Woche belegt":"+ Eintrag")+'</button></div></div></section>';
   });
   daysEl.innerHTML=h;
   const allOpen=openDays.size===DAYS.length;$("toggleAll").textContent=allOpen?"Alle zuklappen":"Alle aufklappen";
@@ -803,7 +1196,7 @@ function updateTotals(){
   $("barTotal").textContent=fmt2(t.zeit)+" h";
   $("sumChips").innerHTML=NUMF.map(f=>'<span class="chip'+(t[f]?((f==="ues"||f==="mk")?" pos":f==="fz"?" neg":""):" zero")+'">'+NUMLBL[f]+' <b>'+fmt2(t[f])+'</b></span>').join("");
   const monD=parseYmd(curId);let sollW=0,istW=0,nT=0;
-  DAYS.forEach((d,di)=>{const st=sollTag(addDays(monD,di));const ist=cur.days[d.k].reduce((a,e)=>a+deckt(e),0);sollW+=st.soll;istW+=ist;if(st.soll)nT++;
+  DAYS.forEach((d,di)=>{const dt=addDays(monD,di);const st=daySoll(cur,d.k,dt);const ist=st.soll?dayIst(cur,d.k,dt):0;sollW+=st.soll;istW+=ist;if(st.soll)nT++;
     const el=$("dh-"+d.k);if(!el)return;const h=dayHours(cur,d.k);
     if(st.soll){el.textContent=(ist?fmt2(ist):"–")+" / "+fmt2(st.soll)+" h";el.className="dayh "+(ist>=st.soll-0.001?"ok":ist>0?"part":"")}
     else{el.textContent=h?fmt2(h)+" h":"";el.className="dayh"}});
@@ -851,8 +1244,17 @@ formEl.addEventListener("focusout",ev=>{
 formEl.addEventListener("click",ev=>{
   const b=ev.target.closest("button[data-act]");if(!b)return;
   const act=b.dataset.act;
+  if(act==="abs"){const k=b.dataset.d,v=b.dataset.v;const auto=e=>{const o=(e.ort||"").trim();const nums=NUMF.some(f=>num(e[f]))||num(e.zeit);if(o==="Krank"&&!nums&&!e.nr)return true;if(o==="Urlaub"&&!e.nr&&!num(e.zeit)&&NUMF.every(f=>f==="ul"||!num(e[f])))return true;return false};
+    const empty=e=>!(e.ort||"").trim()&&!(e.nr||"").trim()&&!num(e.zeit)&&!NUMF.some(f=>e[f]!=null&&e[f]!=="");
+    let list=cur.days[k].filter(e=>!auto(e)&&!empty(e));
+    if(!cur.abs)cur.abs={};
+    if(v==="urlaub"){list.unshift({ort:"Urlaub",nr:"",ul:1})}else if(v==="krank"){list.unshift({ort:"Krank",nr:""})}
+    if(cur.absAuto&&cur.absAuto[k]&&v!=="urlaub"){delete cur.absAuto[k];cur.absSkip=cur.absSkip||{};cur.absSkip[k]=1}
+    if(v)cur.abs[k]=v;else delete cur.abs[k];
+    cur.days[k]=list;cur.days[k]=list.slice(0,dayCap(cur,k));openDays.add(k);scheduleSave();renderEdit();
+    if(v)toast(v==="urlaub"?"Urlaub eingetragen – der Tag zählt als erfüllt.":"Krank eingetragen – der Tag zählt nicht zum Soll.");return}
   if(act==="toggle"){const d=b.dataset.d;if(openDays.has(d))openDays.delete(d);else openDays.add(d);renderEdit();return}
-  if(act==="add"){const d=b.dataset.d;openDays.add(d);const def=DAYS.find(x=>x.k===d);if(cur.days[d].length>=def.max)return;cur.days[d].push({ort:"",nr:""});renderEdit();const inp=$("e-"+d+"-"+(cur.days[d].length-1)+"-ort");inp&&inp.focus()}
+  if(act==="add"){const d=b.dataset.d;openDays.add(d);const def=DAYS.find(x=>x.k===d);if(cur.days[d].length>=dayCap(cur,d))return;cur.days[d].push({ort:"",nr:""});renderEdit();const inp=$("e-"+d+"-"+(cur.days[d].length-1)+"-ort");inp&&inp.focus()}
   if(act==="more"){const k=b.dataset.key;const x=$("x-"+k);const open=x.hidden;x.hidden=!open;b.setAttribute("aria-expanded",String(open));if(open)openExtras.add(k);else openExtras.delete(k)}
   if(act==="del"){const d=b.dataset.d,i=Number(b.dataset.i);
     if(b.dataset.armed!=="1"){b.dataset.armed="1";b.textContent="Wirklich?";setTimeout(()=>{if(b.isConnected){b.dataset.armed="";b.textContent="Löschen"}},3000);return}
@@ -1019,7 +1421,7 @@ function renderSummary(){
   if(perMode==="month"){
     const ids=Object.keys(res.weeks).sort();
     if(!ids.length)h='<div class="empty">Für '+MONTHS[perMonth]+' '+perYear+' ist noch nichts eingetragen.</div>';
-    ids.forEach(id=>{const w=res.weeks[id];const kw=isoWeek(parseYmd(id)).week;const ex=extLine(w.t);let ws=0;for(let i=0;i<7;i++){const d=addDays(parseYmd(id),i);if(d.getMonth()===perMonth&&d.getFullYear()===perYear)ws+=sollTag(d).soll}const wi=w.t.zeit+num(w.t.ul)+fzOf(w.t);
+    ids.forEach(id=>{const w=res.weeks[id];const kw=isoWeek(parseYmd(id)).week;const ex=extLine(w.t);let ws=0,wi=0;{const rr=normReport(allReports()[id],id);DAYS.forEach((dd,i)=>{const d=addDays(parseYmd(id),i);if(d.getMonth()===perMonth&&d.getFullYear()===perYear){const so=daySoll(rr,dd.k,d).soll;ws+=so;wi+=so?dayIst(rr,dd.k,d):dayHours(rr,dd.k)}})}
       h+='<button type="button" class="prow" data-week="'+id+'"><div class="pname">KW '+kw+'<span>'+fmtShort(w.from)+' – '+fmtShort(w.to)+'</span></div><div class="ph '+(ws?(wi>=ws-0.001?'okh':'parth'):'')+'">'+(ws?fmt2(wi)+' / '+fmt2(ws)+' h':fmt2(w.t.zeit)+' h')+'</div>'+(ex?'<div class="pext">'+ex+'</div>':'')+'</button>'});
   }else{
     const max=Math.max(1,...res.months.map(m=>m.zeit));
@@ -1050,7 +1452,7 @@ $("modeSeg").addEventListener("click",ev=>{const b=ev.target.closest("[data-mode
 
 // ---------- toast ----------
 let toastT=null;
-$("saveBtn").addEventListener("click",()=>{clearTimeout(saveTimer);saveCurrent();toast("Gespeichert – nur auf diesem Gerät.")});
+$("saveBtn")&&$("saveBtn").addEventListener("click",()=>{clearTimeout(saveTimer);saveCurrent();toast("Gespeichert – nur auf diesem Gerät.")});
 function toast(t){const el=$("toast");el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3200)}
 
 // ---------- form drawing (shared by preview + PDF) ----------
@@ -1093,12 +1495,13 @@ function drawForm(B,r,st){
   heads.forEach((h,i)=>cellText(7,i+1,h,{pt:8.5,bold:true}));
   cellText(8,0,"Übertrag:",{pt:8.5});
   NUMF.forEach((f,i)=>{if(R.carry[f]!=null)cellText(8,4+i,fmt2(R.carry[f]),{pt:10,align:"right"})});
+  const PLAN=rowPlan(R);
   DAYS.forEach(d=>{
-    const r1=d.row,r2=d.row+d.max-1;
+    const pl=PLAN[d.k],r1=pl.row,r2=pl.row+pl.n-1;
     box(r1,0,r2,0,thin);
     B.line(X[0],Y[r1],X[9],Y[r1],mid);
     cellText(r1,0,d.n+":",{pt:8.5,bold:true});
-    R.days[d.k].slice(0,d.max).forEach((e,i)=>{const row=r1+i;
+    R.days[d.k].slice(0,pl.n).forEach((e,i)=>{const row=r1+i;
       cellText(row,1,(e.ort||"").trim(),{pt:10});
       cellText(row,2,(e.nr||"").trim(),{pt:10});
       if(e.zeit!=null)cellText(row,3,fmt2(e.zeit),{pt:10,align:"right"});
@@ -1167,7 +1570,6 @@ function drawPreview(){
   const ctx=c.getContext("2d");ctx.fillStyle="#fff";ctx.fillRect(0,0,W,H);
   drawForm(canvasBackend(ctx,W/210),cur,settings);
 }
-window.addEventListener("pageshow",()=>{try{window.WB_look(localStorage.getItem("app.design")||"modern",localStorage.getItem("app.mode")||"system")}catch(e){}});
 window.addEventListener("resize",()=>{if(currentTab==="preview")drawPreview()});
 
 // ---------- export ----------
@@ -1179,6 +1581,34 @@ $("exportBtn").addEventListener("click",()=>{
   }
   openSheet();
 });
+// ---------- genehmigter Urlaub aus „Urlaub beantragen“ ----------
+function urlaubTage(){const m=new Map();const st=lsGet("urlaub.v1");if(!st||!st.antraege)return m;
+  Object.entries(st.antraege).forEach(([id,a])=>{if(!a||a.status!=="genehmigt"||!a.uVon)return;let d=parseYmd(a.uVon);const e=parseYmd(a.uBis&&a.uBis>=a.uVon?a.uBis:a.uVon);for(let n=0;d<=e&&n<400;n++){m.set(ymd(d),id);d=addDays(d,1)}});return m}
+function applyUrlaub(r,id,U){let ch=false;const mon=parseYmd(id);
+  const isAutoEntry=e=>(e.ort||"").trim()==="Urlaub"&&!(e.nr||"").trim()&&!num(e.zeit)&&NUMF.every(f=>f==="ul"||!num(e[f]));
+  const isEmpty=e=>!(e.ort||"").trim()&&!(e.nr||"").trim()&&!num(e.zeit)&&!NUMF.some(f=>e[f]!=null&&e[f]!=="");
+  DAYS.forEach((d,di)=>{const dt=addDays(mon,di),key=ymd(dt);const want=U.has(key)&&sollTag(dt).soll>0;const auto=r.absAuto&&r.absAuto[d.k];
+    if(want&&!auto&&!r.abs[d.k]&&!(r.absSkip&&r.absSkip[d.k])){r.abs[d.k]="urlaub";r.days[d.k]=[{ort:"Urlaub",nr:"",ul:1}].concat(r.days[d.k].filter(e=>!isEmpty(e)&&!isAutoEntry(e)));r.absAuto=r.absAuto||{};r.absAuto[d.k]=U.get(key);ch=true}
+    else if(!want&&auto){if(r.abs[d.k]==="urlaub"){delete r.abs[d.k];r.days[d.k]=r.days[d.k].filter(e=>!isAutoEntry(e))}delete r.absAuto[d.k];ch=true}
+    if(!U.has(key)&&r.absSkip&&r.absSkip[d.k]){delete r.absSkip[d.k];ch=true}});
+  return ch}
+function syncUrlaub(){let U;try{U=urlaubTage()}catch(e){return}
+  const ids=new Set();U.forEach((_,k)=>ids.add(ymd(mondayOf(parseYmd(k)))));
+  Object.keys(reports).forEach(id=>{const r=reports[id];if(r&&(r.absAuto&&Object.keys(r.absAuto).length||r.absSkip&&Object.keys(r.absSkip).length))ids.add(id)});
+  if(cur&&cur.absAuto&&Object.keys(cur.absAuto).length)ids.add(curId);
+  let curCh=false;const changed=[];
+  ids.forEach(id=>{if(id===curId){if(applyUrlaub(cur,id,U)){curCh=true;changed.push(id)}return}
+    const r=normReport(reports[id],id);if(applyUrlaub(r,id,U)){r.updatedAt=Date.now();reports[id]=r;changed.push(id);if(mode==="db")queueWrite("reports/"+id,()=>reports[id]?JSON.parse(JSON.stringify(reports[id])):null,()=>{})}});
+  if(!changed.length)return;
+  if(curCh)saveCurrent();else if(mode!=="db")lsSet(LS_R,reports);
+  renderEdit();renderList();if(currentTab==="sum")renderSummary();
+  const kws=[...new Set(changed.map(id=>isoWeek(parseYmd(id)).week))].sort((a,b)=>a-b);
+  const added=changed.some(id=>{const r=id===curId?cur:reports[id];return r.absAuto&&Object.keys(r.absAuto).length});
+  if(added)toast("Genehmigter Urlaub eingetragen: KW "+kws.join(", "));
+}
+window.addEventListener("pageshow",ev=>{if(ev.persisted)syncUrlaub()});
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")syncUrlaub()});
+
 async function exportPdf(){
   if(dirty){clearTimeout(saveTimer);saveCurrent()}
   await ensureImg(cur.sig==="@saved"?settings.signature:cur.sig);
@@ -1297,7 +1727,7 @@ async function boot(){
   if(db&&owner){
     mode="db";let firstR=true,firstS=true;
     db.collection("reports").onSnapshot(snap=>{const m={};snap.docs.forEach(d=>{if(d.exists)m[d.id]=d.data()});applyRemoteReports(m,firstR);
-      if(firstR){firstR=false;$("fs").disabled=false;setStatus(reports[curId]?savedText():"Neue Woche – wird beim ersten Eintrag gespeichert")}},
+      if(firstR){firstR=false;$("fs").disabled=false;syncUrlaub();setStatus(reports[curId]?savedText():"Neue Woche – wird beim ersten Eintrag gespeichert")}},
       e=>setStatus("Verbindung zum Speicher unterbrochen. Lade die Seite neu.",true));
     db.doc("settings/main").onSnapshot(s=>{
       if(s.exists){const data=s.data();const focused=document.activeElement&&document.activeElement.dataset&&document.activeElement.dataset.s;settings={...DEFAULT_SETTINGS,...data};if(!focused)renderSettings()}
@@ -1309,7 +1739,7 @@ async function boot(){
     const r=lsGet(LS_R);if(r&&typeof r==="object")Object.assign(reports,r);
     const s=lsGet(LS_S);settings={...DEFAULT_SETTINGS,...(s||{})};if(settings.signature)ensureImg(settings.signature);
     loadCurrent();renderEdit();renderDatalists();$("fs").disabled=false;
-    setStatus("Nur auf diesem Gerät gespeichert");try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+    setStatus("Nur auf diesem Gerät gespeichert");try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}syncUrlaub();
   }
   renderSettings();
 }
@@ -1317,5 +1747,14 @@ boot();
 })();
 </script>
 
+<script>
+setTimeout(()=>GT.tour("wb",[
+  {sel:".weekrow",title:"Woche wählen",text:"Mit den Pfeilen wechselst du die Kalenderwoche."},
+  {sel:"#view-edit .sum",title:"Wochenstunden",text:"Deine Stunden der Woche, das Soll von 37 h sowie Überstunden, Urlaub und Freizeit."},
+  {sel:'[data-act="toggle"][data-d="mo"]',title:"Tag aufklappen",text:"Tippe auf einen Tag. Mit „+ Eintrag“ trägst du Erfüllungsort, Auftragsnummer und Zeit ein. Alles wird automatisch gespeichert."},
+  {sel:"#exportBtn",title:"Stundenzettel erstellen",text:"Ist die Woche fertig, tippst du hier: unterschreiben (oder deine gespeicherte Unterschrift wird genommen) und das PDF teilen."},
+  {sel:"#tab-sum",fixed:true,title:"Übersicht",text:"Monat und Jahr auf einen Blick: Stunden, Überstunden, Freizeit, Notdienst und Saldo."}
+]),700);
+</script>
 </body>
 </html>
