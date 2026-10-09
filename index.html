@@ -90,6 +90,22 @@ details.card .in > *{min-width:0;max-width:100%}
 .check{display:flex;gap:10px;align-items:center}
 .su-bg{position:fixed;inset:0;z-index:150;background:rgba(5,15,30,.55);display:flex;align-items:flex-end;justify-content:center}
 .su{background:var(--surface);color:var(--ink);width:100%;max-width:560px;border-radius:26px 26px 0 0;padding:22px 18px calc(22px + env(safe-area-inset-bottom,0px));display:grid;gap:12px;box-shadow:0 -10px 40px rgba(0,0,0,.25)}
+.su .btn.ghost{background:none;border:0;color:var(--muted);height:44px}
+.ins-bg{position:fixed;inset:0;z-index:1100;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(5,15,30,.45);-webkit-backdrop-filter:blur(8px) saturate(.8);backdrop-filter:blur(8px) saturate(.8);overflow:auto}
+.ins{width:100%;max-width:420px;max-height:100%;overflow:auto;background:var(--surface);color:var(--ink);border-radius:24px;padding:22px 20px 16px;box-shadow:0 18px 50px rgba(0,0,0,.35);display:grid;gap:10px;border-top:6px solid var(--accent);font-size:15px;line-height:1.5;box-sizing:border-box}
+.ins-ic{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.ins-ic svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ins #insT{font:800 21px/1.25 var(--f-display);color:var(--brand,var(--ink))}
+.ins p{margin:0}
+.ins-seg{grid-template-columns:repeat(2,1fr)}
+.ins-steps{margin:0;padding-left:22px;display:grid;gap:6px}
+.ins-sym{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--accent-soft);color:var(--accent);vertical-align:-5px}
+.ins-sym svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ins-data{background:var(--sunk);border-radius:16px;padding:12px 14px;font-size:14px}
+.ins-row{display:flex;gap:10px;margin-top:4px}
+.ins-row button,.ins-go{flex:1;height:50px;border:0;border-radius:99px;font:650 16px/1 var(--f-body);cursor:pointer}
+.ins-no{background:var(--sunk);color:var(--ink)}.ins-ok,.ins-go{background:var(--accent);color:var(--accent-ink)}
+:root[data-design="neon"] .ins-ok,:root[data-design="neon"] .ins-go{background:linear-gradient(100deg,var(--neon-blue),var(--neon-cyan));color:#fff}
 .su-step{margin:0 0 -6px;font-size:12px;letter-spacing:.04em;color:var(--muted)}
 .su h2{margin:0;font:800 24px/1.2 var(--f-display);color:var(--brand,var(--ink))}
 .su-f{display:grid;gap:6px;font-weight:600;font-size:14px}
@@ -253,7 +269,7 @@ header.top{position:static!important;border-bottom:0!important}
   </div>
   <p class="note" id="noneNote" hidden>Alle Bereiche sind ausgeblendet. Schalte unten unter „Einstellungen“ einen Bereich ein.</p>
 
-  <p class="ver"><span style="white-space:nowrap">Oh-MyGosch</span> · <span style="white-space:nowrap">Version 4.0</span></p>
+  <p class="ver"><span style="white-space:nowrap">Oh-MyGosch</span> · <span style="white-space:nowrap">Version 4.1</span></p>
 </main>
 <main class="wrap" id="vSet" hidden>
   <div class="pagehead"><h1>Einstellungen</h1><span class="ctx">Oh-MyGosch</span></div>
@@ -331,6 +347,7 @@ header.top{position:static!important;border-bottom:0!important}
     <div class="in">
       <p class="note">Die Einführung zeigt dir Schritt für Schritt, wie die App funktioniert. Sie startet auch in jedem Bereich beim nächsten Öffnen wieder. Einzelne Bereiche erklärst du dir jederzeit über das „?“ oben rechts.</p>
       <div class="row"><button class="btn primary" type="button" id="tourAgain">Einführung erneut ansehen</button></div>
+      <div class="row"><button class="btn" type="button" id="setupAgain">Ersteinrichtung neu starten</button><button class="btn" type="button" id="installAgain">Auf den Home-Bildschirm – so geht's</button></div>
     </div>
   </details>
   <details class="card" id="secBk">
@@ -349,8 +366,34 @@ header.top{position:static!important;border-bottom:0!important}
       <p class="note">Eingelesen werden Sicherungen aus dieser App, aus dem alten Wochenbericht und aus der alten Brandmelde-App. Einträge mit gleicher Kennung werden ersetzt, alle anderen bleiben.</p>
     </div>
   </details>
-  <p class="ver"><span style="white-space:nowrap">Oh-MyGosch</span> · <span style="white-space:nowrap">Version 4.0</span></p>
+  <p class="ver"><span style="white-space:nowrap">Oh-MyGosch</span> · <span style="white-space:nowrap">Version 4.1</span></p>
 </main>
+<div class="ins-bg" id="insPop" role="dialog" aria-modal="true" aria-labelledby="insT" hidden>
+  <div class="ins">
+    <div class="ins-ic"><svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M12 7.5v7M9 11.5l3 3 3-3"/></svg></div>
+    <b id="insT">Hol dir die App auf den Home-Bildschirm</b>
+    <p>Du hast Oh-MyGosch im Browser geöffnet. Als App auf dem Home-Bildschirm startet sie wie eine normale App – ohne Adressleiste und auch ohne Internet.</p>
+    <div class="seg ins-seg" role="tablist" aria-label="Gerät">
+      <button type="button" role="tab" data-os="ios" aria-checked="false">iPhone</button>
+      <button type="button" role="tab" data-os="and" aria-checked="false">Android</button>
+    </div>
+    <ol class="ins-steps" data-os="ios">
+      <li>Öffne diese Seite in <b>Safari</b> (oder Chrome).</li>
+      <li>Tippe auf das <b>Teilen-Symbol</b> <span class="ins-sym" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M6 11v9h12v-9"/></svg></span> – bei neueren iOS-Versionen zuerst auf <b>„…“</b>.</li>
+      <li>Wähle <b>„Zum Home-Bildschirm“</b> und tippe auf <b>„Hinzufügen“</b>.</li>
+      <li>Starte Oh-MyGosch ab jetzt über das neue Symbol.</li>
+    </ol>
+    <ol class="ins-steps" data-os="and" hidden>
+      <li>Öffne diese Seite in <b>Chrome</b>.</li>
+      <li>Tippe oben rechts auf <b>⋮</b> (drei Punkte).</li>
+      <li>Wähle <b>„App installieren“</b> oder <b>„Zum Startbildschirm hinzufügen“</b> und bestätige.</li>
+      <li>Starte Oh-MyGosch ab jetzt über das neue Symbol.</li>
+    </ol>
+    <button class="ins-go" type="button" id="insNow" hidden>Jetzt installieren</button>
+    <div class="ins-data"><b>Deine Daten bleiben auf deinem Handy.</b> Sie werden nur auf diesem Gerät gespeichert, nicht in einer Cloud. Browser und App auf dem Home-Bildschirm haben aber <b>getrennte Speicher</b>: Was du im Browser einträgst, ist in der App nicht zu sehen. Installiere die App deshalb zuerst und richte sie erst dann ein.</div>
+    <div class="ins-row"><button type="button" class="ins-no" id="insLater">Im Browser weiter</button><button type="button" class="ins-ok" id="insOk">Verstanden</button></div>
+  </div>
+</div>
 <div class="su-bg" id="setupSheet" hidden>
   <div class="su" role="dialog" aria-modal="true" aria-labelledby="suTitle" id="suStep1">
     <p class="su-step">Schritt 1 von 2</p>
@@ -360,6 +403,7 @@ header.top{position:static!important;border-bottom:0!important}
     <label class="su-f"><span>Urlaubstage pro Jahr <small>(optional)</small></span><input id="suUrlaub" inputmode="decimal" placeholder="z. B. 30 – geht auch später"></label>
     <p class="note">Die Urlaubstage kannst du auch später unter Einstellungen → Persönliche Daten eintragen. Alles bleibt nur auf diesem Gerät.</p>
     <button class="btn primary" type="button" id="suOk" disabled>Weiter</button>
+    <button class="btn ghost su-cancel" type="button" hidden>Abbrechen</button>
   </div>
   <div class="su" role="dialog" aria-modal="true" aria-labelledby="suLockT" id="suStep2" hidden>
     <p class="su-step">Schritt 2 von 2</p>
@@ -369,12 +413,18 @@ header.top{position:static!important;border-bottom:0!important}
       <button class="btn primary" type="button" id="suPin">PIN festlegen (4–6 Ziffern)</button>
       <button class="btn" type="button" id="suPw">Lieber ein Passwort</button>
     </div>
+    <div id="suKeep" style="display:grid;gap:10px" hidden>
+      <p class="note"><b>Die App-Sperre ist schon eingerichtet.</b> Du kannst sie so lassen oder neu festlegen.</p>
+      <button class="btn primary" type="button" id="suKeepOk">Sperre behalten und fertig</button>
+      <button class="btn" type="button" id="suKeepNew">Sperre neu festlegen</button>
+    </div>
     <div id="suBio" style="display:grid;gap:10px" hidden>
       <p class="note"><b>Fertig – die Sperre ist eingerichtet.</b> Möchtest du zusätzlich mit Face ID oder Fingerabdruck entsperren? PIN bzw. Passwort bleiben als Ersatz.</p>
       <button class="btn primary" type="button" id="suBioOn">Face ID / Fingerabdruck einschalten</button>
       <button class="btn" type="button" id="suBioNo">Nicht jetzt</button>
     </div>
     <p class="note"><b>Nach 10 falschen Eingaben werden alle Daten gelöscht.</b> Merk dir PIN oder Passwort gut. Ändern oder ausschalten kannst du die Sperre später unter Einstellungen → App-Sperre.</p>
+    <button class="btn ghost su-cancel" type="button" hidden>Abbrechen</button>
   </div>
 </div>
 <nav class="appnav" id="nav" aria-label="Oh-MyGosch"><div class="in" role="tablist">
@@ -1036,22 +1086,57 @@ const TOUR_START = [
 ];
 function startTour(force){ GT.tour("start", TOUR_START, {force}); }
 // Erster Start: Name und (optional) Urlaubstage abfragen
+// ---------- Auf den Home-Bildschirm ----------
+const isStandalone = () => { try{ return matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: fullscreen)").matches || navigator.standalone === true; }catch(e){ return false; } };
+const guessOS = () => { const u = navigator.userAgent || ""; if(/android/i.test(u)) return "and"; return "ios"; };
+let insPrompt = null, insDone = null;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); insPrompt = e; $("insNow").hidden = false; });
+function insOS(os){ document.querySelectorAll("#insPop .ins-seg [data-os]").forEach(b => b.setAttribute("aria-checked", String(b.dataset.os === os)));
+  document.querySelectorAll("#insPop .ins-steps").forEach(o => o.hidden = o.dataset.os !== os); }
+document.querySelector("#insPop .ins-seg").addEventListener("click", ev => { const b = ev.target.closest("[data-os]"); if(b) insOS(b.dataset.os); });
+function showInstall(){ return new Promise(res => { insDone = res; insOS(guessOS()); $("insNow").hidden = !insPrompt; $("insPop").hidden = false; setTimeout(() => { $("insOk").focus({preventScroll:true}); document.querySelector("#insPop .ins").scrollTop = 0; }, 60); }); }
+function closeInstall(){ $("insPop").hidden = true; try{ sessionStorage.setItem("app.insSeen", "1"); }catch(e){} const d = insDone; insDone = null; if(d) d(); }
+$("insOk").addEventListener("click", closeInstall);
+$("insLater").addEventListener("click", closeInstall);
+$("insNow").addEventListener("click", async () => { if(!insPrompt) return; try{ insPrompt.prompt(); await insPrompt.userChoice; }catch(e){} insPrompt = null; $("insNow").hidden = true; });
+document.addEventListener("keydown", e => { if(e.key === "Escape" && !$("insPop").hidden) closeInstall(); });
+$("installAgain").addEventListener("click", () => showInstall());
+const needInstallHint = () => { if(isStandalone()) return false; try{ if(localStorage.getItem("app.tour.off") || sessionStorage.getItem("app.insSeen")) return false; }catch(e){} return true; };
+
+// ---------- Ersteinrichtung ----------
+let suRedo = false;
 function setupStage(){ try{ if(localStorage.getItem("app.tour.off") || localStorage.getItem("app.setup.done")) return 0; }catch(e){ return 0; }
   if(!(gset().name || "").trim()) return 1; return GT.lock.config() ? 0 : 2; }
 function showStage(n){ $("setupSheet").hidden = false; $("suStep1").hidden = n !== 1; $("suStep2").hidden = n !== 2;
+  document.querySelectorAll("#setupSheet .su-cancel").forEach(b => b.hidden = !suRedo);
+  if(n === 2){ const has = !!GT.lock.config(); $("suKeep").hidden = !(suRedo && has); $("suLockPick").hidden = suRedo && has; $("suBio").hidden = true; }
   if(n === 1) setTimeout(() => $("suName").focus(), 300); }
 function finishAll(){
+  if(suRedo && pendingMe){ gsave({name: pendingMe.name}); if(pendingMe.urlaub != null){ const U = ls("urlaub.v1") || {antraege:{}}; U.settings = Object.assign({}, U.settings || {}, {anspruch: pendingMe.urlaub, anspruchSet: true}); lsSet("urlaub.v1", U); } }
+  const redo = suRedo; suRedo = false; pendingMe = null;
   try{ localStorage.setItem("app.setup.done", "1"); }catch(e){}
   $("setupSheet").hidden = true; summary(); renderGlobal(); renderUrlaub(); renderLock();
-  setTimeout(() => startTour(false), 400);
+  if(redo) GT.toast("Ersteinrichtung abgeschlossen."); else setTimeout(() => startTour(false), 400);
 }
+let pendingMe = null;
 function finishSetup(){
   const n = $("suName").value.trim(); if(!n){ $("suName").focus(); GT.toast("Bitte deinen Namen eintragen."); return; }
-  const raw = $("suUrlaub").value.trim();
-  if(raw){ const v = Number(raw.replace(",", ".")); if(v > 0 && v < 100){ const U = ls("urlaub.v1") || {antraege:{}}; U.settings = Object.assign({}, U.settings || {}, {anspruch: v, anspruchSet: true}); lsSet("urlaub.v1", U); } else { GT.toast("Urlaubstage bitte als Zahl eintragen – oder leer lassen."); $("suUrlaub").focus(); return; } }
+  const raw = $("suUrlaub").value.trim(); let urlaub = null;
+  if(raw){ const v = Number(raw.replace(",", ".")); if(v > 0 && v < 100) urlaub = v; else { GT.toast("Urlaubstage bitte als Zahl eintragen – oder leer lassen."); $("suUrlaub").focus(); return; } }
+  if(suRedo){ pendingMe = {name: n, urlaub}; showStage(2); return; }
+  if(urlaub != null){ const U = ls("urlaub.v1") || {antraege:{}}; U.settings = Object.assign({}, U.settings || {}, {anspruch: urlaub, anspruchSet: true}); lsSet("urlaub.v1", U); }
   gsave({name: n});
   if(GT.lock.config()) finishAll(); else showStage(2);
 }
+function cancelSetup(){ suRedo = false; pendingMe = null; $("setupSheet").hidden = true; GT.toast("Abgebrochen – nichts wurde geändert."); }
+document.querySelectorAll("#setupSheet .su-cancel").forEach(b => b.addEventListener("click", cancelSetup));
+$("setupAgain").addEventListener("click", () => {
+  suRedo = true; pendingMe = null; const g = gset(); $("suName").value = g.name || "";
+  const U = ls("urlaub.v1"); $("suUrlaub").value = U && U.settings && U.settings.anspruchSet ? String(U.settings.anspruch).replace(".", ",") : "";
+  $("suOk").disabled = !$("suName").value.trim(); showStage(1);
+});
+$("suKeepOk").addEventListener("click", finishAll);
+$("suKeepNew").addEventListener("click", async () => { if(!(await GT.lock.verify("Sperre neu festlegen"))) return; $("suKeep").hidden = true; $("suLockPick").hidden = false; });
 async function suLock(type){
   if(!(await GT.lock.setup(type))) return;
   if(await GT.lock.bioAvailable()){ $("suLockPick").hidden = true; $("suBio").hidden = false; }
@@ -1067,7 +1152,10 @@ $("suBioOn").addEventListener("click", async () => {
 $("suBioNo").addEventListener("click", finishAll);
 ["suName","suUrlaub"].forEach(id => $(id).addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); if(id === "suName") $("suUrlaub").focus(); else finishSetup(); } }));
 $("suName").addEventListener("input", () => { $("suOk").disabled = !$("suName").value.trim(); });
-{ const st = setupStage(); if(st) showStage(st); else setTimeout(() => { if($("vSet").hidden) startTour(false); }, 700); }
+(async () => {
+  if(needInstallHint()) await showInstall();
+  const st = setupStage(); if(st) showStage(st); else setTimeout(() => { if($("vSet").hidden) startTour(false); }, 700);
+})();
 $("tourAgain").addEventListener("click", () => { GT.tourReset(); showSet(false); setTimeout(() => startTour(true), 300); });
 window.addEventListener("pageshow", () => { const l = look(); window.WB_look(l.d, l.m); summary(); renderLook(); renderModules(); });
 // Urlaubstage pro Jahr (gilt für "Urlaub beantragen")
