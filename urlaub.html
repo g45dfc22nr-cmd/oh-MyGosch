@@ -199,6 +199,13 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
     try{ if(document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1){ if(ev) ev.preventDefault(); history.back(); return false; } }catch(e){}
     return true;
   }
+  // App nach mehr als 15 Minuten im Hintergrund wieder auf dem Startbildschirm öffnen
+  let hiddenAt = 0;
+  document.addEventListener("visibilitychange", () => {
+    if(document.hidden){ hiddenAt = Date.now(); return; }
+    if(hiddenAt && Date.now() - hiddenAt > 15*60*1000 && !/(^|\/)(index\.html)?$/.test(location.pathname)){ location.replace("index.html"); }
+    hiddenAt = 0;
+  });
   window.GT = {toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home};
   persist(); registerSW();
 })();
@@ -278,10 +285,23 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
 
 <div class="bar" id="bar" hidden><div class="in"><button class="btn primary" type="button" id="makeBtn">Antrag erstellen</button></div></div>
 
+<div class="sheet-bg" id="setup" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="suT">
+    <h2 id="suT">Urlaubstage einrichten</h2>
+    <p class="note">Wie viele Urlaubstage hast du pro Jahr? Das brauchst du nur einmal einzutragen. Ändern kannst du es später jederzeit über „Anspruch“.</p>
+    <div class="field"><label for="suTage">Urlaubstage pro Jahr</label><input id="suTage" class="num" inputmode="decimal" placeholder="Tage" autocomplete="off"></div>
+    <div class="row">
+      <a class="btn" href="index.html" onclick="return GT.home(event)" style="display:inline-flex;align-items:center;text-decoration:none;color:var(--ink)">Zurück</a>
+      <span style="flex:1"></span>
+      <button class="btn primary" type="button" id="suOk">Speichern</button>
+    </div>
+  </div>
+</div>
+
 <div class="sheet-bg" id="sheet" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shT">
     <h2 id="shT">Unterschreiben</h2>
-    <p class="note">Unterschreib mit dem Finger. Datum und Uhrzeit werden beim Erstellen gestempelt. Tipp: Wenn du im Stundenzettel eine Unterschrift speicherst, wird sie hier automatisch verwendet.</p>
+    <p class="note">Unterschreib mit dem Finger. Datum und Uhrzeit werden beim Erstellen gestempelt. Tipp: Wenn du auf der Startseite unter Einstellungen (Zahnrad) eine Unterschrift speicherst, wird sie hier automatisch verwendet.</p>
     <canvas class="sigpad" id="pad" width="900" height="300"></canvas>
     <div class="row">
       <button class="btn" type="button" id="padClear">Feld leeren</button>
@@ -308,7 +328,7 @@ const numDE = n => { if(n==null || n==="" || isNaN(n)) return ""; const r = Math
 const parseNum = s => { s = String(s ?? "").trim(); if(!s) return null; const n = Number(s.replace(",",".")); return isNaN(n) ? null : n; };
 
 // ---------- Daten ----------
-const DEF = {tage:[1,2,3,4], std:9.25, anspruch:22};
+const DEF = {tage:[1,2,3,4], std:9.25, anspruch:0};
 let store = Object.assign({antraege:{}, settings:{...DEF}}, ls(KEY) || {});
 store.settings = Object.assign({...DEF}, store.settings || {});
 const save = () => { if(!lsSet(KEY, store)) GT.toast("Speichern fehlgeschlagen: Der Speicher ist voll."); };
@@ -352,10 +372,10 @@ function renderKonto(){
     if(a.uVon && parseD(a.uVon).getFullYear() === y){ const t = parseNum(a.uTage) || 0; b += t; if(a.status === "genehmigt") g += t; }
     if(a.oVon && parseD(a.oVon).getFullYear() === y) h += parseNum(a.oStd) || 0;
   }
-  const an = Number(store.settings.anspruch) || 0, rest = an - b;
+  const set = !!store.settings.anspruchSet, an = Number(store.settings.anspruch) || 0, rest = an - b;
   $("kontoTitle").textContent = "Urlaubskonto " + y;
-  $("kAnspruch").textContent = numDE(an); $("kBeantragt").textContent = numDE(b); $("kRest").textContent = numDE(rest);
-  $("kRestBox").className = "k " + (rest < 0 ? "warn" : "ok");
+  $("kAnspruch").textContent = set ? numDE(an) : "–"; $("kBeantragt").textContent = numDE(b); $("kRest").textContent = set ? numDE(rest) : "–";
+  $("kRestBox").className = "k " + (!set ? "" : rest < 0 ? "warn" : "ok");
   $("kNote").textContent = store.settings.anspruchSet ? (g ? numDE(g) + " Tage genehmigt" : "Noch nichts genehmigt") + (h ? " · " + numDE(h) + " h Überstunden-Freizeit beantragt" : "") + "." : "Tippe auf „Anspruch“ und trag deine Urlaubstage pro Jahr ein.";
 }
 function label(a){
@@ -385,7 +405,7 @@ $("list").addEventListener("click", ev => { const b = ev.target.closest("[data-i
 
 // ---------- Einstellungen ----------
 const WD = ["Mo","Di","Mi","Do","Fr","Sa","So"];
-function renderSettings(){ $("setAnspruch").value = numDE(store.settings.anspruch); }
+function renderSettings(){ $("setAnspruch").value = store.settings.anspruchSet ? numDE(store.settings.anspruch) : ""; $("setAnspruch").placeholder = "Tage"; }
 $("setAnspruch").addEventListener("change", () => { const v = parseNum($("setAnspruch").value); if(v != null && v >= 0 && v < 100){ store.settings.anspruch = v; store.settings.anspruchSet = true; save(); renderKonto(); GT.toast("Urlaubsanspruch: " + numDE(v) + " Tage pro Jahr"); } renderSettings(); });
 $("kAnspruchBtn").addEventListener("click", () => { $("setBox").open = true; const i = $("setAnspruch"); i.scrollIntoView({block:"center"}); setTimeout(() => { i.focus(); i.select(); }, 250); });
 
@@ -561,6 +581,12 @@ async function makePdf(){
 }
 
 renderSettings(); renderList(); show("list");
+// Beim ersten Öffnen: Urlaubstage einrichten
+function setupDone(){ const v = parseNum($("suTage").value); if(v == null || v <= 0 || v >= 100){ GT.toast("Bitte deine Urlaubstage pro Jahr eintragen."); $("suTage").focus(); return; }
+  store.settings.anspruch = v; store.settings.anspruchSet = true; save(); renderKonto(); renderSettings(); $("setup").hidden = true; GT.toast("Urlaubsanspruch: " + numDE(v) + " Tage pro Jahr"); }
+$("suOk").addEventListener("click", setupDone);
+$("suTage").addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); setupDone(); } });
+if(!store.settings.anspruchSet){ $("setup").hidden = false; setTimeout(() => $("suTage").focus(), 300); }
 window.addEventListener("pageshow", () => { try{ window.WB_look(localStorage.getItem("app.design")||"gosch", localStorage.getItem("app.mode")||"system"); }catch(e){} });
 })();
 </script>

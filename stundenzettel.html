@@ -571,7 +571,7 @@ let mode="pending";        // pending | db | local
 let db=null, downloads=null;
 const openExtras=new Set();
 let openDays=null; // Set of expanded day keys
-function defaultOpenDays(){const o=new Set();const t=new Date();if(ymd(mondayOf(t))===curId)o.add(DAYS[(t.getDay()+6)%7].k);return o}
+function defaultOpenDays(){const o=new Set();const t=new Date();if(ymd(mondayOf(t))===curId&&sollTag(t).soll>0)o.add(DAYS[(t.getDay()+6)%7].k);return o}
 
 function emptyReport(id){const r={week:id,carry:{},days:{}};DAYS.forEach(d=>r.days[d.k]=[]);return r}
 function normReport(r,id){const o=emptyReport(id);if(!r)return o;o.carry={...(r.carry||{})};DAYS.forEach(d=>{o.days[d.k]=Array.isArray(r.days&&r.days[d.k])?r.days[d.k].map(e=>({...e})):[]});o.updatedAt=r.updatedAt;if(r.sig){o.sig=r.sig;o.signedAt=r.signedAt;o.sigStale=!!r.sigStale}return o}

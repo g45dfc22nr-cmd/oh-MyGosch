@@ -132,7 +132,7 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
   </div>
   <p class="note" id="noneNote" hidden>Alle Bereiche sind ausgeblendet. Schalte unten unter „Einstellungen“ einen Bereich ein.</p>
 
-  <p class="ver">Oh-MyGosch · Version 2.4</p>
+  <p class="ver">Oh-MyGosch · Version 2.5</p>
 </main>
 <main class="wrap" id="vSet" hidden>
   <div><button type="button" class="backbtn" id="setBack">‹ Zurück</button></div>
@@ -174,7 +174,7 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
       <label class="check"><input type="checkbox" id="m-wb"> Stundenzettel</label>
       <label class="check"><input type="checkbox" id="m-ur"> Urlaub beantragen</label>
       <h3>Datensicherung</h3>
-      <p class="note">Alles liegt nur auf diesem iPhone. „Alles sichern“ speichert Stundenzettel, Brandmeldeanlagen mit Grundrissen und Urlaubsanträge in eine Datei. Leg sie z. B. in „Dateien → Auf meinem iPhone“ ab.</p>
+      <p class="note">Alles liegt nur auf diesem Gerät. „Alles sichern“ speichert Stundenzettel, Brandmeldeanlagen mit Grundrissen und Urlaubsanträge in eine Datei. Leg sie z. B. in deinen Dateien oder Downloads auf dem Gerät ab.</p>
       <div class="row">
         <button class="btn primary" type="button" id="bkAll">Alles sichern</button>
         <button class="btn" type="button" id="bkLoad">Sicherung einlesen</button>
@@ -187,7 +187,7 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
       <p class="note">Eingelesen werden Sicherungen aus dieser App, aus dem alten Wochenbericht und aus der alten Brandmelde-App. Einträge mit gleicher Kennung werden ersetzt, alle anderen bleiben.</p>
     </div>
   </section>
-  <p class="ver">Oh-MyGosch · Version 2.4</p>
+  <p class="ver">Oh-MyGosch · Version 2.5</p>
 </main>
 <script>/* Gemeinsame Helfer für alle Seiten von Oh-MyGosch: Dateien weitergeben, Gerätespeicher für Grundrisse. */
 (function(){
@@ -316,10 +316,11 @@ function summary(){
     if(mg){ const w = document.createElement("span"); w.className = "warn"; w.style.display = "inline"; w.textContent = " · " + mg + (mg===1?" offener Mangel":" offene Mängel"); el.append(w); }
   }
   const U = ls("urlaub.v1");
-  if(U && U.antraege && Object.keys(U.antraege).length){
+  if(!(U && U.settings && U.settings.anspruchSet)){ $("s-ur").textContent = "Urlaubstage noch einrichten"; }
+  else {
     const y = now.getFullYear(); let t = 0;
     for(const a of Object.values(U.antraege)){ if(a.status === "abgelehnt" || !a.uVon || Number(a.uVon.slice(0,4)) !== y) continue; t += Number(String(a.uTage).replace(",", ".")) || 0; }
-    const an = Number((U.settings||{}).anspruch) || 22; const r = Math.round((an - t)*100)/100;
+    const an = Number(U.settings.anspruch) || 0; const r = Math.round((an - t)*100)/100;
     $("s-ur").textContent = y + ": noch " + String(r).replace(".", ",") + " von " + an + " Urlaubstagen";
   }
   const name = (set.name || "").trim().split(/\s+/)[0];
