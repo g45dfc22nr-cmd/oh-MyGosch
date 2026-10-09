@@ -473,6 +473,8 @@ body.has-appnav{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 :root[data-design="neon"] nav.tabs:has(> .in) button{color:#8e95ba}
 :root[data-design="neon"] nav.tabs:has(> .in) button[aria-current="page"]{background:linear-gradient(100deg,var(--neon-blue,#2f7bff),var(--neon-cyan,#35c8ff));color:#fff}
 :root[data-design] .fab{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+/* Kleine Zusatzangabe neben dem Seitentitel ausblenden */
+.pagehead .ctx,header.panel .strip > small{display:none!important}
 
 /* Zurück-Knopf bleibt beim Scrollen oben links stehen */
 .backbtn{position:fixed!important;z-index:40;top:calc(10px + env(safe-area-inset-top,0px));left:max(16px,calc(50vw - 304px));margin:0!important;box-shadow:0 6px 18px rgba(0,30,60,.18)}
