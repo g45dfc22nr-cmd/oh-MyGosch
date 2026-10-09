@@ -11,7 +11,7 @@
 <meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
-<title>Leitfäden – Oh-MyGosch</title>
+<title>SAT-Finder – Oh-MyGosch</title>
 <script>
 (function(){var d="modern",m="system";try{d=localStorage.getItem("app.design")||"modern";m=localStorage.getItem("app.mode")||"system"}catch(e){}
 window.WB_look=function(design,mode){if(design!=="neon")design="modern";var el=document.documentElement;el.setAttribute("data-design",design);if(mode==="light"||mode==="dark")el.setAttribute("data-mode",mode);else el.removeAttribute("data-mode")};
@@ -36,49 +36,61 @@ window.WB_look(d,m);})();
 html{width:1px;min-width:100%;overflow-x:clip;background:var(--bg)}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 body{margin:0;width:100%;background:var(--bg);color:var(--ink);font:16px/1.45 var(--f-body);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;touch-action:pan-y;overflow-x:clip;font-variant-numeric:tabular-nums}
-button,input,textarea{font:inherit;color:inherit}
+button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .wrap{max-width:640px;margin:0 auto;padding-inline:16px;padding-block:12px 120px;display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
 .backline{display:flex}
 .backbtn{display:inline-flex;align-items:center;height:34px;padding:0 14px;border:0;border-radius:99px;background:var(--accent);color:var(--accent-ink);font:650 14px/1 var(--f-body);text-decoration:none}
-:root[data-design="gosch"] .backbtn{border-radius:6px}
 h1{margin:4px 2px 0;font:800 30px/1.1 var(--f-display);letter-spacing:-.02em}
-:root[data-design="gosch"] h1{color:var(--accent)}
 .lead{margin:-6px 2px 0;color:var(--muted)}
-.search input{width:100%;height:46px;border:1px solid var(--line);border-radius:var(--rs);background:var(--surface);color:var(--ink);padding:0 14px;font:inherit;font-size:16px}
-.hits{font-size:13px;color:var(--muted);margin:-4px 2px 0}
-details{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);min-width:0}
-summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;gap:12px;align-items:center}
-summary::-webkit-details-marker{display:none}
-summary .ic{flex:none;width:38px;height:38px;border-radius:var(--rs);background:var(--accent);color:var(--accent-ink);display:grid;place-items:center}
-:root[data-design="neon"] summary .ic{background:linear-gradient(135deg,var(--neon-blue),var(--neon-cyan));color:#fff}
-summary .ic svg{width:22px;height:22px}
-summary .t{min-width:0;flex:1}
-summary b{display:block;font:700 17px/1.25 var(--f-display)}
-summary small{display:block;color:var(--muted);font-size:13px;line-height:1.3}
-summary::after{content:"";flex:none;width:9px;height:9px;border-right:2.5px solid var(--muted);border-bottom:2.5px solid var(--muted);transform:rotate(45deg);margin-top:-4px}
-details[open] summary::after{transform:rotate(-135deg);margin-top:4px}
-.body{padding:0 16px 16px;display:grid;gap:12px;min-width:0}
-.body h3{margin:6px 0 -4px;font:700 15px/1.3 var(--f-body)}
-.body p{margin:0}
-.body ul,.body ol{margin:0;padding-left:1.25em;display:grid;gap:6px}
-.steps{list-style:none;padding:0!important}
-.steps li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start;counter-increment:s}
-.steps{counter-reset:s}
-.steps li::before{content:counter(s);width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font:700 14px/26px var(--f-body);text-align:center}
-.box{border-radius:var(--rs);padding:10px 12px;font-size:15px}
-.box.warn{background:var(--danger-soft);border-left:4px solid var(--danger)}
-.box.note{background:var(--accent-soft)}
-.tbl{overflow-x:auto}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;display:grid;gap:12px;min-width:0}
+.card h2{margin:0;font:700 17px/1.25 var(--f-display)}
+.note{margin:0;font-size:13px;color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{height:44px;padding:0 16px;border-radius:99px;border:0;background:var(--sunk);color:var(--ink);font-weight:650;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+:root[data-design="neon"] .btn.primary{background:linear-gradient(100deg,var(--neon-blue),var(--neon-cyan));color:#fff}
+.btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.btn.wide{width:100%;height:52px;font-size:16px}
+.coords{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.coords label{display:grid;gap:4px;font-size:13px;color:var(--muted);font-weight:600}
+.coords input{height:44px;border:1px solid transparent;border-radius:var(--rs);background:var(--sunk);padding:0 12px;font-size:16px;width:100%;color:var(--ink)}
+.coords input:focus{outline:none;border-color:var(--accent)}
+.locinfo{font-size:14px;color:var(--muted)}
+.locinfo b{color:var(--ink)}
+.sats{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.sats::-webkit-scrollbar{display:none}
+.sats button{flex:none;border:0;border-radius:99px;background:var(--sunk);color:var(--ink);height:38px;padding:0 14px;font-weight:650;font-size:14px;white-space:nowrap}
+.sats button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+:root[data-design="neon"] .sats button[aria-pressed="true"]{background:linear-gradient(100deg,var(--neon-blue),var(--neon-cyan));color:#fff}
+.big{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.big div{background:var(--sunk);border-radius:var(--rs);padding:10px 8px;text-align:center;display:grid;gap:2px;min-width:0}
+.big small{font-size:12px;color:var(--muted);font-weight:600}
+.big b{font:800 26px/1.1 var(--f-display);letter-spacing:-.02em;color:var(--brand,var(--ink))}
+:root[data-design="neon"] .big b{color:var(--ink)}
+.big span{font-size:12px;color:var(--muted)}
+.howto{margin:0;padding-left:20px;display:grid;gap:6px;font-size:15px}
+.warnbox{background:var(--warn-soft,#fcf0e1);color:var(--ink);border-left:4px solid var(--warn,#b05f0b);border-radius:var(--rs);padding:10px 12px;font-size:14px}
+.sky{width:100%;height:auto;display:block;background:var(--sunk);border-radius:var(--rs)}
+.sky text{font:600 11px var(--f-body);fill:var(--muted)}
+.sky .sel text{fill:var(--ink);font-weight:800;font-size:12px}
 table{border-collapse:collapse;width:100%;font-size:14px}
-th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
-th{color:var(--muted);font-weight:650;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
-.fill{background:var(--sunk);border:1px dashed var(--line);border-radius:4px;padding:0 6px;color:var(--muted);font-size:14px}
-.tel{color:var(--accent);font-weight:700;text-decoration:none;white-space:nowrap}
-mark{background:#ffe58a;color:#14202b;border-radius:2px}
-.foot{font-size:13px;color:var(--muted);text-align:center;margin:0}
-.empty{text-align:center;color:var(--muted);padding:20px;margin:0}
+th,td{text-align:right;padding:7px 6px;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-weight:650;font-size:12px}
+tr.on td{font-weight:800;color:var(--accent)}
+tr.low td{color:var(--muted)}
+tbody tr{cursor:pointer}
+/* Kompass */
+.rosebox{display:grid;justify-items:center;gap:10px}
+.rose{width:min(78vw,300px);height:auto;display:block}
+.dirtxt{font:800 22px/1.25 var(--f-display);text-align:center;min-height:1.3em}
+.dirtxt.ok{color:var(--ok)}
+.dirsub{font-size:14px;color:var(--muted);text-align:center;margin:-6px 0 0}
+.level{width:min(70vw,260px);height:auto;display:block}
+.pill{display:inline-block;border-radius:99px;padding:3px 10px;font-size:13px;font-weight:700;background:var(--sunk);color:var(--muted)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
 
 /* ===== Design „Modern“: hellgrau, weiße Karten mit großen Rundungen, Pillen-Knöpfe in Fast-Schwarz ===== */
 :root[data-design="modern"]{--bg:#f3f5f8;--paper:#ffffff;--surface:#ffffff;--sunk:#eef2f6;--ink:#0d1b2e;--muted:#5d6b7c;--line:#d6dee8;--accent:#003769;--accent-ink:#ffffff;--accent-soft:#e2eaf3;--brand:#003769;--ok:#13804f;--ok-soft:#e3f3ea;--danger:#c62f2f;--danger-soft:#fbe9e9;--warn:#b05f0b;--warn-soft:#fcf0e1;--shadow:0 1px 2px rgba(0,55,105,.05),0 12px 32px rgba(0,55,105,.08);--navbg:#003769;--f-display:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--f-body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--f-mono:system-ui,-apple-system,sans-serif;--r:26px;--rs:16px;color-scheme:light}
@@ -658,549 +670,302 @@ header.top{position:static!important;border-bottom:0!important}
 </script>
 <main class="wrap">
   <div class="backline"><a class="backbtn" href="index.html" onclick="return GT.home(event)">‹ Zurück</a></div>
+  <div class="pagehead"><h1 id="pageTitle">SAT-Finder</h1></div>
+  <p class="lead" id="lead">Wohin zeigt die Schüssel? Richtung, Höhe und LNB-Drehung für deinen Standort.</p>
 
-  <div class="pagehead"><h1 id="pageTitle">Firma</h1></div>
-  <p class="lead" id="lead">Regeln und Abläufe im Betrieb – kurz nachschlagen, was gilt und wie es bei uns läuft.</p>
-  <div class="search"><input id="q" type="search" placeholder="Alle Leitfäden durchsuchen" autocomplete="off" aria-label="Leitfaden durchsuchen"></div>
-  <p class="hits" id="hits" hidden></p>
-  <div id="list" style="display:grid;gap:10px">
-
-  <details data-grp="notfall" data-k="notfall stromunfall unfall erste hilfe 112">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg></span><span class="t"><b>Notfall &amp; Unfall</b><small>Stromunfall, Erste Hilfe, Unfall melden</small></span></summary>
-    <div class="body">
-      <h3>Bei einem Stromunfall</h3>
-      <ol class="steps">
-        <li><span>Eigenschutz: Verunglückten nicht berühren, solange er noch unter Spannung stehen kann.</span></li>
-        <li><span>Stromkreis unterbrechen: Sicherung, Hauptschalter oder NOT-AUS. Bei Hochspannung Abstand halten und auf den Netzbetreiber warten.</span></li>
-        <li><span>Notruf <a class="tel" href="tel:112">112</a>. Sagen: Wo, was passiert, wie viele Verletzte, welche Verletzungen.</span></li>
-        <li><span>Erste Hilfe: Bewusstsein und Atmung prüfen, ggf. Herz-Lungen-Wiederbelebung, Defibrillator holen lassen.</span></li>
-        <li><span>Chef bzw. Büro sofort informieren.</span></li>
-      </ol>
-      <div class="box warn"><b>Auch nach einem „leichten“ Stromschlag zum Arzt.</b> Herzrhythmusstörungen können noch Stunden später auftreten. Dem Arzt sagen, dass es ein Stromunfall war (EKG).</div>
-      <h3>Jeden Unfall melden</h3>
-      <ul>
-        <li>Auch kleine Verletzungen ins Verbandbuch eintragen. Das ist wichtig für den Versicherungsschutz bei der BG.</li>
-        <li>Bei Arbeitsunfähigkeit zum Durchgangsarzt (D-Arzt), nicht zum Hausarzt.</li>
-        <li>Verbandkasten im Fahrzeug: <span class="fill">Ort/Prüfdatum eintragen</span></li>
-        <li>Ersthelfer im Betrieb: <span class="fill">Namen eintragen</span></li>
-      </ul>
+  <!-- ======== Ausrichten ======== -->
+  <section id="vCalc" style="display:grid;gap:14px">
+    <div class="card" id="locCard">
+      <h2>Standort</h2>
+      <button class="btn primary wide" type="button" id="gpsBtn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7"/></svg>Standort per GPS ermitteln</button>
+      <p class="locinfo" id="locInfo">Noch kein Standort.</p>
+      <div class="coords">
+        <label>Breite (Nord)<input id="lat" inputmode="decimal" placeholder="z. B. 54,32"></label>
+        <label>Länge (Ost)<input id="lon" inputmode="decimal" placeholder="z. B. 10,13"></label>
+      </div>
+      <p class="note">Ohne GPS: Koordinaten von Hand eintragen, z. B. aus der Karten-App (Ort lange gedrückt halten).</p>
     </div>
-  </details>
 
-  <details data-grp="firma" data-k="kunde auftreten baustelle sauber abnahme regiebericht">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg></span><span class="t"><b>Beim Kunden</b><small>Auftreten, Sauberkeit, Abnahme</small></span></summary>
-    <div class="body">
-      <ul>
-        <li>Pünktlich sein. Bei Verspätung Kunde oder Büro vorher anrufen.</li>
-        <li>Freundlich vorstellen, Arbeitskleidung mit Firmenlogo tragen.</li>
-        <li>In Wohnungen Schuhüberzieher benutzen, Boden abdecken, Möbel schützen.</li>
-        <li>Vor Abschalten kurz Bescheid sagen (Kühlschrank, Heizung, Computer, Aufzug).</li>
-        <li>Nichts versprechen, was nicht abgesprochen ist – Zusatzwünsche ans Büro geben.</li>
-        <li>Arbeitsplatz besenrein hinterlassen, Verpackung und Reste mitnehmen.</li>
-        <li>Zum Schluss mit dem Kunden durchgehen, was gemacht wurde, und abzeichnen lassen.</li>
-      </ul>
-      <div class="box note">Zusatzarbeiten immer auf dem Auftrag bzw. Regiebericht notieren – mit Zeit und Material. Was nicht aufgeschrieben ist, kann nicht abgerechnet werden.</div>
-    </div>
-  </details>
-
-  <details data-grp="firma" data-k="fahrzeug werkzeug leiter vde isoliert prüfplakette ladung">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></span><span class="t"><b>Fahrzeug &amp; Werkzeug</b><small>Pflege, Prüfung, Ladungssicherung</small></span></summary>
-    <div class="body">
-      <h3>Werkzeug</h3>
-      <ul>
-        <li>Nur VDE-isoliertes Werkzeug (1000 V) für Arbeiten an elektrischen Anlagen.</li>
-        <li>Vor Benutzung Sichtprüfung: Isolierung, Leitungen, Stecker. Defektes Werkzeug sofort aussortieren und melden.</li>
-        <li>Elektrische Geräte und Verlängerungen nur mit gültiger Prüfplakette.</li>
-        <li>Leitern vor jedem Einsatz prüfen: Holme, Sprossen, Füße, Spreizsicherung.</li>
-      </ul>
-      <h3>Fahrzeug</h3>
-      <ul>
-        <li>Ladung sichern – lose Kabeltrommeln und Leitern sind bei einer Vollbremsung Geschosse.</li>
-        <li>Fahrzeug sauber und aufgeräumt halten, Material nachfüllen.</li>
-        <li>Schäden, Warnleuchten und Unfälle sofort dem Büro melden.</li>
-        <li>Tanken: <span class="fill">Tankkarte / Regelung eintragen</span></li>
-      </ul>
-    </div>
-  </details>
-
-  <details data-grp="firma" data-k="material abfall entsorgung leuchtmittel batterien lager">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/></svg></span><span class="t"><b>Material &amp; Entsorgung</b><small>Materialschein, Abfall richtig trennen</small></span></summary>
-    <div class="body">
-      <ul>
-        <li>Verbautes Material auf dem Auftrag notieren – Menge und Artikel.</li>
-        <li>Material aus dem Lager: <span class="fill">Regelung eintragen</span></li>
-        <li>Kabelreste und Schrott sammeln und mit in den Betrieb nehmen.</li>
-        <li>Leuchtstoffröhren, Energiesparlampen, Batterien und Akkus getrennt sammeln – nicht in den Hausmüll.</li>
-        <li>Elektro-Altgeräte nur über die Firma entsorgen.</li>
-      </ul>
-    </div>
-  </details>
-
-  <details data-grp="firma" data-k="organisation krank krankmeldung urlaub stundenzettel arbeitszeit notdienst">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg></span><span class="t"><b>Organisation</b><small>Arbeitszeit, Krankmeldung, Urlaub, Notdienst</small></span></summary>
-    <div class="body">
-      <h3>Arbeitszeit</h3>
-      <ul>
-        <li>4-Tage-Woche, Montag bis Donnerstag, 9,25 Stunden pro Tag, 37 Stunden pro Woche.</li>
-        <li>Kernarbeitszeit 7:00–17:00 Uhr, Pausen 9:00–9:15 und 12:00–12:30 Uhr.</li>
-        <li>Stundenzettel jede Woche vollständig abgeben – in der App unter „Stundenzettel“. Abgabe bis <span class="fill">Tag/Uhrzeit eintragen</span></li>
-      </ul>
-      <h3>Krankmeldung</h3>
-      <ol class="steps">
-        <li><span>Am ersten Tag <b>vor Arbeitsbeginn</b> anrufen, nicht nur schreiben: <span class="fill">Nummer eintragen</span></span></li>
-        <li><span>Voraussichtliche Dauer mitteilen und sagen, welche Termine anstehen.</span></li>
-        <li><span>Ab wann eine Arbeitsunfähigkeitsbescheinigung nötig ist: <span class="fill">laut Arbeitsvertrag eintragen</span></span></li>
-      </ol>
-      <h3>Urlaub</h3>
-      <ul>
-        <li>Urlaub in der App unter „Urlaub beantragen“ erstellen und abgeben.</li>
-        <li>Rechtzeitig beantragen – erst nach Genehmigung buchen.</li>
-      </ul>
-      <h3>Notdienst</h3>
-      <ul>
-        <li>Plan und Übergabe: <span class="fill">Regelung eintragen</span></li>
-        <li>Einsätze im Stundenzettel unter „Notdienst“ eintragen.</li>
-      </ul>
-    </div>
-  </details>
-
-  <details data-grp="firma" data-k="kontakte telefon büro chef notdienst großhandel netzbetreiber">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span><span class="t"><b>Wichtige Kontakte</b><small>Büro, Chef, Notdienst, Großhandel</small></span></summary>
-    <div class="body">
-      <div class="tbl"><table>
-        <tbody>
-          <tr><td>Notruf</td><td><a class="tel" href="tel:112">112</a></td></tr>
-          <tr><td>Giftnotruf Nord</td><td><a class="tel" href="tel:+4955119240">0551 19240</a></td></tr>
-          <tr><td>Büro</td><td><span class="fill">Nummer eintragen</span></td></tr>
-          <tr><td>Chef</td><td><span class="fill">Nummer eintragen</span></td></tr>
-          <tr><td>Notdienst-Handy</td><td><span class="fill">Nummer eintragen</span></td></tr>
-          <tr><td>Großhandel</td><td><span class="fill">Nummer eintragen</span></td></tr>
-          <tr><td>Netzbetreiber Störung</td><td><span class="fill">Nummer eintragen</span></td></tr>
-        </tbody>
-      </table></div>
-      <p class="hits" style="margin:0">Nummer antippen zum Anrufen.</p>
-    </div>
-  </details>
-
-  <details data-grp="elektro" data-k="sicherheit 5 sicherheitsregeln freischalten spannungsfreiheit erden psa">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span><span class="t"><b>Die 5 Sicherheitsregeln</b><small>Vor jeder Arbeit an elektrischen Anlagen</small></span></summary>
-    <div class="body">
-      <p>Nach DIN VDE 0105-100. Immer in dieser Reihenfolge, auch wenn es „nur kurz“ ist.</p>
-      <ol class="steps">
-        <li><span><b>Freischalten</b> – allpolig und allseitig trennen.</span></li>
-        <li><span><b>Gegen Wiedereinschalten sichern</b> – Sicherungen raus und mitnehmen, LS sperren, Schild „Nicht schalten – es wird gearbeitet“ anbringen.</span></li>
-        <li><span><b>Spannungsfreiheit feststellen</b> – allpolig, mit zweipoligem Spannungsprüfer. Prüfer vorher und nachher an einer bekannten Spannungsquelle testen.</span></li>
-        <li><span><b>Erden und kurzschließen</b> – in Niederspannung, wenn Gefahr der Rückspeisung besteht (z. B. PV, Notstrom, Freileitung). Erst erden, dann kurzschließen.</span></li>
-        <li><span><b>Benachbarte, unter Spannung stehende Teile abdecken oder abschranken.</b></span></li>
-      </ol>
-      <div class="box note">Wieder einschalten in umgekehrter Reihenfolge – erst wenn alle Kollegen Bescheid wissen und der Arbeitsbereich frei ist.</div>
-      <h3>Achtung bei</h3>
-      <ul>
-        <li><b>PV-Anlagen:</b> DC-Seite lässt sich bei Tageslicht nicht freischalten. Nur mit Unterweisung arbeiten.</li>
-        <li><b>Speichern, USV, Notstrom:</b> können zurückspeisen, auch wenn das Netz aus ist.</li>
-        <li><b>Neutralleiter:</b> kann Spannung führen. N nie trennen, solange Außenleiter eingeschaltet sind.</li>
-        <li><b>Arbeiten unter Spannung:</b> nur mit Ausbildung, Auftrag und passender PSA – sonst nie.</li>
-      </ul>
-      <h3>Persönliche Schutzausrüstung</h3>
-      <ul>
-        <li>Sicherheitsschuhe (S3) auf jeder Baustelle.</li>
-        <li>Helm auf Baustellen mit Gerüst, Kran oder Arbeiten über Kopf.</li>
-        <li>Schutzbrille beim Bohren, Stemmen und Schlitzen.</li>
-        <li>Gehörschutz beim Stemmen und Schlitzen.</li>
-        <li>Isolierte Handschuhe und Gesichtsschutz beim Arbeiten in der Nähe aktiver Teile.</li>
-      </ul>
-    </div>
-  </details>
-
-  <details data-grp="elektro" data-k="prüfen messen erstprüfung isolationswiderstand rcd fi schleifenimpedanz protokoll dguv v3 vde 0100-600">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4M12 2v3"/></svg></span><span class="t"><b>Prüfen &amp; Messen</b><small>Erstprüfung, Wiederholungsprüfung, Protokoll</small></span></summary>
-    <div class="body">
-      <p>Keine Anlage geht ohne Prüfung und Protokoll in Betrieb. Erstprüfung nach DIN VDE 0100-600, in dieser Reihenfolge:</p>
-      <ol class="steps">
-        <li><span><b>Besichtigen</b> – Auswahl der Betriebsmittel, Querschnitte, Schutzeinrichtungen, Beschriftung, keine Schäden, Abdeckungen vollständig.</span></li>
-        <li><span><b>Erproben &amp; Messen</b> – siehe Tabelle. Prüftaste der RCDs betätigen, Funktion von Schaltern und Not-Aus testen.</span></li>
-        <li><span><b>Dokumentieren</b> – Prüfprotokoll vollständig ausfüllen, unterschreiben, dem Büro geben.</span></li>
-      </ol>
-      <div class="tbl"><table>
-        <thead><tr><th>Messung</th><th>Worauf achten</th></tr></thead>
-        <tbody>
-          <tr><td>Durchgängigkeit Schutzleiter</td><td>Niederohmig zu jeder PE-Klemme, Potentialausgleich</td></tr>
-          <tr><td>Isolationswiderstand</td><td>Bis 500 V Nennspannung: Messspannung 500 V DC, Grenzwert ≥ 1 MΩ. Verbraucher vorher abklemmen.</td></tr>
-          <tr><td>Schleifenimpedanz Z<sub>S</sub></td><td>Abschaltbedingung der Schutzeinrichtung muss erfüllt sein</td></tr>
-          <tr><td>RCD / FI</td><td>Auslösen bei I<sub>Δn</sub> innerhalb der zulässigen Zeit, Berührungsspannung</td></tr>
-          <tr><td>Drehfeld</td><td>Rechtsdrehfeld an Drehstromsteckdosen</td></tr>
-          <tr><td>Spannung &amp; Polarität</td><td>Richtige Leiter an Schalter und Steckdose</td></tr>
-        </tbody>
-      </table></div>
-      <h3>Wiederholungsprüfungen</h3>
-      <ul>
-        <li>Nach DGUV Vorschrift 3 und DIN VDE 0105-100 (Anlagen) bzw. DIN VDE 0701-0702 (Geräte).</li>
-        <li>Fristen richten sich nach Gefährdungsbeurteilung des Betreibers. Bei uns: <span class="fill">Standardfristen eintragen</span></li>
-        <li>Messgerät nur mit gültiger Kalibrierung benutzen. Prüfplakette am Gerät checken.</li>
-      </ul>
-    </div>
-  </details>
-
-  <details data-grp="elektro" data-k="installation zonen din 18015 farben aderfarben rcd afdd überspannung querschnitt verteiler">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span><span class="t"><b>Installation</b><small>Installationszonen, Aderfarben, Schutzeinrichtungen</small></span></summary>
-    <div class="body">
-      <h3>Installationszonen (DIN 18015-3)</h3>
-      <div class="tbl"><table>
-        <thead><tr><th>Zone</th><th>Lage</th></tr></thead>
-        <tbody>
-          <tr><td>Waagerecht oben</td><td>15–45 cm unter der fertigen Decke, Vorzugsmaß 30 cm</td></tr>
-          <tr><td>Waagerecht unten</td><td>15–45 cm über dem fertigen Fußboden, Vorzugsmaß 30 cm</td></tr>
-          <tr><td>Senkrecht</td><td>10–30 cm neben Türen, Fenstern und Raumecken, Vorzugsmaß 15 cm</td></tr>
-        </tbody>
-      </table></div>
-      <p>Leitungen nur in den Zonen, senkrecht oder waagerecht – nie schräg. So weiß jeder, wo er nicht bohren darf.</p>
-      <h3>Aderfarben</h3>
-      <div class="tbl"><table>
-        <tbody>
-          <tr><td>Schutzleiter PE</td><td>grün-gelb – nie für etwas anderes verwenden</td></tr>
-          <tr><td>Neutralleiter N</td><td>blau</td></tr>
-          <tr><td>Außenleiter L1 / L2 / L3</td><td>braun / schwarz / grau</td></tr>
-        </tbody>
-      </table></div>
-      <h3>Schutzeinrichtungen</h3>
-      <ul>
-        <li><b>RCD 30 mA</b> für Steckdosen bis 32 A, die von Laien benutzt werden, und für Endstromkreise mit Leuchten in Wohnungen (DIN VDE 0100-410).</li>
-        <li><b>Überspannungsschutz</b> in Neuanlagen und bei wesentlichen Änderungen vorsehen (DIN VDE 0100-443 / -534).</li>
-        <li><b>Brandschutzschalter (AFDD)</b> nach DIN VDE 0100-420 prüfen, z. B. in Schlafräumen und Räumen mit erhöhter Brandgefahr.</li>
-        <li>Querschnitt und Absicherung immer nach Verlegeart und Häufung bestimmen – nicht nach Gefühl.</li>
-      </ul>
-      <h3>Verteiler &amp; Zählerplatz</h3>
-      <ul>
-        <li>Zählerplatz nach den TAB des zuständigen Netzbetreibers. Anmeldung beim Netzbetreiber nicht vergessen.</li>
-        <li>Jeder Stromkreis im Verteiler beschriftet, Stromkreisliste in die Tür.</li>
-        <li>Änderungen in Plänen eintragen und dem Büro mitgeben.</li>
-      </ul>
-    </div>
-  </details>
-
-  <details data-grp="bma" data-k="bma vorbereitung anmelden betreiber feuerwehr leitstelle ue übertragungseinrichtung revision">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5V3h6v1.5M9 11l2 2 4-4M9 17h6"/></svg></span><span class="t"><b>Vor der Prüfung</b><small>Anmelden, ÜE abschalten, Steuerungen sichern</small></span></summary>
-    <div class="body">
-      <ol class="steps">
-        <li><span><b>Beim Betreiber anmelden</b> – Ansprechpartner, Zugang zu allen Räumen, Schlüssel. Nutzer vorwarnen, dass Signalgeber ertönen können.</span></li>
-        <li><span><b>Leitstelle informieren</b> und die <b>Übertragungseinrichtung (ÜE) abschalten</b>, damit kein Alarm zur Feuerwehr geht. Zeit und Namen des Gesprächspartners notieren.</span></li>
-        <li><span><b>Brandfallsteuerungen sichern:</b> Aufzüge, RWA, Türfeststeller, Lüftung, Löschanlagen, Gaswarnanlagen – nach Absprache abschalten oder in Revision setzen.</span></li>
-        <li><span><b>Zentrale prüfen:</b> anstehende Störungen und Abschaltungen notieren, bevor du etwas veränderst.</span></li>
-        <li><span><b>Gruppen in Revision schalten</b>, die du prüfst – nicht die ganze Anlage, wenn es nicht nötig ist.</span></li>
-      </ol>
-      <div class="box warn"><b>Nie eine Löschanlage auslösen lassen.</b> Löschbereiche immer vorher mit dem Betreiber bzw. Errichter der Löschanlage absichern.</div>
-    </div>
-  </details>
-
-  <details data-grp="bma" data-k="bma fristen inspektion wartung vierteljährlich jährlich din vde 0833 14675">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg></span><span class="t"><b>Fristen</b><small>Inspektion, Wartung, Melderprüfung</small></span></summary>
-    <div class="body">
-      <div class="tbl"><table>
-        <thead><tr><th>Was</th><th>Wie oft</th></tr></thead>
-        <tbody>
-          <tr><td>Inspektion</td><td>vierteljährlich (4× im Jahr)</td></tr>
-          <tr><td>Wartung</td><td>jährlich</td></tr>
-          <tr><td>Automatische Melder</td><td>jeder Melder mindestens 1× im Jahr – meist ¼ der Melder pro Quartal</td></tr>
-          <tr><td>Handfeuermelder</td><td>jeder mindestens 1× im Jahr</td></tr>
-          <tr><td>Akkus</td><td>bei jeder Inspektion prüfen, Tausch nach Herstellerangabe (oft alle 4 Jahre)</td></tr>
-        </tbody>
-      </table></div>
-      <p>Grundlage sind DIN VDE 0833-1/-2 und DIN 14675. Abweichende Vorgaben aus Brandschutzkonzept, Baugenehmigung oder Versicherer (z. B. VdS) gehen vor.</p>
-      <div class="box note">In der App: Unter Brandmeldeanlagen → Anlage → <b>Quartale</b> verteilt die App die Melder automatisch auf Q1–Q4.</div>
-    </div>
-  </details>
-
-  <details data-grp="bma" data-k="bma melder prüfen rauchmelder prüfgas wärmemelder handfeuermelder druckknopf mehrkriterien ansaug linienmelder">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.5M12 18v2.5M3.5 12H6M18 12h2.5"/></svg></span><span class="t"><b>Melder prüfen</b><small>Rauch, Wärme, Handfeuermelder, Sichtprüfung</small></span></summary>
-    <div class="body">
-      <div class="tbl"><table>
-        <thead><tr><th>Melder</th><th>Prüfung</th></tr></thead>
-        <tbody>
-          <tr><td>Rauchmelder (O)</td><td>Prüfaerosol mit Prüfstange/Prüfgerät, nicht direkt aufsprühen</td></tr>
-          <tr><td>Wärmemelder (W)</td><td>Wärmeprüfgerät – keine offene Flamme</td></tr>
-          <tr><td>Mehrkriterienmelder (OT)</td><td>alle Sensoren nach Herstellerangabe auslösen</td></tr>
-          <tr><td>Handfeuermelder</td><td>mit Prüfschlüssel auslösen, Scheibe/Klappe heil?</td></tr>
-          <tr><td>Linien-/Ansaugrauchmelder</td><td>nach Prüfverfahren des Herstellers</td></tr>
-        </tbody>
-      </table></div>
-      <h3>Bei jedem Melder</h3>
-      <ul>
-        <li>Auslösen, an der Zentrale <b>richtige Gruppe und Meldernummer</b> kontrollieren, danach zurückstellen.</li>
-        <li>Sichtprüfung: verschmutzt, beschädigt, verdreckt, übermalt, Sockel fest?</li>
-        <li><b>Staubschutzkappe</b> nach Bauarbeiten entfernt?</li>
-        <li>Freiraum unter dem Melder (mind. 0,5 m) und keine Umbauten, die den Melder abschirmen.</li>
-        <li>Meldertext und Einbauort stimmen mit Laufkarte und Zentrale überein?</li>
-      </ul>
-      <div class="box note">In der App: Melder abhaken, bei Problemen „Mangel“ tippen und kurz beschreiben – mit Datum, Uhrzeit und Prüfer.</div>
-    </div>
-  </details>
-
-  <details data-grp="bma" data-k="bma zentrale bmz energieversorgung akku notstrom überbrückung signalgeber schallpegel db">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h3M14 11h2M8 15h3M14 15h2"/></svg></span><span class="t"><b>Zentrale, Akkus &amp; Signalgeber</b><small>Energieversorgung, Überbrückung, Schallpegel</small></span></summary>
-    <div class="body">
-      <h3>Zentrale (BMZ)</h3>
-      <ul>
-        <li>Anzeigen, Bedienteil, Drucker und Uhrzeit prüfen.</li>
-        <li>Netzausfall simulieren: Umschaltung auf Akku muss klappen, Störung muss angezeigt werden.</li>
-        <li>Ereignisspeicher auslesen und mit deinen Prüfungen abgleichen.</li>
-      </ul>
-      <h3>Akkus</h3>
-      <ul>
-        <li>Spannung messen, Sichtprüfung (aufgebläht, ausgelaufen, Klemmen fest).</li>
-        <li>Einbaudatum auf dem Akku vermerken.</li>
-        <li>Kapazität muss für die geforderte Überbrückungszeit plus Alarmbetrieb reichen – Wert aus Konzept bzw. Herstellerunterlagen.</li>
-      </ul>
-      <h3>Akustische Signalgeber</h3>
-      <div class="tbl"><table>
-        <tbody>
-          <tr><td>Mindestens</td><td>65 dB(A) bzw. 10 dB über Umgebungsgeräusch</td></tr>
-          <tr><td>Schlafbereich</td><td>75 dB(A) am Kopfende</td></tr>
-          <tr><td>Höchstens</td><td>120 dB(A)</td></tr>
-        </tbody>
-      </table></div>
-      <div class="box note">In der App: Anlage → <b>Schallpegel</b> für Messpunkte und Messungen, <b>Akku</b> für Tauschdatum und Überbrückungsrechnung.</div>
-    </div>
-  </details>
-
-  <details data-grp="bma" data-k="bma feuerwehr fsd fbf fat fse laufkarten schlüsseldepot freischaltelement bedienfeld">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c2 3 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-8z"/></svg></span><span class="t"><b>Feuerwehr-Peripherie</b><small>FSD, FBF, FAT, FSE, Laufkarten</small></span></summary>
-    <div class="body">
-      <ul>
-        <li><b>FSD</b> (Feuerwehr-Schlüsseldepot): Funktion und Schlüssel prüfen – nur nach Absprache mit Betreiber und Feuerwehr öffnen.</li>
-        <li><b>FBF</b> (Feuerwehr-Bedienfeld): alle Tasten und Anzeigen prüfen.</li>
-        <li><b>FAT</b> (Feuerwehr-Anzeigetableau): Anzeige der Meldungen kontrollieren.</li>
-        <li><b>FSE</b> (Freischaltelement) und <b>Blitzleuchte</b> am Zugang prüfen.</li>
-        <li><b>Laufkarten</b>: vollständig, aktuell, Meldernummern und Wege stimmen.</li>
-      </ul>
-    </div>
-  </details>
-
-  <details data-grp="bma" data-k="bma abschluss ue einschalten rückstellen betriebsbuch protokoll mängel">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><span class="t"><b>Nach der Prüfung</b><small>Zurückschalten, Betriebsbuch, Mängel</small></span></summary>
-    <div class="body">
-      <ol class="steps">
-        <li><span>Alle <b>Revisionen und Abschaltungen aufheben</b> – Gruppen, Steuerungen, Signalgeber.</span></li>
-        <li><span>Zentrale <b>ohne Störung und ohne Abschaltung</b>? Erst dann weiter.</span></li>
-        <li><span><b>ÜE wieder einschalten</b> und mit der Leitstelle abstimmen (ggf. Probealarm nach Absprache).</span></li>
-        <li><span><b>Betriebsbuch</b> ausfüllen: Datum, was geprüft wurde, Mängel, Unterschrift.</span></li>
-        <li><span>Mängel dem Betreiber mitteilen und Frist zur Behebung festhalten.</span></li>
-      </ol>
-      <div class="box warn"><b>Nie gehen, solange die ÜE abgeschaltet ist.</b> Lieber einmal mehr an der Zentrale nachschauen.</div>
-    </div>
-  </details>
-
-  <details data-grp="bma" data-k="bma täuschungsalarm falschalarm bauarbeiten staub abdecken heißarbeiten">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg></span><span class="t"><b>Täuschungsalarme vermeiden</b><small>Staub, Dampf, Arbeiten in der Nähe von Meldern</small></span></summary>
-    <div class="body">
-      <ul>
-        <li>Bei Bohr-, Schleif- und Stemmarbeiten: betroffene Melder nach Absprache mit dem Betreiber <b>abdecken oder Gruppe abschalten</b>.</li>
-        <li>Abschaltung immer dokumentieren und <b>nach den Arbeiten sofort aufheben</b> – Abdeckungen entfernen!</li>
-        <li>Heißarbeiten (Schweißen, Trennen) nur mit Erlaubnis des Betreibers.</li>
-        <li>Wird trotzdem ein Alarm ausgelöst: Ruhe bewahren, Leitstelle bzw. Feuerwehr informieren, dass es ein Täuschungsalarm ist, Betreiber benachrichtigen.</li>
-      </ul>
-    </div>
-  </details>
-
-  <details data-grp="bma" data-k="bma begriffe glossar bmz ue fsd fbf fat fse rwa revision abschaltung">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M8.5 7.5h7M8.5 11h5"/></svg></span><span class="t"><b>Begriffe</b><small>Abkürzungen kurz erklärt</small></span></summary>
-    <div class="body">
-      <div class="tbl"><table>
-        <tbody>
-          <tr><td>BMA / BMZ</td><td>Brandmeldeanlage / Brandmelderzentrale</td></tr>
-          <tr><td>ÜE</td><td>Übertragungseinrichtung zur Leitstelle der Feuerwehr</td></tr>
-          <tr><td>FSD</td><td>Feuerwehr-Schlüsseldepot</td></tr>
-          <tr><td>FBF</td><td>Feuerwehr-Bedienfeld</td></tr>
-          <tr><td>FAT</td><td>Feuerwehr-Anzeigetableau</td></tr>
-          <tr><td>FSE</td><td>Freischaltelement</td></tr>
-          <tr><td>RWA</td><td>Rauch- und Wärmeabzugsanlage</td></tr>
-          <tr><td>Revision</td><td>Gruppe/Melder meldet nur an die Zentrale, nicht weiter</td></tr>
-          <tr><td>Abschaltung</td><td>Teil der Anlage ist außer Betrieb – immer dokumentieren</td></tr>
-        </tbody>
-      </table></div>
-    </div>
-  </details>
-
-  <details data-grp="sat" data-k="sat ausrichtung astra hotbird azimut elevation skew satellit">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3"/><path d="M12 12l3-5"/></svg></span><span class="t"><b>Ausrichtung</b><small>Astra, Hotbird, Azimut, Elevation</small></span></summary>
-    <div class="body">
-      <p>Richtwerte für Schleswig-Holstein (um Rendsburg). Genaue Werte für jeden Standort – mit GPS und Kompass – liefert der <a href="satfinder.html" style="color:var(--accent);font-weight:700">SAT-Finder</a>.</p>
-      <div class="tbl"><table>
-        <thead><tr><th>Satellit</th><th>Azimut</th><th>Elevation</th></tr></thead>
-        <tbody>
-          <tr><td>Astra 19,2° Ost</td><td>ca. 168°</td><td>ca. 27°</td></tr>
-          <tr><td>Hotbird 13° Ost</td><td>ca. 176°</td><td>ca. 28°</td></tr>
-        </tbody>
-      </table></div>
-      <ol class="steps">
-        <li><span>Freie Sicht Richtung Süden prüfen – Bäume, Nachbarhäuser, künftiger Bewuchs.</span></li>
-        <li><span>Mast lotrecht ausrichten (Wasserwaage), sonst stimmt die Elevation nicht.</span></li>
-        <li><span>Elevation an der Skala einstellen – bei Offset-Spiegeln die Herstellerskala nutzen, nicht den Spiegelwinkel.</span></li>
-        <li><span>Azimut langsam schwenken, bis das Messgerät den richtigen Satelliten erkennt.</span></li>
-        <li><span>LNB-Skew (Drehung) und Feinjustage auf beste Signalqualität (MER) – nicht nur auf höchsten Pegel.</span></li>
-        <li><span>Alle Schrauben fest anziehen und Werte nach dem Festziehen noch einmal messen.</span></li>
+    <div class="card">
+      <h2>Satellit</h2>
+      <div class="sats" id="sats" role="group" aria-label="Satellit wählen"></div>
+      <div class="big" id="big">
+        <div><small>Kompass</small><b id="rAz">–</b><span id="rDir">Richtung</span></div>
+        <div><small>Höhe</small><b id="rEl">–</b><span>Elevation</span></div>
+        <div><small>LNB drehen</small><b id="rSk">–</b><span id="rSkD">Skew</span></div>
+      </div>
+      <p class="note" id="rTrue"></p>
+      <div class="warnbox" id="rLow" hidden></div>
+      <ol class="howto">
+        <li><b>Richtung:</b> Schüssel grob auf den Kompasswert drehen – im Reiter <b>Kompass</b> zeigt dir ein Pfeil, wohin.</li>
+        <li><b>Höhe:</b> Elevation an der Skala des Halters einstellen. Bei Offset-Spiegeln steht der Spiegel selbst ca. 20–28° steiler – immer die Skala am Halter nehmen.</li>
+        <li><b>LNB:</b> <span id="rSkTxt">–</span></li>
+        <li><b>Feinjustage</b> mit Messgerät oder Satfinder auf maximale Signalqualität (MER/C/N), dann Schrauben fest anziehen.</li>
       </ol>
     </div>
-  </details>
 
-  <details data-grp="sat" data-k="sat lnb multischalter unicable einkabel quattro quad sat>ip ebenen 13v 18v 22khz zf">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="8" rx="2"/><path d="M7 16v3M12 16v3M17 16v3M12 8V5"/></svg></span><span class="t"><b>LNB &amp; Verteilung</b><small>Quad, Quattro, Multischalter, Unicable</small></span></summary>
-    <div class="body">
-      <h3>Die 4 SAT-Ebenen</h3>
-      <div class="tbl"><table>
-        <thead><tr><th>Ebene</th><th>Umschaltung</th></tr></thead>
-        <tbody>
-          <tr><td>Low Band vertikal</td><td>13 V, kein 22 kHz</td></tr>
-          <tr><td>Low Band horizontal</td><td>18 V, kein 22 kHz</td></tr>
-          <tr><td>High Band vertikal</td><td>13 V + 22 kHz</td></tr>
-          <tr><td>High Band horizontal</td><td>18 V + 22 kHz</td></tr>
-        </tbody>
-      </table></div>
-      <p>Empfang 10,7–12,75 GHz, im Kabel als ZF 950–2150 MHz (LNB-Oszillator 9,75 / 10,6 GHz).</p>
-      <h3>Welches System?</h3>
-      <div class="tbl"><table>
-        <tbody>
-          <tr><td>Quad-LNB</td><td>bis 4 Teilnehmer direkt, je ein Kabel</td></tr>
-          <tr><td>Quattro-LNB + Multischalter</td><td>beliebig viele Teilnehmer sternförmig, z. B. Multischalter 5/8 (4 SAT-Ebenen + terrestrisch, 8 Ausgänge)</td></tr>
-          <tr><td>Unicable / Einkabel (EN 50494 / EN 50607)</td><td>mehrere Tuner an einem Kabel – Receiver muss das unterstützen, jedem Tuner ein eigenes Userband zuweisen</td></tr>
-          <tr><td>SAT&gt;IP</td><td>Verteilung über das Netzwerk an Smart-TV, Tablet usw.</td></tr>
-        </tbody>
-      </table></div>
-      <div class="box note">Twin-Receiver oder Aufnahme-Funktion brauchen zwei Leitungen bzw. zwei Userbands.</div>
+    <div class="card">
+      <h2>Blick nach Süden</h2>
+      <svg class="sky" id="sky" viewBox="0 0 340 170" role="img" aria-label="Satelliten am Himmel von Osten bis Westen"></svg>
+      <p class="note">So stehen die Satelliten von deinem Standort aus am Himmel. Bäume oder Häuser in dieser Richtung und Höhe stören den Empfang.</p>
     </div>
-  </details>
 
-  <details data-grp="sat" data-k="sat kabel koax f-stecker kompression dose 75 ohm schirmung abschluss">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="7"/><path d="M19 12h3"/></svg></span><span class="t"><b>Kabel &amp; Stecker</b><small>Koax, F-Stecker, Dosen</small></span></summary>
-    <div class="body">
-      <ul>
-        <li>Koaxkabel 75 Ω mit hoher Schirmung (Klasse A+), für längere Strecken dämpfungsarm.</li>
-        <li>F-Kompressionsstecker mit passendem Werkzeug – keine Aufdrehstecker im Außenbereich.</li>
-        <li>Geflecht sauber zurücklegen: <b>kein einzelnes Drähtchen</b> darf den Innenleiter berühren (Kurzschluss der LNB-Speisung).</li>
-        <li>Innenleiter ca. 1–2 mm Überstand, nicht verbogen.</li>
-        <li>Außen: Stecker mit Gummitülle oder Vulkanisierband gegen Feuchtigkeit, Kabel mit Tropfschlaufe einführen.</li>
-        <li>Biegeradius einhalten, Kabel nicht quetschen (Schellen, Türen, Fensterrahmen).</li>
-        <li>Freie Ausgänge am Multischalter bzw. Verteiler mit 75-Ω-Abschlusswiderstand versehen.</li>
-      </ul>
+    <div class="card">
+      <h2>Alle Satelliten</h2>
+      <table><thead><tr><th>Satellit</th><th>Kompass</th><th>Höhe</th><th>LNB</th></tr></thead><tbody id="tbl"></tbody></table>
+      <p class="note">LNB: + im Uhrzeigersinn, − gegen den Uhrzeigersinn – von hinten durch den Spiegel Richtung Satellit gesehen.</p>
     </div>
-  </details>
+  </section>
 
-  <details data-grp="sat" data-k="sat erdung potentialausgleich blitzschutz din en 60728-11 vde 0855 16 mm²">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v10M6 13h12M8 17h8M10.5 21h3"/></svg></span><span class="t"><b>Erdung &amp; Potentialausgleich</b><small>DIN EN 60728-11 (VDE 0855-1)</small></span></summary>
-    <div class="body">
-      <ul>
-        <li><b>Antennenerdung:</b> Mast bzw. Halterung über einen Erdungsleiter mit mind. <b>16 mm² Cu</b> (oder 25 mm² Al bzw. 50 mm² Stahl) auf kürzestem Weg mit der Erdungsanlage verbinden.</li>
-        <li><b>Ausnahme:</b> Antenne mindestens 2 m unter der Dachkante und höchstens 1,5 m von der Gebäudewand entfernt – dann ist keine Erdung des Mastes nötig.</li>
-        <li><b>Potentialausgleich:</b> Schirme aller Koaxkabel z. B. über Erdungsblock am Multischalter mit mind. <b>4 mm² Cu</b> an den Potentialausgleich anschließen.</li>
-        <li>Ist eine <b>Blitzschutzanlage</b> vorhanden: Trennungsabstand beachten bzw. Anschluss nur nach Blitzschutzkonzept.</li>
-        <li>Erdungsleiter nie durch das Gebäudeinnere führen, Verbindungen korrosionsgeschützt.</li>
-      </ul>
-      <div class="box warn"><b>Die Erdung ist Pflicht und wird bei Schäden geprüft.</b> Ohne Erdung kein Abschluss der Anlage.</div>
+  <!-- ======== Kompass ======== -->
+  <section id="vComp" style="display:grid;gap:14px" hidden>
+    <div class="card rosebox">
+      <svg class="rose" id="rose" viewBox="-110 -110 220 220" aria-hidden="true"></svg>
+      <div class="dirtxt" id="cTxt">Kompass ist aus</div>
+      <p class="dirsub" id="cSub">Ziel: –</p>
+      <button class="btn primary wide" type="button" id="compBtn">Kompass starten</button>
     </div>
-  </details>
-
-  <details data-grp="sat" data-k="sat messen pegel dbµv mer cn ber messgerät protokoll">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13l4-4M12 2v3"/></svg></span><span class="t"><b>Messen</b><small>Pegel, Signalqualität, Protokoll</small></span></summary>
-    <div class="body">
-      <ul>
-        <li><b>Pegel</b> an jeder Teilnehmerdose messen, alle 4 Ebenen. Üblicher Bereich für DVB-S/S2: ca. <b>47–77 dBµV</b>.</li>
-        <li><b>Signalqualität</b> (MER bzw. C/N und BER) ist wichtiger als der Pegel – Richtwerte zeigt das Messgerät (Ampel) bzw. der Hersteller.</li>
-        <li>Zu hoher Pegel ist genauso schlecht wie zu niedriger: ggf. Dämpfungsglied setzen.</li>
-        <li>Messwerte je Dose ins Protokoll eintragen und dem Kunden übergeben.</li>
-      </ul>
-    </div>
-  </details>
-
-  <details data-grp="sat" data-k="sat störung fehlersuche kein signal bild friert sender fehlen regen">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></span><span class="t"><b>Fehlersuche</b><small>Kein Signal, Sender fehlen, Bild friert ein</small></span></summary>
-    <div class="body">
-      <div class="tbl"><table>
-        <thead><tr><th>Fehler</th><th>Ursache prüfen</th></tr></thead>
-        <tbody>
-          <tr><td>Überall kein Signal</td><td>Ausrichtung verstellt (Sturm), LNB defekt, Netzteil Multischalter aus</td></tr>
-          <tr><td>Eine Dose ohne Signal</td><td>Kurzschluss im F-Stecker, Kabel beschädigt, Speisespannung an der Dose messen (13/18 V)</td></tr>
-          <tr><td>Nur manche Sender fehlen</td><td>Eine Ebene fehlt: LNB-Ausgang, Multischalter-Eingang, Receiver-Einstellung (DiSEqC, Unicable)</td></tr>
-          <tr><td>Bild friert bei Regen ein</td><td>Signalqualität zu knapp: Feinjustage, größerer Spiegel, Hindernisse</td></tr>
-          <tr><td>Nach Umbau Störungen</td><td>Freie Ausgänge ohne Abschlusswiderstand, schlechte Stecker</td></tr>
-        </tbody>
-      </table></div>
-    </div>
-  </details>
-
-  <details data-grp="sat" data-k="sat dach sicherheit absturz leiter wetter gewitter">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg></span><span class="t"><b>Arbeiten auf dem Dach</b><small>Absturz, Wetter, Leitern</small></span></summary>
-    <div class="body">
-      <ul>
-        <li>Vor dem Aufstieg Gefährdung beurteilen: Absturzkante, Dachneigung, Tragfähigkeit, Zugang.</li>
-        <li>Absturzsicherung nach Gefährdungsbeurteilung – Persönliche Schutzausrüstung gegen Absturz nur mit Unterweisung und Anschlagpunkt.</li>
-        <li><b>Nicht aufs Dach</b> bei Gewitter, Sturm, Nässe, Eis oder Schnee.</li>
-        <li>Leiter sichern und mind. 1 m über die Austrittsstelle hinausragen lassen.</li>
-        <li>Werkzeug und Material gegen Herabfallen sichern, Bereich unten absperren.</li>
-        <li>Nach Möglichkeit nicht allein auf dem Dach arbeiten.</li>
-      </ul>
-    </div>
-  </details>
-
-  <details data-grp="sat" data-k="sat abschluss kunde sendersuchlauf übergabe">
-    <summary><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><span class="t"><b>Abschluss beim Kunden</b><small>Sendersuchlauf, Übergabe, Doku</small></span></summary>
-    <div class="body">
-      <ol class="steps">
-        <li><span>Sendersuchlauf an jedem Gerät, Senderliste nach Wunsch sortieren.</span></li>
-        <li><span>Alle Räume testen, auch Aufnahme und Twin-Funktion.</span></li>
-        <li><span>Erdung und Potentialausgleich kontrolliert? Fotos machen.</span></li>
-        <li><span>Messprotokoll und Material auf dem Auftrag notieren, Kunde abzeichnen lassen.</span></li>
+    <div class="card">
+      <h2>So geht's</h2>
+      <ol class="howto">
+        <li>Handy <b>flach</b> halten, Display nach oben. Die <b>Oberkante</b> zeigt die Richtung.</li>
+        <li>Drehen, bis der Pfeil oben auf den Satelliten zeigt und „Richtung stimmt“ erscheint.</li>
+        <li>Vorher kalibrieren: Handy ein paar Mal in einer liegenden Acht schwenken.</li>
       </ol>
+      <div class="warnbox"><b>Ungenau in der Nähe von Metall.</b> Schüssel, Mast, Dachrinne, Auto und Stahlträger lenken den Kompass ab. Halte 1–2 m Abstand und peile von dort. Der Wert ist eine Grobrichtung – das Feintuning machst du mit dem Messgerät.</div>
+      <p class="note" id="declNote"></p>
     </div>
-  </details>
+  </section>
 
-  </div>
-  <p class="empty" id="none" hidden>Nichts gefunden. Versuch ein anderes Wort.</p>
-  <p class="foot">Der Leitfaden ersetzt keine Unterweisung und nicht die geltenden Normen und Vorschriften. Im Zweifel: fragen.</p>
+  <!-- ======== Neigung ======== -->
+  <section id="vTilt" style="display:grid;gap:14px" hidden>
+    <div class="card rosebox">
+      <h2 style="justify-self:start">Höhe peilen</h2>
+      <svg class="level" id="arc" viewBox="0 0 220 130" aria-hidden="true"></svg>
+      <div class="dirtxt" id="tTxt">Neigung ist aus</div>
+      <p class="dirsub" id="tSub">Ziel: –</p>
+      <button class="btn primary wide" type="button" id="tiltBtn">Neigung messen</button>
+      <p class="note">Handy hochkant halten, Rückkamera zeigt zum Himmel in Richtung Satellit. So siehst du, ob in dieser Höhe Bäume oder Häuser im Weg sind.</p>
+    </div>
+    <div class="card rosebox">
+      <h2 style="justify-self:start">Mast im Lot?</h2>
+      <svg class="level" id="bubble" viewBox="-60 -60 120 120" aria-hidden="true" style="width:min(50vw,180px)"></svg>
+      <div><span class="pill" id="mTxt">–</span></div>
+      <p class="note">Handy hochkant mit der Längsseite an den Mast halten. Steht der Mast schief, stimmt die Elevation nicht über den ganzen Bogen.</p>
+    </div>
+  </section>
 </main>
-<nav class="appnav" id="nav" aria-label="Leitfäden"><div class="in" role="tablist">
-  <button type="button" role="tab" data-view="firma" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>Firma</button>
-  <button type="button" role="tab" data-view="elektro" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg>Elektro</button>
-  <button type="button" role="tab" data-view="bma" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M12 3c2 3 5 5 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-8z"/></svg>BMA</button>
-  <button type="button" role="tab" data-view="sat" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M4 10a10 10 0 0 0 10 10L4 10z"/><path d="M9 15l4-4M13 7a4 4 0 0 1 4 4M13 3a8 8 0 0 1 8 8"/></svg>SAT</button>
-  <button type="button" role="tab" data-view="notfall" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg>Notfall</button>
+<nav class="appnav" id="nav" aria-label="SAT-Finder"><div class="in" role="tablist">
+  <button type="button" role="tab" data-view="calc" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M4 10a10 10 0 0 0 10 10L4 10z"/><path d="M9 15l4-4M13 7a4 4 0 0 1 4 4M13 3a8 8 0 0 1 8 8"/></svg>Ausrichten</button>
+  <button type="button" role="tab" data-view="comp" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Kompass</button>
+  <button type="button" role="tab" data-view="tilt" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M3 20h18"/><path d="M5 20A15 15 0 0 1 17 8"/><path d="M5 20l12-12"/></svg>Neigung</button>
 </div></nav>
 <script>
 (function(){
-  const q = document.getElementById("q"), list = document.getElementById("list"), hits = document.getElementById("hits"), none = document.getElementById("none");
-  const nav = document.getElementById("nav"), title = document.getElementById("pageTitle");
-  const TITLES = {'firma': 'Firma', 'elektro': 'Elektro', 'bma': 'Brandmeldeanlagen', 'sat': 'SAT-Technik', 'notfall': 'Notfall'};
-  const LEADS = {"notfall": "Was zu tun ist bei Stromunfall, Verletzung oder Unfall. Im Ernstfall zuerst: Notruf 112.", "firma": "Regeln und Abläufe im Betrieb – kurz nachschlagen, was gilt und wie es bei uns läuft.", "elektro": "Für Elektroniker/innen für Energie- und Gebäudetechnik. Maßgeblich sind die geltenden DIN-VDE-Normen und die Unterweisungen im Betrieb.", "bma": "Leitfaden für Inspektion und Wartung von Brandmeldeanlagen. Maßgeblich sind immer DIN 14675, DIN VDE 0833-1/-2, das Brandschutzkonzept und die Unterlagen des Herstellers.", "sat": "Leitfaden für SAT-Empfangsanlagen. Maßgeblich sind DIN EN 60728-11 (VDE 0855-1) für Erdung und Potentialausgleich sowie die Unterlagen der Hersteller."};
-  const items = [...list.querySelectorAll("details")];
-  const orig = new Map(items.map(d => [d, d.querySelector(".body").innerHTML]));
-  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  let view = "firma";
-  function mark(el, re){
-    const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); const nodes = [];
-    while(w.nextNode()) nodes.push(w.currentNode);
-    for(const n of nodes){ if(!re.test(n.nodeValue)) continue; re.lastIndex = 0;
-      const span = document.createElement("span"); span.innerHTML = n.nodeValue.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"})[c]).replace(re, m => "<mark>" + m + "</mark>");
-      n.replaceWith(...span.childNodes); re.lastIndex = 0; }
-  }
-  function show(){ const vis = items.filter(d => d.dataset.grp === view); for(const d of items){ d.querySelector(".body").innerHTML = orig.get(d); d.hidden = d.dataset.grp !== view; d.open = vis.length === 1 && !d.hidden; } }
-  q.addEventListener("input", () => {
-    const t = q.value.trim().toLowerCase(); let n = 0;
-    if(!t){ show(); hits.hidden = true; none.hidden = true; return; }
-    for(const d of items){
-      const b = d.querySelector(".body"); b.innerHTML = orig.get(d);
-      const hit = d.textContent.toLowerCase().includes(t) || (d.dataset.k || "").includes(t);
-      d.hidden = !hit; d.open = hit; if(hit){ n++; mark(b, new RegExp(esc(t), "gi")); }
+"use strict";
+const $ = id => document.getElementById(id);
+const KEY = "app.sat";
+const ls = () => { try{ return JSON.parse(localStorage.getItem(KEY) || "null") || {}; }catch(e){ return {}; } };
+const save = p => { try{ localStorage.setItem(KEY, JSON.stringify(Object.assign(ls(), p))); }catch(e){} };
+const num = s => { const n = Number(String(s ?? "").trim().replace(",", ".")); return String(s ?? "").trim() === "" || isNaN(n) ? null : n; };
+const de = (n, d) => (Math.round(n * Math.pow(10, d||0)) / Math.pow(10, d||0)).toFixed(d||0).replace(".", ",");
+const D = Math.PI / 180;
+
+// ---------- Satelliten ----------
+const SATS = [
+  {n:"Astra 19,2° Ost", s:"Astra 19,2°", lon:19.2},
+  {n:"Hotbird 13° Ost", s:"Hotbird 13°", lon:13},
+  {n:"Astra 23,5° Ost", s:"Astra 23,5°", lon:23.5},
+  {n:"Astra 28,2° Ost", s:"Astra 28,2°", lon:28.2},
+  {n:"Eutelsat 9° Ost", s:"Eutelsat 9°", lon:9},
+  {n:"Eutelsat 16° Ost", s:"Eutelsat 16°", lon:16},
+  {n:"Eutelsat 7° Ost", s:"Eutelsat 7°", lon:7},
+  {n:"SES 4,8° Ost", s:"SES 4,8°", lon:4.8},
+  {n:"Thor 0,8° West", s:"Thor 0,8° W", lon:-0.8},
+  {n:"Eutelsat 5° West", s:"Eutelsat 5° W", lon:-5},
+  {n:"Türksat 42° Ost", s:"Türksat 42°", lon:42},
+  {n:"Hispasat 30° West", s:"Hispasat 30° W", lon:-30}
+];
+
+// Blickrichtung zum geostationären Satelliten (Erde als Kugel), dazu die LNB-Drehung
+function look(lat, lon, slon){
+  const R = 6378.137, G = 42164.0, la = lat*D, lo = lon*D, sl = slon*D;
+  const s = [R*Math.cos(la)*Math.cos(lo), R*Math.cos(la)*Math.sin(lo), R*Math.sin(la)];
+  const t = [G*Math.cos(sl), G*Math.sin(sl), 0];
+  const d = [t[0]-s[0], t[1]-s[1], t[2]-s[2]];
+  const E = [-Math.sin(lo), Math.cos(lo), 0], N = [-Math.sin(la)*Math.cos(lo), -Math.sin(la)*Math.sin(lo), Math.cos(la)], U = [Math.cos(la)*Math.cos(lo), Math.cos(la)*Math.sin(lo), Math.sin(la)];
+  const dot = (a,b) => a[0]*b[0]+a[1]*b[1]+a[2]*b[2], cross = (a,b) => [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
+  const e = dot(d,E), n = dot(d,N), u = dot(d,U);
+  const az = (Math.atan2(e, n)/D + 360) % 360, el = Math.atan2(u, Math.hypot(e, n))/D;
+  const L = Math.sqrt(dot(d,d)), f = d.map(x => x/L), z = [0,0,1];
+  const p = z.map((x,i) => x - dot(z,f)*f[i]), q = U.map((x,i) => x - dot(U,f)*f[i]);
+  const sk = Math.atan2(dot(p, cross(f,q)), dot(p,q))/D;
+  return {az, el, sk};
+}
+// Missweisung grob für Deutschland/Mitteleuropa (Stand ca. 2026), Ost positiv
+const declOf = (lat, lon) => Math.max(-2, Math.min(8, 0.32*lon + 0.6));
+const DIRS = ["N","NNO","NO","ONO","O","OSO","SO","SSO","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+const dirName = a => DIRS[Math.round(((a % 360) + 360) % 360 / 22.5) % 16];
+const DIRLONG = {N:"Norden",NNO:"Nord-Nordost",NO:"Nordost",ONO:"Ost-Nordost",O:"Osten",OSO:"Ost-Südost",SO:"Südost",SSO:"Süd-Südost",S:"Süden",SSW:"Süd-Südwest",SW:"Südwest",WSW:"West-Südwest",W:"Westen",WNW:"West-Nordwest",NW:"Nordwest",NNW:"Nord-Nordwest"};
+
+// ---------- Zustand ----------
+let st = ls(); let sel = SATS.findIndex(x => x.lon === st.sat); if(sel < 0) sel = 0;
+let lat = typeof st.lat === "number" ? st.lat : null, lon = typeof st.lon === "number" ? st.lon : null;
+const has = () => lat != null && lon != null;
+const cur = () => has() ? look(lat, lon, SATS[sel].lon) : null;
+const magAz = r => (r.az - declOf(lat, lon) + 360) % 360;
+
+function skewText(sk){ const a = Math.round(Math.abs(sk)); if(a === 0) return "Gerade lassen (0°)."; return "Um " + a + "° " + (sk > 0 ? "im Uhrzeigersinn" : "gegen den Uhrzeigersinn") + " drehen – von hinten durch den Spiegel Richtung Satellit gesehen."; }
+
+function renderSats(){ $("sats").innerHTML = SATS.map((s,i) => '<button type="button" data-i="'+i+'" aria-pressed="'+(i===sel)+'">'+s.s+'</button>').join(""); }
+function render(){
+  $("lat").value = lat == null ? "" : de(lat, 5); $("lon").value = lon == null ? "" : de(lon, 5);
+  $("locInfo").innerHTML = has() ? "Standort: <b>" + de(lat, 4) + "° N, " + de(lon, 4) + "° O</b>" + (st.acc ? " · Genauigkeit ca. " + Math.round(st.acc) + " m" : "") : "Noch kein Standort – GPS antippen oder Koordinaten eintragen.";
+  document.querySelectorAll("#sats button").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.i) === sel)));
+  const r = cur();
+  if(!r){ ["rAz","rEl","rSk"].forEach(id => $(id).textContent = "–"); $("rDir").textContent = "Richtung"; $("rTrue").textContent = ""; $("rSkTxt").textContent = "–"; $("rLow").hidden = true; $("tbl").innerHTML = ""; drawSky(); renderTargets(); return; }
+  const m = magAz(r);
+  $("rAz").textContent = de(m, 0) + "°"; $("rDir").textContent = dirName(m);
+  $("rEl").textContent = de(r.el, 1) + "°";
+  $("rSk").textContent = (r.sk > 0 ? "+" : r.sk < 0 ? "−" : "") + de(Math.abs(r.sk), 0) + "°"; $("rSkD").textContent = Math.abs(r.sk) < .5 ? "gerade" : r.sk > 0 ? "im Uhrzeigersinn" : "gegen Uhrzeigersinn";
+  $("rTrue").textContent = SATS[sel].n + ": Richtung " + DIRLONG[dirName(m)] + ". Kompass (magnetisch) " + de(m,1) + "°, geografisch (Karte) " + de(r.az,1) + "°, Missweisung ca. " + (declOf(lat,lon) >= 0 ? "+" : "") + de(declOf(lat,lon),1) + "°.";
+  $("rSkTxt").textContent = skewText(r.sk);
+  $("rLow").hidden = r.el >= 12; if(r.el < 0) $("rLow").innerHTML = "<b>Nicht empfangbar:</b> Der Satellit liegt von hier aus unter dem Horizont."; else if(r.el < 12) $("rLow").innerHTML = "<b>Sehr flach (" + de(r.el,1) + "°):</b> Freie Sicht nötig – Bäume und Nachbarhäuser stören schnell. Größerer Spiegel empfohlen.";
+  $("tbl").innerHTML = SATS.map((s,i) => { const x = look(lat, lon, s.lon); const mm = (x.az - declOf(lat,lon) + 360) % 360;
+    return '<tr data-i="'+i+'" class="'+(i===sel?"on":"")+(x.el<10?" low":"")+'"><td>'+s.s+'</td><td>'+de(mm,0)+'° '+dirName(mm)+'</td><td>'+(x.el<0?"–":de(x.el,1)+'°')+'</td><td>'+(x.sk>0?"+":x.sk<0?"−":"")+de(Math.abs(x.sk),0)+'°</td></tr>'; }).join("");
+  drawSky(); renderTargets();
+}
+function drawSky(){
+  const W = 340, H = 170, top = 14, bot = 148, maxEl = has() ? Math.max(30, Math.ceil((Math.max(...SATS.map(s => look(lat,lon,s.lon).el)) + 6) / 10) * 10) : 40;
+  const X = az => (az - 90) / 180 * (W - 20) + 10, Y = el => bot - el / maxEl * (bot - top);
+  let h = '';
+  for(let e = 10; e < maxEl; e += 10) h += '<line x1="10" x2="'+(W-10)+'" y1="'+Y(e)+'" y2="'+Y(e)+'" stroke="currentColor" stroke-opacity=".12"/><text x="'+(W-12)+'" y="'+(Y(e)-3)+'" text-anchor="end">'+e+'°</text>';
+  h += '<rect x="0" y="'+bot+'" width="'+W+'" height="'+(H-bot)+'" fill="currentColor" fill-opacity=".08"/><line x1="0" x2="'+W+'" y1="'+bot+'" y2="'+bot+'" stroke="currentColor" stroke-opacity=".5"/>';
+  [["O",90],["SO",135],["S",180],["SW",225],["W",270]].forEach(([t,a]) => h += '<text x="'+X(a)+'" y="'+(H-6)+'" text-anchor="middle">'+t+'</text>');
+  if(has()){
+    let pts = []; for(let s = -80; s <= 100; s += 1){ const r = look(lat, lon, s); if(r.el > 0 && r.az > 90 && r.az < 270) pts.push(X(r.az).toFixed(1)+","+Y(r.el).toFixed(1)); }
+    if(pts.length) h += '<polyline points="'+pts.join(" ")+'" fill="none" stroke="var(--accent)" stroke-opacity=".45" stroke-width="2" stroke-dasharray="4 4"/>';
+    SATS.forEach((s,i) => { const r = look(lat, lon, s.lon); if(r.el <= 0 || r.az <= 90 || r.az >= 270) return; const on = i === sel;
+      h += '<g class="'+(on?"sel":"")+'"><circle cx="'+X(r.az)+'" cy="'+Y(r.el)+'" r="'+(on?7:4)+'" fill="'+(on?"var(--accent)":"var(--muted)")+'"'+(on?' stroke="var(--surface)" stroke-width="2"':'')+'/>' + (on ? '<text x="'+X(r.az)+'" y="'+(Y(r.el)-12)+'" text-anchor="middle">'+s.s+'</text>' : '') + '</g>'; });
+  } else h += '<text x="'+(W/2)+'" y="'+(H/2)+'" text-anchor="middle">Erst Standort festlegen</text>';
+  $("sky").innerHTML = h;
+}
+
+// ---------- Standort ----------
+$("gpsBtn").addEventListener("click", () => {
+  if(!("geolocation" in navigator)){ GT.toast("GPS ist auf diesem Gerät nicht verfügbar. Koordinaten bitte von Hand eintragen."); return; }
+  $("gpsBtn").disabled = true; $("locInfo").textContent = "Standort wird ermittelt …";
+  navigator.geolocation.getCurrentPosition(p => {
+    $("gpsBtn").disabled = false; lat = p.coords.latitude; lon = p.coords.longitude; st.acc = p.coords.accuracy; save({lat, lon, acc: st.acc}); render(); GT.toast("Standort übernommen.");
+  }, e => {
+    $("gpsBtn").disabled = false;
+    GT.toast(e && e.code === 1 ? "Standort nicht erlaubt. In den Einstellungen des Geräts den Standort für den Browser bzw. die App erlauben." : "Standort konnte nicht ermittelt werden. Draußen erneut versuchen oder von Hand eintragen.");
+    render();
+  }, {enableHighAccuracy: true, timeout: 20000, maximumAge: 60000});
+});
+function manual(){ const a = num($("lat").value), b = num($("lon").value);
+  if(a == null || b == null) return; if(a < -80 || a > 80 || b < -180 || b > 180){ GT.toast("Koordinaten prüfen: Breite −80 bis 80, Länge −180 bis 180."); return; }
+  lat = a; lon = b; st.acc = null; save({lat, lon, acc: null}); render(); }
+["lat","lon"].forEach(id => { $(id).addEventListener("change", manual); $(id).addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); manual(); } }); });
+$("sats").addEventListener("click", e => { const b = e.target.closest("[data-i]"); if(!b) return; sel = Number(b.dataset.i); save({sat: SATS[sel].lon}); render(); });
+$("tbl").addEventListener("click", e => { const t = e.target.closest("[data-i]"); if(!t) return; sel = Number(t.dataset.i); save({sat: SATS[sel].lon}); render(); window.scrollTo({top: 0, behavior: "smooth"}); });
+
+// ---------- Sensoren ----------
+let heading = null, beta = null, gamma = null, sensOn = false, lastOk = false;
+async function startSensors(){
+  if(sensOn) return true;
+  try{
+    if(window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === "function"){
+      const r = await DeviceOrientationEvent.requestPermission(); if(r !== "granted"){ GT.toast("Bewegungssensoren nicht erlaubt. Beim nächsten Start „Erlauben“ wählen."); return false; }
     }
-    hits.hidden = false; hits.textContent = n === 1 ? "1 Kapitel gefunden" : n + " Kapitel gefunden"; none.hidden = n > 0;
-  });
-  nav.addEventListener("click", ev => { const b = ev.target.closest("[data-view]"); if(!b) return; view = b.dataset.view;
-    nav.querySelectorAll("[data-view]").forEach(x => x.setAttribute("aria-selected", String(x === b)));
-    title.textContent = TITLES[view]; document.getElementById("lead").textContent = LEADS[view]; q.value = ""; hits.hidden = true; none.hidden = true; show(); window.scrollTo(0, 0); });
-  show();
-  setTimeout(() => GT.tour("lf", [
-    {sel:"#nav", fixed:true, title:"Leitfaden wählen", text:"Unten wählst du: Firma, Elektro, BMA und SAT."},
-    {sel:'#nav [data-view="notfall"]', fixed:true, title:"Notfall", text:"Im Ernstfall hier tippen: Ablauf bei Stromunfall und Erste Hilfe – Notruf 112."},
-    {sel:"#q", title:"Suche", text:"Durchsucht alle Leitfäden auf einmal, z. B. „RCD“, „ÜE“ oder „Unicable“."},
-    {sel:"#list details:not([hidden])", title:"Kapitel", text:"Antippen zum Aufklappen."}
-  ]), 700);
+  }catch(e){ GT.toast("Bewegungssensoren sind hier nicht verfügbar."); return false; }
+  if(!window.DeviceOrientationEvent){ GT.toast("Dieses Gerät hat keinen Kompass für den Browser."); return false; }
+  const scr = () => (screen.orientation && typeof screen.orientation.angle === "number") ? screen.orientation.angle : (window.orientation || 0);
+  const onAbs = e => { if(e.alpha == null) return; heading = (360 - e.alpha + scr()) % 360; beta = e.beta; gamma = e.gamma; tick(); };
+  const onRel = e => { if(typeof e.webkitCompassHeading === "number"){ heading = (e.webkitCompassHeading + scr()) % 360; } else if(e.absolute && e.alpha != null){ heading = (360 - e.alpha + scr()) % 360; } beta = e.beta; gamma = e.gamma; tick(); };
+  if("ondeviceorientationabsolute" in window) window.addEventListener("deviceorientationabsolute", onAbs);
+  window.addEventListener("deviceorientation", onRel);
+  sensOn = true;
+  setTimeout(() => { if(beta == null && heading == null) GT.toast("Keine Sensordaten. Auf einem Handy in der installierten App versuchen."); }, 2500);
+  return true;
+}
+let raf = 0; function tick(){ if(!raf) raf = requestAnimationFrame(() => { raf = 0; drawRose(); drawTilt(); }); }
+
+// Kompassrose
+function roseBase(){
+  let h = '<circle r="100" fill="var(--sunk)"/><g id="dial">';
+  for(let a = 0; a < 360; a += 5){ const L = a % 30 === 0 ? 12 : 6, r1 = 96, r2 = r1 - L, s = Math.sin(a*D), c = -Math.cos(a*D);
+    h += '<line x1="'+(s*r1).toFixed(1)+'" y1="'+(c*r1).toFixed(1)+'" x2="'+(s*r2).toFixed(1)+'" y2="'+(c*r2).toFixed(1)+'" stroke="currentColor" stroke-opacity="'+(a%30===0?.7:.3)+'" stroke-width="'+(a%30===0?2:1)+'"/>'; }
+  [["N",0],["O",90],["S",180],["W",270]].forEach(([t,a]) => { h += '<text class="rl" data-a="'+a+'" text-anchor="middle" font-size="17" font-weight="800" fill="'+(t==="N"?"var(--danger)":"currentColor")+'">'+t+'</text>'; });
+  h += '<g id="tgt"><path d="M0 -99 L9 -80 L-9 -80 Z" fill="var(--accent)"/><circle cx="0" cy="-60" r="11" fill="var(--accent)"/><path d="M-5 -60 a6 6 0 0 1 10 0" stroke="var(--accent-ink)" stroke-width="2" fill="none"/></g>';
+  h += '</g><path d="M0 -108 L8 -94 L-8 -94 Z" fill="var(--ink)"/><circle r="4" fill="var(--ink)"/>';
+  $("rose").innerHTML = h; $("rose").style.color = "var(--ink)";
+}
+function renderTargets(){
+  const r = cur(); const tgt = document.getElementById("tgt");
+  if(tgt) tgt.style.display = r ? "" : "none";
+  $("cSub").textContent = r ? "Ziel: " + SATS[sel].s + " · " + de(magAz(r),0) + "° " + dirName(magAz(r)) : "Ziel: erst Standort festlegen (Reiter Ausrichten)";
+  $("tSub").textContent = r ? "Ziel: " + de(r.el,1) + "° Höhe (" + SATS[sel].s + ")" : "Ziel: erst Standort festlegen";
+  $("declNote").textContent = has() ? "Der Kompass zeigt magnetisch Nord. Die Werte in der App sind schon um die Missweisung (ca. " + de(declOf(lat,lon),1) + "°) korrigiert." : "";
+  drawRose(); drawTilt();
+}
+function drawRose(){
+  const dial = document.getElementById("dial"), tgt = document.getElementById("tgt"); if(!dial) return;
+  const hd = heading == null ? 0 : heading; dial.setAttribute("transform", "rotate(" + (-hd).toFixed(1) + ")");
+  document.querySelectorAll("#rose .rl").forEach(t => { const a = Number(t.dataset.a); t.setAttribute("x", (Math.sin(a*D)*70).toFixed(1)); t.setAttribute("y", (-Math.cos(a*D)*70 + 6).toFixed(1)); t.setAttribute("transform", "rotate(" + hd.toFixed(1) + " " + (Math.sin(a*D)*70).toFixed(1) + " " + (-Math.cos(a*D)*70).toFixed(1) + ")"); });
+  const r = cur(); if(r && tgt) tgt.setAttribute("transform", "rotate(" + magAz(r).toFixed(1) + ")");
+  const t = $("cTxt");
+  if(!sensOn){ t.textContent = "Kompass ist aus"; t.className = "dirtxt"; return; }
+  if(heading == null){ t.textContent = "Warte auf Kompass …"; t.className = "dirtxt"; return; }
+  if(!r){ t.textContent = de(heading,0) + "° " + dirName(heading); t.className = "dirtxt"; return; }
+  let diff = ((magAz(r) - heading + 540) % 360) - 180; const ok = Math.abs(diff) <= 3;
+  t.textContent = ok ? "Richtung stimmt ✓" : (diff > 0 ? "Nach rechts drehen: " : "Nach links drehen: ") + de(Math.abs(diff),0) + "°";
+  t.className = "dirtxt" + (ok ? " ok" : "");
+  if(ok && !lastOk && navigator.vibrate) try{ navigator.vibrate(60); }catch(e){}
+  lastOk = ok;
+}
+// Neigung + Lot
+function drawTilt(){
+  const r = cur(); const elNow = beta == null ? null : Math.max(-90, Math.min(90, beta - 90));
+  const cx = 20, cy = 115, R = 95; let h = '';
+  h += '<path d="M'+cx+' '+cy+' L'+(cx+R)+' '+cy+' A'+R+' '+R+' 0 0 0 '+cx+' '+(cy-R)+' Z" fill="var(--sunk)"/>';
+  for(let a = 0; a <= 90; a += 10){ const s = Math.cos(a*D), c = Math.sin(a*D); h += '<line x1="'+(cx+s*(R-8))+'" y1="'+(cy-c*(R-8))+'" x2="'+(cx+s*R)+'" y2="'+(cy-c*R)+'" stroke="currentColor" stroke-opacity=".5"/>'; if(a % 30 === 0) h += '<text x="'+(cx+s*(R+12))+'" y="'+(cy-c*(R+12)+4)+'" font-size="11" text-anchor="middle" fill="var(--muted)">'+a+'°</text>'; }
+  if(r && r.el > 0){ const s = Math.cos(r.el*D), c = Math.sin(r.el*D); h += '<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+s*R)+'" y2="'+(cy-c*R)+'" stroke="var(--accent)" stroke-width="3" stroke-dasharray="5 4"/>'; }
+  if(elNow != null){ const a = Math.max(0, Math.min(90, elNow)), s = Math.cos(a*D), c = Math.sin(a*D); h += '<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+s*(R-4))+'" y2="'+(cy-c*(R-4))+'" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/><circle cx="'+cx+'" cy="'+cy+'" r="5" fill="var(--ink)"/>'; }
+  $("arc").innerHTML = h;
+  const t = $("tTxt");
+  if(!sensOn){ t.textContent = "Neigung ist aus"; t.className = "dirtxt"; }
+  else if(elNow == null){ t.textContent = "Warte auf Sensor …"; t.className = "dirtxt"; }
+  else if(r){ const d = r.el - elNow, ok = Math.abs(d) <= 1.5; t.textContent = ok ? de(elNow,1) + "° – Höhe stimmt ✓" : de(elNow,1) + "° – " + (d > 0 ? "höher" : "tiefer") + " peilen (" + de(Math.abs(d),1) + "°)"; t.className = "dirtxt" + (ok ? " ok" : ""); }
+  else { t.textContent = de(elNow,1) + "°"; t.className = "dirtxt"; }
+  // Lot: Handy hochkant am Mast → beta ≈ 90, gamma ≈ 0
+  let b = '<circle r="56" fill="var(--sunk)"/><circle r="10" fill="none" stroke="var(--ok)" stroke-width="2"/><line x1="-56" x2="56" y1="0" y2="0" stroke="currentColor" stroke-opacity=".2"/><line y1="-56" y2="56" x1="0" x2="0" stroke="currentColor" stroke-opacity=".2"/>';
+  const mt = $("mTxt");
+  if(sensOn && beta != null){ const dx = Math.max(-45, Math.min(45, (gamma||0) * 4)), dy = Math.max(-45, Math.min(45, (beta - 90) * 4)), dev = Math.hypot(gamma||0, beta - 90);
+    b += '<circle cx="'+dx.toFixed(1)+'" cy="'+(-dy).toFixed(1)+'" r="9" fill="'+(dev <= 1 ? "var(--ok)" : "var(--accent)")+'"/>';
+    mt.textContent = dev <= 1 ? "Lotrecht ✓" : "Abweichung " + de(dev,1) + "°"; mt.className = "pill" + (dev <= 1 ? " ok" : ""); }
+  else { mt.textContent = "Neigung messen antippen"; mt.className = "pill"; }
+  $("bubble").innerHTML = b;
+}
+$("compBtn").addEventListener("click", async () => { if(await startSensors()){ $("compBtn").hidden = true; $("tiltBtn").hidden = true; tick(); } });
+$("tiltBtn").addEventListener("click", async () => { if(await startSensors()){ $("compBtn").hidden = true; $("tiltBtn").hidden = true; tick(); } });
+
+// ---------- Navigation ----------
+const LEADS = {calc:"Wohin zeigt die Schüssel? Richtung, Höhe und LNB-Drehung für deinen Standort.", comp:"Der Pfeil zeigt dir, wohin du die Schüssel drehen musst.", tilt:"Höhe peilen und prüfen, ob der Mast gerade steht."};
+const TITLES = {calc:"SAT-Finder", comp:"Kompass", tilt:"Neigung"};
+$("nav").addEventListener("click", ev => { const b = ev.target.closest("[data-view]"); if(!b) return; const v = b.dataset.view;
+  $("nav").querySelectorAll("[data-view]").forEach(x => x.setAttribute("aria-selected", String(x === b)));
+  $("vCalc").hidden = v !== "calc"; $("vComp").hidden = v !== "comp"; $("vTilt").hidden = v !== "tilt";
+  $("pageTitle").textContent = TITLES[v]; $("lead").textContent = LEADS[v]; window.scrollTo(0, 0); tick(); });
+
+renderSats(); roseBase(); render();
+setTimeout(() => GT.tour("sat", [
+  {sel:"#gpsBtn", title:"Standort", text:"Tippe hier, damit das Gerät per GPS weiß, wo du stehst. Ohne GPS trägst du die Koordinaten darunter von Hand ein."},
+  {sel:"#sats", title:"Satellit wählen", text:"Meist Astra 19,2° Ost. Für Türkisch, Polnisch oder Italienisch z. B. Türksat 42° oder Hotbird 13°."},
+  {sel:"#big", title:"Die drei Werte", text:"Kompassrichtung (schon um die Missweisung korrigiert), Höhe für die Skala am Halter und wie weit du das LNB drehst."},
+  {sel:'#nav [data-view="comp"]', fixed:true, title:"Kompass", text:"Der Pfeil zeigt, wohin du dich drehen musst. Handy flach halten und Abstand zu Metall."},
+  {sel:'#nav [data-view="tilt"]', fixed:true, title:"Neigung", text:"Höhe zum Himmel peilen – sind Bäume im Weg? – und prüfen, ob der Mast lotrecht steht."}
+]), 700);
 })();
 </script>
 </body>
