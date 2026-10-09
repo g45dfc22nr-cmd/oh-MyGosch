@@ -131,10 +131,15 @@ details.card .in > *{min-width:0;max-width:100%}
       <span style="margin:0;white-space:normal"><b>Urlaub beantragen</b><span id="s-ur">Urlaub und Überstunden</span></span>
       <i class="go"></i>
     </a>
+    <a class="tile" id="t-lf" href="leitfaden.html">
+      <span class="tic"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 22H20v-4"/><path d="M8.5 7.5h7M8.5 11h5"/></svg></span>
+      <span style="margin:0;white-space:normal"><b>Firmenleitfaden</b><span id="s-lf">Sicherheit, Abläufe, Kontakte</span></span>
+      <i class="go"></i>
+    </a>
   </div>
   <p class="note" id="noneNote" hidden>Alle Bereiche sind ausgeblendet. Schalte unten unter „Einstellungen“ einen Bereich ein.</p>
 
-  <p class="ver">Oh-MyGosch · Version 2.6</p>
+  <p class="ver">Oh-MyGosch · Version 2.7</p>
 </main>
 <main class="wrap" id="vSet" hidden>
   <div><button type="button" class="backbtn" id="setBack">‹ Zurück</button></div>
@@ -184,6 +189,7 @@ details.card .in > *{min-width:0;max-width:100%}
       <label class="check"><input type="checkbox" id="m-bma"> Brandmeldeanlagen</label>
       <label class="check"><input type="checkbox" id="m-wb"> Stundenzettel</label>
       <label class="check"><input type="checkbox" id="m-ur"> Urlaub beantragen</label>
+      <label class="check"><input type="checkbox" id="m-lf"> Firmenleitfaden</label>
     </div>
   </details>
   <details class="card" id="secBk">
@@ -202,7 +208,7 @@ details.card .in > *{min-width:0;max-width:100%}
       <p class="note">Eingelesen werden Sicherungen aus dieser App, aus dem alten Wochenbericht und aus der alten Brandmelde-App. Einträge mit gleicher Kennung werden ersetzt, alle anderen bleiben.</p>
     </div>
   </details>
-  <p class="ver">Oh-MyGosch · Version 2.6</p>
+  <p class="ver">Oh-MyGosch · Version 2.7</p>
 </main>
 <script>/* Gemeinsame Helfer für alle Seiten von Oh-MyGosch: Dateien weitergeben, Gerätespeicher für Grundrisse. */
 (function(){
@@ -344,13 +350,13 @@ function summary(){
 }
 
 // ---------- Bereiche ein/aus ----------
-function modules(){ return Object.assign({bma:true, wb:true, ur:true}, ls("app.modules") || {}); }
+function modules(){ return Object.assign({bma:true, wb:true, ur:true, lf:true}, ls("app.modules") || {}); }
 function renderModules(){
   const m = modules();
-  $("t-bma").hidden = !m.bma; $("t-wb").hidden = !m.wb; $("t-ur").hidden = !m.ur; $("m-bma").checked = m.bma; $("m-wb").checked = m.wb; $("m-ur").checked = m.ur;
-  $("noneNote").hidden = m.bma || m.wb || m.ur;
+  $("t-bma").hidden = !m.bma; $("t-wb").hidden = !m.wb; $("t-ur").hidden = !m.ur; $("t-lf").hidden = !m.lf; $("m-lf").checked = m.lf; $("m-bma").checked = m.bma; $("m-wb").checked = m.wb; $("m-ur").checked = m.ur;
+  $("noneNote").hidden = m.bma || m.wb || m.ur || m.lf;
 }
-["bma","wb","ur"].forEach(k => $("m-"+k).addEventListener("change", () => { const m = modules(); m[k] = $("m-"+k).checked; lsSet("app.modules", m); renderModules(); }));
+["bma","wb","ur","lf"].forEach(k => $("m-"+k).addEventListener("change", () => { const m = modules(); m[k] = $("m-"+k).checked; lsSet("app.modules", m); renderModules(); }));
 
 // ---------- Arbeitszeit ----------
 const WD = ["Mo","Di","Mi","Do","Fr","Sa","So"];
