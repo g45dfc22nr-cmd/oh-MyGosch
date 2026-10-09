@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Oh-MyGosch">
+<meta name="theme-color" content="#003769">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Urlaub – Oh-MyGosch</title>
+<script>
+(function(){var d="gosch",m="system";try{d=localStorage.getItem("app.design")||"gosch";m=localStorage.getItem("app.mode")||"system"}catch(e){}
+window.WB_look=function(design,mode){var el=document.documentElement;el.setAttribute("data-design",design);if(mode==="light"||mode==="dark")el.setAttribute("data-mode",mode);else el.removeAttribute("data-mode")};
+window.WB_look(d,m);})();
+</script>
+<style>
+/* Designs wie in der BMA-App: Gosch (Logo-Farben), Neon (immer dunkel), Klassisch (iOS-artig). Layout: Woche oben fest, Reiter, Leiste unten. */
+:root{--paper:#FFFFFF;--sunk:#edf1f6;--rs:12px;--bg:#f1f4f8;--surface:#ffffff;--sunk:#edf1f6;--ink:#141a26;--muted:#667085;--line:#e5e8ee;--accent:#0b4f96;--accent-ink:#ffffff;--accent-soft:#e5edf6;--ok:#16875a;--ok-soft:#e4f4ec;--danger-soft:#fdeceb;--warn:#b4610a;--danger:#d03b2f;--shadow:0 1px 2px rgba(16,24,40,.04),0 2px 8px rgba(16,24,40,.05);--f-display:system-ui,-apple-system,"Segoe UI",sans-serif;--f-body:system-ui,-apple-system,"Segoe UI",sans-serif;--r:16px;--rs:12px;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-design]):not([data-theme="light"]){--bg:#0e1116;--surface:#181c23;--sunk:#20252e;--ink:#e9edf3;--muted:#98a2b3;--line:#2a303a;--accent:#7fb0ec;--accent-ink:#06152a;--accent-soft:#15263d;--ok:#45c482;--ok-soft:#13291f;--danger-soft:#3a1916;--warn:#f2aa45;--danger:#ff6b5e;--shadow:none;color-scheme:dark}}
+:root:not([data-design])[data-theme="dark"]{--bg:#0e1116;--surface:#181c23;--sunk:#20252e;--ink:#e9edf3;--muted:#98a2b3;--line:#2a303a;--accent:#7fb0ec;--accent-ink:#06152a;--accent-soft:#15263d;--ok:#45c482;--ok-soft:#13291f;--danger-soft:#3a1916;--warn:#f2aa45;--danger:#ff6b5e;--shadow:none;color-scheme:dark}
+:root[data-design="klassisch"]{--bg:#f1f4f8;--surface:#ffffff;--sunk:#edf1f6;--ink:#141a26;--muted:#667085;--line:#e5e8ee;--accent:#0b4f96;--accent-ink:#ffffff;--accent-soft:#e5edf6;--ok:#16875a;--ok-soft:#e4f4ec;--danger-soft:#fdeceb;--warn:#b4610a;--danger:#d03b2f;--shadow:0 1px 2px rgba(16,24,40,.04),0 2px 8px rgba(16,24,40,.05);--f-display:system-ui,-apple-system,"Segoe UI",sans-serif;--f-body:system-ui,-apple-system,"Segoe UI",sans-serif;--r:16px;--rs:12px;color-scheme:light}
+@media (prefers-color-scheme: dark){:root[data-design="klassisch"]:not([data-theme="light"]):not([data-mode="light"]){--bg:#0e1116;--surface:#181c23;--sunk:#20252e;--ink:#e9edf3;--muted:#98a2b3;--line:#2a303a;--accent:#7fb0ec;--accent-ink:#06152a;--accent-soft:#15263d;--ok:#45c482;--ok-soft:#13291f;--danger-soft:#3a1916;--warn:#f2aa45;--danger:#ff6b5e;--shadow:none;color-scheme:dark}}
+:root[data-design="klassisch"][data-theme="dark"]:not([data-mode="light"]),:root[data-design="klassisch"][data-mode="dark"]{--bg:#0e1116;--surface:#181c23;--sunk:#20252e;--ink:#e9edf3;--muted:#98a2b3;--line:#2a303a;--accent:#7fb0ec;--accent-ink:#06152a;--accent-soft:#15263d;--ok:#45c482;--ok-soft:#13291f;--danger-soft:#3a1916;--warn:#f2aa45;--danger:#ff6b5e;--shadow:none;color-scheme:dark}
+:root[data-design="gosch"]{--bg:#f3f5f8;--surface:#ffffff;--sunk:#eef2f6;--ink:#0d1b2e;--muted:#5d6b7c;--line:#d6dee8;--accent:#003769;--accent-ink:#ffffff;--accent-soft:#e2eaf3;--ok:#13804f;--ok-soft:#e3f3ea;--danger-soft:#fbe9e9;--warn:#b05f0b;--danger:#c62f2f;--shadow:0 1px 0 rgba(0,55,105,.06);--f-display:system-ui,-apple-system,sans-serif;--f-body:system-ui,-apple-system,sans-serif;--r:8px;--rs:6px;color-scheme:light}
+@media (prefers-color-scheme: dark){:root[data-design="gosch"]:not([data-theme="light"]):not([data-mode="light"]){--bg:#08131f;--surface:#0f1e30;--sunk:#16283d;--ink:#e8eef5;--muted:#93a3b6;--line:#22374f;--accent:#7fb2e6;--accent-ink:#04121f;--accent-soft:#16304c;--ok:#45c482;--ok-soft:#13291f;--danger-soft:#3a1916;--warn:#f2aa45;--danger:#ff6b5e;--shadow:none;color-scheme:dark}}
+:root[data-design="gosch"][data-theme="dark"]:not([data-mode="light"]),:root[data-design="gosch"][data-mode="dark"]{--bg:#08131f;--surface:#0f1e30;--sunk:#16283d;--ink:#e8eef5;--muted:#93a3b6;--line:#22374f;--accent:#7fb2e6;--accent-ink:#04121f;--accent-soft:#16304c;--ok:#45c482;--ok-soft:#13291f;--danger-soft:#3a1916;--warn:#f2aa45;--danger:#ff6b5e;--shadow:none;color-scheme:dark}
+:root[data-design="neon"]{--bg:#06070d;--surface:#0f1220;--sunk:#171b2d;--ink:#eef1ff;--muted:#8e95ba;--line:#242a45;--accent:#3b8cff;--accent-ink:#ffffff;--accent-soft:rgba(59,140,255,.16);--ok:#2fe6a7;--ok-soft:rgba(47,230,167,.13);--danger-soft:rgba(255,61,90,.16);--warn:#ff9a3c;--danger:#ff3d5a;--shadow:0 0 0 1px rgba(110,130,255,.10),0 10px 28px rgba(0,0,0,.45);--neon-red:#ff2e4d;--neon-mag:#e1309a;--neon-blue:#2f7bff;--neon-cyan:#35c8ff;--f-display:system-ui,-apple-system,sans-serif;--f-body:system-ui,-apple-system,sans-serif;--r:16px;--rs:12px;color-scheme:dark}
+
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{width:1px;min-width:100%;overflow-x:clip;background:var(--bg)}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;width:100%;background:var(--bg);color:var(--ink);font:16px/1.45 var(--f-body);-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;touch-action:pan-y;overflow-x:clip;font-variant-numeric:tabular-nums}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:640px;margin:0 auto;padding-inline:16px;padding-block:12px 120px;display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
+.backline{display:flex}
+.backbtn{display:inline-flex;align-items:center;height:34px;padding:0 14px;border:0;border-radius:99px;background:var(--accent);color:var(--accent-ink);font:650 14px/1 var(--f-body);text-decoration:none}
+:root[data-design="gosch"] .backbtn{border-radius:6px}
+h1{margin:4px 2px 0;font:800 30px/1.1 var(--f-display);letter-spacing:-.02em}
+:root[data-design="gosch"] h1{color:var(--accent)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;display:grid;gap:12px;min-width:0}
+.card h2{margin:0;font:700 18px/1.2 var(--f-display)}
+.yb{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface);font:600 20px/1 var(--f-body);color:var(--ink)}
+.konto{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.k{background:var(--sunk);border-radius:var(--rs);padding:10px;display:grid;gap:2px;min-width:0}
+.kbtn{border:0;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.kbtn:active{transform:scale(.98)}
+.k span{font-size:12px;color:var(--muted);line-height:1.2}
+.k b{font:800 24px/1.1 var(--f-display)}
+.k.ok b{color:var(--ok)} .k.warn b{color:var(--danger)}
+.note{margin:0;font-size:13px;color:var(--muted)}
+.list{display:grid;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+.li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:13px 16px;border:0;border-top:1px solid var(--line);background:none;text-align:left;width:100%}
+.li:first-child{border-top:0}
+.li b{font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.li small{grid-column:1;color:var(--muted);font-size:13px}
+.chip{grid-row:1 / span 2;grid-column:2;font-size:12px;font-weight:650;padding:4px 9px;border-radius:99px;background:var(--sunk);color:var(--muted)}
+.chip.genehmigt{background:var(--ok-soft);color:var(--ok)} .chip.abgelehnt{background:var(--danger-soft);color:var(--danger)}
+.empty{padding:20px 16px;color:var(--muted);text-align:center}
+.btn{height:44px;padding:0 16px;border-radius:var(--rs);border:1px solid var(--line);background:var(--surface);font-weight:650;font-size:15px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.danger{color:var(--danger)}
+:root[data-design="neon"] .btn.primary{background:linear-gradient(100deg,var(--neon-blue),var(--neon-cyan));border:0;color:#fff}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.grid3{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 5.5rem;gap:8px}
+.field{display:grid;gap:3px;min-width:0}
+.field label{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.field input,.field textarea{width:100%;min-width:0;height:44px;border:1px solid transparent;border-radius:var(--rs);background:var(--sunk);padding:0 10px;font-size:16px}
+.field input[type="date"]{-webkit-appearance:none;appearance:none;padding:0 8px;line-height:44px}
+.field textarea{height:auto;min-height:64px;padding:10px;resize:vertical}
+.field input:focus,.field textarea:focus{border-color:var(--accent);background:var(--surface);outline:none}
+.field input.num{text-align:right}
+.hint{font-size:12px;color:var(--muted)}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--line);border-radius:11px;padding:2px;gap:2px}
+.seg button{border:0;background:none;border-radius:9px;height:38px;font-weight:600}
+.seg button[aria-checked="true"]{background:var(--surface);box-shadow:0 1px 3px rgba(16,24,40,.14)}
+:root[data-design="gosch"] .seg button[aria-checked="true"]{background:var(--accent);color:var(--accent-ink);box-shadow:none}
+:root[data-design="neon"] .seg button[aria-checked="true"]{background:linear-gradient(100deg,rgba(47,123,255,.9),rgba(53,200,255,.9));color:#fff}
+.seg.status button[data-v="genehmigt"][aria-checked="true"]{background:var(--ok);color:#fff}
+.seg.status button[data-v="abgelehnt"][aria-checked="true"]{background:var(--danger);color:#fff}
+.days{display:flex;gap:6px;flex-wrap:wrap}
+.days label{display:flex;align-items:center;justify-content:center;width:44px;height:40px;border-radius:var(--rs);background:var(--sunk);font-weight:650;cursor:pointer}
+.days input{position:absolute;opacity:0;pointer-events:none}
+.days label.on{background:var(--accent);color:var(--accent-ink)}
+details.card{padding:0}
+details.card > summary{list-style:none;cursor:pointer;padding:16px;font:700 18px/1.2 var(--f-display);display:flex;align-items:center}
+details.card > summary::-webkit-details-marker{display:none}
+details.card > summary::after{content:"";margin-left:auto;width:9px;height:9px;border-right:2.5px solid var(--muted);border-bottom:2.5px solid var(--muted);transform:rotate(45deg);margin-top:-5px}
+details.card[open] > summary::after{transform:rotate(-135deg);margin-top:4px}
+details.card .in{display:grid;gap:12px;padding:0 16px 16px}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.bar .in{max-width:640px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center}
+.bar .btn{height:48px;font-size:16px}
+.bar .btn.primary{flex:1}
+.sheet-bg{position:fixed;inset:0;z-index:20;background:rgba(10,18,22,.5);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);color:var(--ink);width:100%;max-width:640px;border-radius:16px 16px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));display:grid;gap:12px}
+.sheet h2{margin:0;font:700 22px/1.2 var(--f-display)}
+.sigpad{border:1px dashed var(--line);border-radius:var(--rs);background:#fff;touch-action:none;width:100%;aspect-ratio:3/1;display:block}
+:root:not([data-design="gosch"]) .card,:root:not([data-design="gosch"]) .list{border:0}
+:root[data-design="gosch"] .card,:root[data-design="gosch"] .list{box-shadow:none}
+:root[data-design="neon"]{background:radial-gradient(60% 40% at 0% 0%,rgba(255,46,77,.16),transparent 70%),radial-gradient(60% 40% at 100% 10%,rgba(47,123,255,.18),transparent 70%),var(--bg);background-attachment:fixed}
+:root[data-design="neon"] body{background:transparent}
+</style>
+</head>
+<body>
+<script>/* Gemeinsame Helfer für alle Seiten von Oh-MyGosch: Dateien weitergeben, Gerätespeicher für Grundrisse. */
+(function(){
+  "use strict";
+  // ---------- kleiner Hinweis unten ----------
+  function toast(msg){
+    let t = document.getElementById("gtToast");
+    if(!t){ t = document.createElement("div"); t.id = "gtToast"; t.setAttribute("role","status");
+      t.style.cssText = "position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom,0px));z-index:60;background:#111;color:#fff;padding:10px 16px;border-radius:12px;font:500 14px/1.3 system-ui,-apple-system,sans-serif;max-width:calc(100% - 32px);text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.25)";
+      document.body.appendChild(t); }
+    t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(()=>{ t.hidden = true; }, 3200);
+  }
+  // Teilen braucht auf dem iPhone manchmal einen frischen Tipp: dann einen Knopf anbieten
+  function shareLater(file, label){
+    let box = document.getElementById("gtShare");
+    if(!box){ box = document.createElement("div"); box.id = "gtShare";
+      box.style.cssText = "position:fixed;left:16px;right:16px;bottom:calc(96px + env(safe-area-inset-bottom,0px));z-index:61;display:flex;gap:8px;justify-content:center";
+      box.innerHTML = '<button type="button" id="gtShareGo" style="flex:1;max-width:360px;height:50px;border:0;border-radius:14px;background:#003769;color:#fff;font:650 16px system-ui,-apple-system,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.3)"></button><button type="button" id="gtShareX" aria-label="Schließen" style="width:50px;height:50px;border:0;border-radius:14px;background:#fff;color:#111;font:600 18px system-ui;box-shadow:0 6px 20px rgba(0,0,0,.3)">✕</button>';
+      document.body.appendChild(box);
+      box.querySelector("#gtShareX").onclick = () => { box.hidden = true; box._f = null; };
+      box.querySelector("#gtShareGo").onclick = async () => { const f = box._f; box.hidden = true; box._f = null; if(f){ try{ await navigator.share({files:[f]}); }catch(e){} } };
+    }
+    box._f = file; box.querySelector("#gtShareGo").textContent = label || "Datei teilen"; box.hidden = false;
+  }
+  // Datei ans iPhone übergeben: Teilen-Menü (Mail, Dateien …), sonst normaler Download
+  async function deliver(blob, filename, label){
+    // In der Claude-Testansicht: Speichern über Claude
+    try{
+      if(window.claude && window.claude.use){
+        const d = await window.claude.use("downloads");
+        if(d){ try{ await d.save({filename, data: blob}); toast("Gespeichert: " + filename); }
+               catch(e){ if(!e || e.code !== "declined") toast("Die Datei konnte nicht gespeichert werden."); }
+               return; }
+      }
+    }catch(e){}
+    const file = new File([blob], filename, {type: blob.type || "application/octet-stream"});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      try{ await navigator.share({files:[file]}); return; }
+      catch(e){ if(e && e.name === "AbortError") return; shareLater(file, label); return; }
+    }
+    const url = URL.createObjectURL(blob); const a = document.createElement("a");
+    a.href = url; a.download = filename; document.body.appendChild(a); a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 5000);
+    toast("Gespeichert: " + filename);
+  }
+  // ---------- Gerätespeicher (IndexedDB) für Grundrisse ----------
+  let dbp = null;
+  function open(){
+    if(!dbp) dbp = new Promise((res, rej)=>{
+      const r = indexedDB.open("gosch-tools", 1);
+      r.onupgradeneeded = () => { if(!r.result.objectStoreNames.contains("blobs")) r.result.createObjectStore("blobs"); };
+      r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+    });
+    return dbp;
+  }
+  async function tx(mode, fn){
+    const db = await open();
+    return new Promise((res, rej)=>{ const t = db.transaction("blobs", mode); const out = fn(t.objectStore("blobs")); t.oncomplete = () => res(out && out.result !== undefined ? out.result : out); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error); });
+  }
+  const IDB = {
+    put: (id, blob) => tx("readwrite", s => { s.put(blob, id); }),
+    del: id => tx("readwrite", s => { s.delete(id); }),
+    get: id => tx("readonly", s => s.get(id)),
+    async all(){
+      const db = await open();
+      return new Promise((res, rej)=>{ const out = []; const t = db.transaction("blobs","readonly"); const c = t.objectStore("blobs").openCursor();
+        c.onsuccess = () => { const cur = c.result; if(cur){ out.push([cur.key, cur.value]); cur.continue(); } };
+        t.oncomplete = () => res(out); t.onerror = () => rej(t.error); });
+    }
+  };
+  const blobToData = b => new Promise((res, rej)=>{ const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(b); });
+  async function dataToBlob(d){ const r = await fetch(d); return r.blob(); }
+  async function blobsAsData(ids){
+    const out = {};
+    for(const id of new Set(ids.filter(Boolean))){ try{ const b = await IDB.get(id); if(b) out[id] = await blobToData(b); }catch(e){} }
+    return out;
+  }
+  async function restoreBlobs(map){
+    let n = 0;
+    for(const [id, d] of Object.entries(map || {})){ try{ await IDB.put(id, await dataToBlob(d)); n++; }catch(e){ console.error(e); } }
+    return n;
+  }
+  function persist(){ try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch(e){} }
+  function registerSW(){ if("serviceWorker" in navigator && location.protocol === "https:" && !(window.claude && window.claude.use)){ navigator.serviceWorker.register("sw.js").catch(()=>{}); } }
+  // Zurück zum Startbildschirm
+  function home(ev){
+    try{ if(document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1){ if(ev) ev.preventDefault(); history.back(); return false; } }catch(e){}
+    return true;
+  }
+  window.GT = {toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home};
+  persist(); registerSW();
+})();
+</script>
+<main class="wrap">
+  <div class="backline"><a class="backbtn" id="backBtn" href="index.html">‹ Zurück</a></div>
+
+  <!-- Liste -->
+  <section id="vList" style="display:grid;gap:14px">
+    <h1>Urlaub</h1>
+    <div class="card">
+      <div class="row" style="flex-wrap:nowrap"><h2 id="kontoTitle" style="flex:1">Urlaubskonto</h2><button class="yb" type="button" id="yPrev" aria-label="Vorheriges Jahr">‹</button><button class="yb" type="button" id="yNext" aria-label="Nächstes Jahr">›</button></div>
+      <div class="konto">
+        <button type="button" class="k kbtn" id="kAnspruchBtn" aria-label="Urlaubsanspruch ändern"><span>Anspruch ✎</span><b id="kAnspruch">–</b></button>
+        <div class="k"><span>Beantragt</span><b id="kBeantragt">–</b></div>
+        <div class="k" id="kRestBox"><span>Rest</span><b id="kRest">–</b></div>
+      </div>
+      <p class="note" id="kNote"></p>
+    </div>
+    <button class="btn primary" type="button" id="newBtn" style="height:50px;font-size:16px">+ Neuer Antrag</button>
+    <div class="list" id="list"></div>
+    <details class="card" id="setBox">
+      <summary>Einstellungen</summary>
+      <div class="in">
+        <div class="grid2">
+          <div class="field"><label for="setAnspruch">Urlaubstage pro Jahr</label><input id="setAnspruch" class="num" inputmode="decimal"></div>
+        </div>
+        <span class="hint">Arbeitstage und Stunden pro Tag stellst du auf dem Startbildschirm unter „Einstellungen → Arbeitszeit“ ein. Sie gelten für Stundenzettel und Urlaub. Feiertage in Schleswig-Holstein werden automatisch abgezogen. Die Unterschrift kommt aus dem Stundenzettel.</span>
+      </div>
+    </details>
+  </section>
+
+  <!-- Antrag -->
+  <section id="vEdit" style="display:grid;gap:14px" hidden>
+    <h1 id="editTitle">Neuer Antrag</h1>
+    <div class="card">
+      <div class="grid2">
+        <div class="field"><label for="fVorname">Vorname</label><input id="fVorname" data-k="vorname" autocomplete="given-name"></div>
+        <div class="field"><label for="fName">Name</label><input id="fName" data-k="name" autocomplete="family-name"></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Urlaub</h2>
+      <div class="grid3">
+        <div class="field"><label for="fUVon">vom</label><input id="fUVon" type="date" data-k="uVon"></div>
+        <div class="field"><label for="fUBis">bis</label><input id="fUBis" type="date" data-k="uBis"></div>
+        <div class="field"><label for="fUTage">Tage</label><input id="fUTage" class="num" inputmode="decimal" data-k="uTage"></div>
+      </div>
+      <span class="hint" id="uHint">Tage werden automatisch berechnet und lassen sich ändern.</span>
+    </div>
+    <div class="card">
+      <h2>Überstunden</h2>
+      <div class="grid3">
+        <div class="field"><label for="fOVon">vom</label><input id="fOVon" type="date" data-k="oVon"></div>
+        <div class="field"><label for="fOBis">bis</label><input id="fOBis" type="date" data-k="oBis"></div>
+        <div class="field"><label for="fOStd">Stunden</label><input id="fOStd" class="num" inputmode="decimal" data-k="oStd"></div>
+      </div>
+      <span class="hint" id="oHint">Freizeit aus Überstunden. Stunden werden aus den Arbeitstagen berechnet und lassen sich ändern.</span>
+    </div>
+    <div class="card">
+      <div class="field"><label for="fGruende">Gründe</label><input id="fGruende" data-k="gruende"></div>
+      <div class="field"><label>Notdienst in der Woche</label>
+        <div class="seg" role="radiogroup" id="ndSeg"><button type="button" role="radio" data-v="ja">Ja</button><button type="button" role="radio" data-v="nein">Nein</button><button type="button" role="radio" data-v="">Keine</button></div>
+      </div>
+      <div class="field"><label for="fNdText">Bemerkung zum Notdienst</label><input id="fNdText" data-k="ndText" placeholder="z. B. Mo–Do"></div>
+      <div class="field"><label for="fNdTausch">Notdienst getauscht mit</label><input id="fNdTausch" data-k="ndTausch" placeholder="Name des Mitarbeiters"></div>
+      <div class="field"><label for="fBeantragt">Beantragt am</label><input id="fBeantragt" type="date" data-k="beantragt"></div>
+    </div>
+    <div class="card">
+      <h2>Status</h2>
+      <div class="seg status" role="radiogroup" id="stSeg"><button type="button" role="radio" data-v="offen">Offen</button><button type="button" role="radio" data-v="genehmigt">Genehmigt</button><button type="button" role="radio" data-v="abgelehnt">Abgelehnt</button></div>
+      <span class="hint">Nur für dich. Steht nicht auf dem Antrag. Abgelehnte Anträge zählen nicht im Urlaubskonto.</span>
+      <div class="row" style="justify-content:flex-end"><button class="btn danger" type="button" id="delBtn">Antrag löschen</button></div>
+    </div>
+  </section>
+</main>
+
+<div class="bar" id="bar" hidden><div class="in"><button class="btn primary" type="button" id="makeBtn">Antrag erstellen</button></div></div>
+
+<div class="sheet-bg" id="sheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shT">
+    <h2 id="shT">Unterschreiben</h2>
+    <p class="note">Unterschreib mit dem Finger. Datum und Uhrzeit werden beim Erstellen gestempelt. Tipp: Wenn du im Stundenzettel eine Unterschrift speicherst, wird sie hier automatisch verwendet.</p>
+    <canvas class="sigpad" id="pad" width="900" height="300"></canvas>
+    <div class="row">
+      <button class="btn" type="button" id="padClear">Feld leeren</button>
+      <span style="flex:1"></span>
+      <button class="btn" type="button" id="padCancel">Abbrechen</button>
+      <button class="btn primary" type="button" id="padOk" disabled>Unterschreiben &amp; erstellen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,"0");
+const ls = k => { try{ return JSON.parse(localStorage.getItem(k) || "null"); }catch(e){ return null; } };
+const lsSet = (k,v) => { try{ localStorage.setItem(k, JSON.stringify(v)); return true; }catch(e){ return false; } };
+const KEY = "urlaub.v1";
+const parseD = s => { if(!s) return null; const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const ymd = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const fmtD = s => { const d = parseD(s); return d ? pad(d.getDate())+"."+pad(d.getMonth()+1)+"."+d.getFullYear() : ""; };
+const fmtShort = s => { const d = parseD(s); return d ? pad(d.getDate())+"."+pad(d.getMonth()+1)+"." : ""; };
+const numDE = n => { if(n==null || n==="" || isNaN(n)) return ""; const r = Math.round(n*100)/100; return String(r).replace(".",","); };
+const parseNum = s => { s = String(s ?? "").trim(); if(!s) return null; const n = Number(s.replace(",",".")); return isNaN(n) ? null : n; };
+
+// ---------- Daten ----------
+const DEF = {tage:[1,2,3,4], std:9.25, anspruch:22};
+let store = Object.assign({antraege:{}, settings:{...DEF}}, ls(KEY) || {});
+store.settings = Object.assign({...DEF}, store.settings || {});
+const save = () => { if(!lsSet(KEY, store)) GT.toast("Speichern fehlgeschlagen: Der Speicher ist voll."); };
+const wbSet = () => ls("wb.settings.v1") || {};
+const az = () => { const a = Object.assign({tage:[1,2,3,4], std:9.25}, ls("app.arbeitszeit") || {}); a.std = Number(a.std) || 9.25; return a; };
+// alte Einstellung aus dem Urlaub-Bereich einmalig übernehmen
+if(!ls("app.arbeitszeit") && store.settings && (store.settings.tage || store.settings.std)) lsSet("app.arbeitszeit", {tage: store.settings.tage || [1,2,3,4], std: Number(store.settings.std) || 9.25});
+
+// ---------- Feiertage Schleswig-Holstein ----------
+function easter(y){ const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),mo=Math.floor((h+l-7*m+114)/31),da=((h+l-7*m+114)%31)+1; return new Date(y,mo-1,da); }
+const hcache = {};
+function holidays(y){
+  if(hcache[y]) return hcache[y];
+  const e = easter(y), add = n => { const d = new Date(e); d.setDate(d.getDate()+n); return ymd(d); };
+  return hcache[y] = new Set([y+"-01-01", add(-2), add(1), y+"-05-01", add(39), add(50), y+"-10-03", y+"-10-31", y+"-12-25", y+"-12-26"]);
+}
+function workdays(von, bis){
+  const a = parseD(von), b = parseD(bis || von); if(!a || !b || b < a) return 0;
+  let n = 0; const d = new Date(a);
+  while(d <= b){ const wd = d.getDay() || 7; if(az().tage.includes(wd) && !holidays(d.getFullYear()).has(ymd(d))) n++; d.setDate(d.getDate()+1); }
+  return n;
+}
+
+// ---------- Ansicht ----------
+let cur = null;      // Antrag in Bearbeitung
+function show(view){
+  $("vList").hidden = view !== "list"; $("vEdit").hidden = view !== "edit"; $("bar").hidden = view !== "edit";
+  window.scrollTo(0,0);
+}
+$("backBtn").addEventListener("click", ev => {
+  if(!$("vEdit").hidden){ ev.preventDefault(); show("list"); renderList(); return; }
+  return GT.home(ev);
+});
+
+let kontoY = new Date().getFullYear();
+function renderKonto(){
+  const y = kontoY;
+  let b = 0, g = 0, h = 0;
+  for(const a of Object.values(store.antraege)){
+    if(a.status === "abgelehnt") continue;
+    if(a.uVon && parseD(a.uVon).getFullYear() === y){ const t = parseNum(a.uTage) || 0; b += t; if(a.status === "genehmigt") g += t; }
+    if(a.oVon && parseD(a.oVon).getFullYear() === y) h += parseNum(a.oStd) || 0;
+  }
+  const an = Number(store.settings.anspruch) || 0, rest = an - b;
+  $("kontoTitle").textContent = "Urlaubskonto " + y;
+  $("kAnspruch").textContent = numDE(an); $("kBeantragt").textContent = numDE(b); $("kRest").textContent = numDE(rest);
+  $("kRestBox").className = "k " + (rest < 0 ? "warn" : "ok");
+  $("kNote").textContent = store.settings.anspruchSet ? (g ? numDE(g) + " Tage genehmigt" : "Noch nichts genehmigt") + (h ? " · " + numDE(h) + " h Überstunden-Freizeit beantragt" : "") + "." : "Tippe auf „Anspruch“ und trag deine Urlaubstage pro Jahr ein.";
+}
+function label(a){
+  const p = [];
+  if(a.uVon) p.push("Urlaub " + (a.uBis && a.uBis !== a.uVon ? fmtShort(a.uVon) + "–" + fmtD(a.uBis) : fmtD(a.uVon)));
+  if(a.oVon) p.push("Überstunden " + (a.oBis && a.oBis !== a.oVon ? fmtShort(a.oVon) + "–" + fmtD(a.oBis) : fmtD(a.oVon)));
+  return p.join(" · ") || "Antrag ohne Zeitraum";
+}
+function renderList(){
+  renderKonto();
+  const arr = Object.entries(store.antraege).sort((x,y) => ((y[1].uVon||y[1].oVon||"")).localeCompare(x[1].uVon||x[1].oVon||""));
+  const el = $("list"); el.innerHTML = "";
+  if(!arr.length){ el.innerHTML = '<div class="empty">Noch keine Anträge. Tippe auf „+ Neuer Antrag“.</div>'; return; }
+  for(const [id, a] of arr){
+    const b = document.createElement("button"); b.type = "button"; b.className = "li"; b.dataset.id = id;
+    const t = document.createElement("b"); t.textContent = label(a);
+    const s = document.createElement("small"); const bits = [];
+    if(a.uVon) bits.push(numDE(parseNum(a.uTage)||0) + " Tage"); if(a.oVon) bits.push(numDE(parseNum(a.oStd)||0) + " h");
+    bits.push("beantragt " + (fmtD(a.beantragt) || "–")); s.textContent = bits.join(" · ");
+    const c = document.createElement("span"); c.className = "chip " + (a.status||"offen"); c.textContent = a.status === "genehmigt" ? "Genehmigt" : a.status === "abgelehnt" ? "Abgelehnt" : "Offen";
+    b.append(t, c, s); el.append(b);
+  }
+}
+$("yPrev").addEventListener("click", () => { kontoY--; renderKonto(); });
+$("yNext").addEventListener("click", () => { kontoY++; renderKonto(); });
+$("list").addEventListener("click", ev => { const b = ev.target.closest("[data-id]"); if(b) openEdit(b.dataset.id); });
+
+// ---------- Einstellungen ----------
+const WD = ["Mo","Di","Mi","Do","Fr","Sa","So"];
+function renderSettings(){ $("setAnspruch").value = numDE(store.settings.anspruch); }
+$("setAnspruch").addEventListener("change", () => { const v = parseNum($("setAnspruch").value); if(v != null && v >= 0 && v < 100){ store.settings.anspruch = v; store.settings.anspruchSet = true; save(); renderKonto(); GT.toast("Urlaubsanspruch: " + numDE(v) + " Tage pro Jahr"); } renderSettings(); });
+$("kAnspruchBtn").addEventListener("click", () => { $("setBox").open = true; const i = $("setAnspruch"); i.scrollIntoView({block:"center"}); setTimeout(() => { i.focus(); i.select(); }, 250); });
+
+// ---------- Antrag bearbeiten ----------
+function newAntrag(){
+  const nm = (wbSet().name || "").trim().split(/\s+/);
+  const last = nm.length > 1 ? nm.pop() : ""; const first = nm.join(" ");
+  const prev = Object.values(store.antraege).sort((a,b)=>(b.created||0)-(a.created||0))[0] || {};
+  return {vorname: prev.vorname || first, name: prev.name || last, uVon:"", uBis:"", uTage:"", oVon:"", oBis:"", oStd:"", gruende:"", nd:"", ndText:"", ndTausch:"", beantragt: ymd(new Date()), status:"offen", created: Date.now(), autoT:true, autoS:true};
+}
+let curId = null;
+function openEdit(id){
+  curId = id || null; cur = id ? {...store.antraege[id]} : newAntrag();
+  $("editTitle").textContent = id ? "Antrag bearbeiten" : "Neuer Antrag";
+  document.querySelectorAll("#vEdit [data-k]").forEach(i => { i.value = cur[i.dataset.k] ?? ""; });
+  $("fUTage").value = cur.uTage === "" ? "" : numDE(parseNum(cur.uTage)); $("fOStd").value = cur.oStd === "" ? "" : numDE(parseNum(cur.oStd));
+  renderSeg("ndSeg", cur.nd || ""); renderSeg("stSeg", cur.status || "offen");
+  $("delBtn").hidden = !id; $("delBtn").dataset.armed = ""; $("delBtn").textContent = "Antrag löschen";
+  show("edit");
+}
+function renderSeg(id, v){ document.querySelectorAll("#"+id+" button").forEach(b => b.setAttribute("aria-checked", String(b.dataset.v === v))); }
+function persist(){ if(!curId) curId = "a" + Date.now().toString(36); store.antraege[curId] = {...cur}; save(); }
+function recalc(changed){
+  if(cur.uVon && !cur.uBis){ cur.uBis = cur.uVon; $("fUBis").value = cur.uBis; }
+  if(cur.oVon && !cur.oBis){ cur.oBis = cur.oVon; $("fOBis").value = cur.oBis; }
+  if(cur.autoT && (changed === "uVon" || changed === "uBis")){ const n = cur.uVon ? workdays(cur.uVon, cur.uBis) : ""; cur.uTage = n === "" ? "" : n; $("fUTage").value = n === "" ? "" : numDE(n); }
+  if(cur.autoS && (changed === "oVon" || changed === "oBis")){ const n = cur.oVon ? workdays(cur.oVon, cur.oBis) * az().std : ""; cur.oStd = n === "" ? "" : n; $("fOStd").value = n === "" ? "" : numDE(n); }
+  const bad = (a,b) => a && b && b < a;
+  $("uHint").textContent = bad(cur.uVon,cur.uBis) ? "„bis“ liegt vor „vom“. Bitte die Daten prüfen." : "Tage werden automatisch berechnet (Arbeitstage ohne Feiertage) und lassen sich ändern.";
+  $("oHint").textContent = bad(cur.oVon,cur.oBis) ? "„bis“ liegt vor „vom“. Bitte die Daten prüfen." : "Freizeit aus Überstunden. Stunden = Arbeitstage × " + numDE(az().std) + " h, lassen sich ändern.";
+}
+$("vEdit").addEventListener("input", ev => {
+  const k = ev.target.dataset.k; if(!k) return;
+  if(k === "uTage"){ cur.uTage = parseNum(ev.target.value) ?? ""; cur.autoT = ev.target.value === ""; }
+  else if(k === "oStd"){ cur.oStd = parseNum(ev.target.value) ?? ""; cur.autoS = ev.target.value === ""; }
+  else cur[k] = ev.target.value;
+  if(ev.target.type === "date") recalc(k);
+  persist();
+});
+$("vEdit").addEventListener("change", ev => { if(ev.target.type === "date"){ cur[ev.target.dataset.k] = ev.target.value; recalc(ev.target.dataset.k); persist(); } });
+$("ndSeg").addEventListener("click", ev => { const b = ev.target.closest("[data-v]"); if(!b) return; cur.nd = b.dataset.v; renderSeg("ndSeg", cur.nd); persist(); });
+$("stSeg").addEventListener("click", ev => { const b = ev.target.closest("[data-v]"); if(!b) return; cur.status = b.dataset.v; renderSeg("stSeg", cur.status); persist(); });
+$("delBtn").addEventListener("click", () => { const b = $("delBtn");
+  if(b.dataset.armed !== "1"){ b.dataset.armed = "1"; b.textContent = "Wirklich löschen?"; setTimeout(()=>{ b.dataset.armed = ""; b.textContent = "Antrag löschen"; }, 3000); return; }
+  if(curId){ delete store.antraege[curId]; save(); } curId = null; show("list"); renderList(); });
+$("newBtn").addEventListener("click", () => openEdit(null));
+
+// ---------- Unterschrift ----------
+const pc = $("pad"), pctx = pc.getContext("2d"); let drawing = false, last = null, inked = false;
+const ppos = e => { const r = pc.getBoundingClientRect(); return {x:(e.clientX-r.left)*pc.width/r.width, y:(e.clientY-r.top)*pc.height/r.height}; };
+pc.addEventListener("pointerdown", e => { e.preventDefault(); drawing = true; last = ppos(e); try{ pc.setPointerCapture(e.pointerId); }catch(_){} pctx.fillStyle="#111"; pctx.beginPath(); pctx.arc(last.x,last.y,2.4,0,7); pctx.fill(); inked = true; });
+pc.addEventListener("pointermove", e => { if(!drawing) return; const p = ppos(e); pctx.strokeStyle="#111"; pctx.lineWidth=5; pctx.lineCap="round"; pctx.beginPath(); pctx.moveTo(last.x,last.y); pctx.lineTo(p.x,p.y); pctx.stroke(); last = p; });
+["pointerup","pointercancel","pointerleave"].forEach(t => pc.addEventListener(t, () => { if(drawing){ drawing = false; $("padOk").disabled = !inked; } }));
+function padPng(){
+  const d = pctx.getImageData(0,0,pc.width,pc.height).data; let x0=pc.width,y0=pc.height,x1=0,y1=0;
+  for(let y=0;y<pc.height;y++) for(let x=0;x<pc.width;x++) if(d[(y*pc.width+x)*4+3]>10){ if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y; }
+  const m=8; x0=Math.max(0,x0-m); y0=Math.max(0,y0-m); x1=Math.min(pc.width,x1+m); y1=Math.min(pc.height,y1+m);
+  const o = document.createElement("canvas"); o.width = x1-x0; o.height = y1-y0; o.getContext("2d").drawImage(pc,x0,y0,o.width,o.height,0,0,o.width,o.height); return o.toDataURL("image/png");
+}
+const clearPad = () => { pctx.clearRect(0,0,pc.width,pc.height); inked = false; $("padOk").disabled = true; };
+$("padClear").onclick = clearPad;
+$("padCancel").onclick = () => { $("sheet").hidden = true; };
+$("padOk").onclick = async () => { if(!inked) return; cur.sig = padPng(); cur.signedAt = Date.now(); persist(); $("sheet").hidden = true; await makePdf(); };
+const loadImg = src => new Promise(res => { if(!src) return res(null); const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; });
+let savedImg = null; const savedSig = wbSet().signature; if(savedSig) loadImg(savedSig).then(im => savedImg = im);
+
+$("makeBtn").addEventListener("click", async () => {
+  if(!cur.uVon && !cur.oVon){ GT.toast("Bitte einen Zeitraum für Urlaub oder Überstunden eintragen."); return; }
+  if((cur.uBis && cur.uBis < cur.uVon) || (cur.oBis && cur.oBis < cur.oVon)){ GT.toast("„bis“ liegt vor „vom“. Bitte die Daten prüfen."); return; }
+  if(wbSet().signature){ cur.sig = "@saved"; cur.signedAt = Date.now(); persist(); await makePdf(); return; }
+  clearPad(); $("sheet").hidden = false;
+});
+
+// ---------- PDF: Formular „Urlaub / Überstunden“ ----------
+// ---------- eigener PDF-Baustein (Helvetica, A4, ohne Internet) ----------
+const HW={r:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 278, 278, 355, 556, 556, 889, 667, 191, 333, 333, 389, 584, 278, 333, 278, 278, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 278, 278, 584, 584, 584, 556, 1015, 667, 667, 722, 722, 667, 611, 778, 722, 278, 500, 667, 556, 833, 722, 778, 667, 778, 722, 667, 611, 722, 667, 944, 667, 667, 611, 278, 278, 278, 469, 556, 333, 556, 556, 500, 556, 556, 278, 556, 556, 222, 222, 500, 222, 833, 556, 556, 556, 556, 333, 500, 278, 556, 500, 722, 500, 500, 500, 334, 260, 334, 584, 350, 556, 350, 222, 556, 333, 1000, 556, 556, 333, 1000, 667, 333, 1000, 350, 611, 350, 350, 222, 222, 333, 333, 350, 556, 1000, 333, 1000, 500, 333, 944, 350, 500, 667, 278, 333, 556, 556, 556, 556, 260, 556, 333, 737, 370, 556, 584, 333, 737, 333, 400, 584, 333, 333, 333, 556, 537, 278, 333, 333, 365, 556, 834, 834, 834, 611, 667, 667, 667, 667, 667, 667, 1000, 722, 667, 667, 667, 667, 278, 278, 278, 278, 722, 722, 778, 778, 778, 778, 778, 584, 778, 722, 722, 722, 722, 667, 667, 611, 556, 556, 556, 556, 556, 556, 889, 500, 556, 556, 556, 556, 278, 278, 278, 278, 556, 556, 556, 556, 556, 556, 556, 584, 611, 556, 556, 556, 556, 500, 556, 500],b:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 278, 333, 474, 556, 556, 889, 722, 238, 333, 333, 389, 584, 278, 333, 278, 278, 556, 556, 556, 556, 556, 556, 556, 556, 556, 556, 333, 333, 584, 584, 584, 611, 975, 722, 722, 722, 722, 667, 611, 778, 722, 278, 556, 722, 611, 833, 722, 778, 667, 778, 722, 667, 611, 722, 667, 944, 667, 667, 611, 333, 278, 333, 584, 556, 333, 556, 611, 556, 611, 556, 333, 611, 611, 278, 278, 556, 278, 889, 611, 611, 611, 611, 389, 556, 333, 611, 556, 778, 556, 556, 500, 389, 280, 389, 584, 350, 556, 350, 278, 556, 500, 1000, 556, 556, 333, 1000, 667, 333, 1000, 350, 611, 350, 350, 278, 278, 500, 500, 350, 556, 1000, 333, 1000, 556, 333, 944, 350, 500, 667, 278, 333, 556, 556, 556, 556, 280, 556, 333, 737, 370, 556, 584, 333, 737, 333, 400, 584, 333, 333, 333, 611, 556, 278, 333, 333, 365, 556, 834, 834, 834, 611, 722, 722, 722, 722, 722, 722, 1000, 722, 667, 667, 667, 667, 278, 278, 278, 278, 722, 722, 778, 778, 778, 778, 778, 584, 778, 722, 722, 722, 722, 667, 667, 611, 556, 556, 556, 556, 556, 556, 889, 556, 556, 556, 556, 556, 278, 278, 278, 278, 611, 611, 611, 611, 611, 611, 611, 584, 611, 611, 611, 611, 611, 556, 611, 556]};
+const WINMAP={"€":128,"‚":130,"„":132,"…":133,"‘":145,"’":146,"“":147,"”":148,"•":149,"–":150,"—":151,"−":45};
+function winAnsi(str){const o=[];for(const ch of String(str)){const c=ch.codePointAt(0);if(WINMAP[ch]!=null)o.push(WINMAP[ch]);else if(c<128||(c>=160&&c<256))o.push(c);else o.push(63)}return o}
+function pdfStr(str){let s="";for(const c of winAnsi(str)){if(c===40||c===41||c===92)s+="\\"+String.fromCharCode(c);else if(c<32||c>126)s+="\\"+c.toString(8).padStart(3,"0");else s+=String.fromCharCode(c)}return "("+s+")"}
+function MiniPDF(){
+  const K=72/25.4,PH=297;const ops=[],imgs=[];let fb=false,fp=10;
+  const f=n=>String(Math.round(n*1000)/1000);const X=x=>f(x*K),Y=y=>f((PH-y)*K);
+  return {
+    font(b,p){fb=!!b;fp=p},
+    width(t){const w=fb?HW.b:HW.r;let s=0;for(const c of winAnsi(t))s+=w[c]||0;return s/1000*fp/K},
+    text(t,x,y){ops.push("BT /"+(fb?"F2":"F1")+" "+f(fp)+" Tf "+X(x)+" "+Y(y)+" Td "+pdfStr(t)+" Tj ET")},
+    line(x1,y1,x2,y2,lw){ops.push(f(lw*K)+" w 0 G "+X(x1)+" "+Y(y1)+" m "+X(x2)+" "+Y(y2)+" l S")},
+    rect(x,y,w,h,lw){ops.push(f(lw*K)+" w 0 G "+X(x)+" "+Y(y+h)+" "+f(w*K)+" "+f(h*K)+" re S")},
+    fill(x,y,w,h){ops.push("0 g "+X(x)+" "+Y(y+h)+" "+f(w*K)+" "+f(h*K)+" re f")},
+    image(img,src,x,y,w,h){
+      const c=document.createElement("canvas");c.width=img.naturalWidth;c.height=img.naturalHeight;const g=c.getContext("2d");
+      g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height);g.drawImage(img,0,0);
+      const bin=atob(c.toDataURL("image/jpeg",0.92).split(",")[1]);const bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+      const name="Im"+(imgs.length+1);imgs.push({name,w:c.width,h:c.height,bytes});
+      ops.push("q "+f(w*K)+" 0 0 "+f(h*K)+" "+X(x)+" "+Y(y+h)+" cm /"+name+" Do Q");
+    },
+    output(title,author){
+      const enc=s=>{const u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i)&255;return u};
+      const parts=[],offs=[];let len=0;const push=u=>{parts.push(u);len+=u.length};
+      push(enc("%PDF-1.4\n%\xE2\xE3\xCF\xD3\n"));
+      const content=ops.join("\n");
+      const imgRefs=imgs.map((im,i)=>"/"+im.name+" "+(7+i)+" 0 R").join(" ");
+      const objs=[];
+      objs.push("<< /Type /Catalog /Pages 2 0 R >>");
+      objs.push("<< /Type /Pages /Kids [3 0 R] /Count 1 >>");
+      objs.push("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 4 0 R /F2 5 0 R >>"+(imgs.length?" /XObject << "+imgRefs+" >>":"")+" >> /Contents 6 0 R >>");
+      objs.push("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>");
+      objs.push("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>");
+      objs.push({stream:enc(content),dict:""});
+      imgs.forEach(im=>objs.push({stream:im.bytes,dict:"/Type /XObject /Subtype /Image /Width "+im.w+" /Height "+im.h+" /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode "}));
+      const d=new Date();const ds="D:"+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds());
+      objs.push("<< /Title "+pdfStr(title||"")+" /Author "+pdfStr(author||"")+" /Producer (Wochenbericht) /CreationDate ("+ds+") >>");
+      objs.forEach((o,i)=>{offs.push(len);
+        if(typeof o==="string")push(enc((i+1)+" 0 obj\n"+o+"\nendobj\n"));
+        else{push(enc((i+1)+" 0 obj\n<< "+o.dict+"/Length "+o.stream.length+" >>\nstream\n"));push(o.stream);push(enc("\nendstream\nendobj\n"))}});
+      const xref=len;let x="xref\n0 "+(objs.length+1)+"\n0000000000 65535 f \n";offs.forEach(o=>x+=String(o).padStart(10,"0")+" 00000 n \n");
+      push(enc(x+"trailer\n<< /Size "+(objs.length+1)+" /Root 1 0 R /Info "+objs.length+" 0 R >>\nstartxref\n"+xref+"\n%%EOF\n"));
+      return new Blob(parts,{type:"application/pdf"});
+    }
+  };
+}
+
+
+async function makePdf(){
+  const a = cur;
+  const sigSrc = a.sig === "@saved" ? wbSet().signature : a.sig;
+  const sigImg = a.sig === "@saved" && savedImg ? savedImg : await loadImg(sigSrc);
+  const B = MiniPDF();
+  const T = (t, x, y, pt, bold) => { B.font(!!bold, pt||11); B.text(t, x, y); };
+  const L = (x1, x2, y, w) => B.line(x1, y, x2, y, w || 0.25);
+  const V = (t, x, y, maxW) => { if(t == null || t === "") return; let pt = 11; B.font(false, pt); while(maxW && B.width(String(t)) > maxW && pt > 7){ pt -= .5; B.font(false, pt); } B.text(String(t), x, y); };
+  const box = (x, y, on) => { T("(" + (on ? "X" : "  ") + ")", x, y, 11); };
+  // Titel
+  T("Urlaub / Überstunden", 29, 31.5, 13, true); B.font(true, 13); L(29, 29 + B.width("Urlaub / Überstunden"), 32.6, 0.35);
+  T("Vorname:", 29, 41.5, 10.5, true); L(47, 96, 42.2); V(a.vorname, 48, 41.2, 47);
+  T("Name:", 104, 41.5, 10.5, true); L(117, 166, 42.2); V(a.name, 118, 41.2, 47);
+  T("Ich beantrage folgenden Urlaub:", 28, 57, 10.5);
+  // Urlaub / Überstunden
+  T("Urlaub:", 27, 73, 10.5, true); T("vom", 66, 73.5, 10.5); L(73.5, 101, 74.2); T("bis", 102, 73.5, 10.5); L(107, 134, 74.2); T("(Tage:", 135.5, 73.5, 10.5); L(147, 165, 74.2); T(")", 165.3, 73.5, 10.5);
+  if(a.uVon){ V(fmtD(a.uVon), 74.5, 73.4, 26); V(fmtD(a.uBis||a.uVon), 108, 73.4, 26); V(numDE(parseNum(a.uTage)), 149, 73.4, 15); }
+  T("Überstunden:", 27, 81.5, 10.5, true); T("vom", 66, 82, 10.5); L(73.5, 101, 82.7); T("bis", 102, 82, 10.5); L(107, 134, 82.7); T("(Stunden:", 135.5, 82, 10.5); L(153, 172, 82.7); T(")", 172.3, 82, 10.5);
+  if(a.oVon){ V(fmtD(a.oVon), 74.5, 81.9, 26); V(fmtD(a.oBis||a.oVon), 108, 81.9, 26); V(numDE(parseNum(a.oStd)), 155, 81.9, 16); }
+  T("Gründe:", 27, 89.5, 10.5, true); L(42, 134, 90.2); V(a.gruende, 43, 89.4, 90);
+  // Notdienst
+  T("Notdienst in der Woche:", 27, 98.5, 10.5, true); box(71, 98.5, a.nd === "ja"); T("Ja", 76.5, 98.5, 10.5); L(80.5, 97.5, 99.2);
+  box(98.5, 98.5, a.nd === "nein"); T("Nein", 104, 98.5, 10.5); L(111.5, 129, 99.2);
+  if(a.ndText){ if(a.nd === "nein") V(a.ndText, 112, 98.4, 17); else V(a.ndText, 81, 98.4, 16); }
+  T("Notdienst getauscht: (Name des Mitarbeiters)", 27, 107, 10.5); V(a.ndTausch, 112, 107, 80);
+  // Beantragt + Unterschrift
+  T("Beantragt am:", 27, 123, 10.5, true); L(53, 81.5, 123.7); V(fmtD(a.beantragt), 54, 122.9, 27);
+  T("Bitte denkt daran, dass ihr euren Urlaub mit euren Kollegen und Vorgesetzten abstimmt,", 27, 131, 10.5);
+  T("damit ein reibungsloser Arbeitsablaufgesichert ist.", 27, 137, 10.5);
+  T("Unterschrift Arbeitnehmer:", 27, 145.5, 10.5, true); L(77, 126.5, 146.2);
+  if(sigImg){ const bw = 48, bh = 7.3; const ar = sigImg.naturalWidth / sigImg.naturalHeight; let w = bw, h = w / ar; if(h > bh){ h = bh; w = h * ar; } B.image(sigImg, sigSrc, 78, 146 - h, w, h); }
+  if(a.signedAt){ const d = new Date(a.signedAt); B.font(false, 6.5); B.text("Unterschrieben am " + pad(d.getDate())+"."+pad(d.getMonth()+1)+"."+d.getFullYear()+", "+pad(d.getHours())+":"+pad(d.getMinutes())+" Uhr", 128, 145.8); }
+  L(26, 193, 148.6, 0.45);
+  // Büro-Teil (bleibt leer)
+  T("(Wird vom Büro ausgefüllt)", 27, 154, 8.5);
+  T("Konto Urlaubstage:", 26, 169.5, 10.5); L(61, 92, 170.2);
+  T("Konto Stunden:", 26, 178, 10.5); L(54, 83, 178.7);
+  T("Gesehen:", 26, 195.5, 10.5); T("Kittel:", 51, 195.5, 10.5); L(63, 113, 196.2); T("S.Poneleit:", 114, 195.5, 10.5); L(134, 185.5, 196.2);
+  T("(   )", 25, 212.5, 10.5); T("Der Urlaubsantrag wurde genehmigt", 37.6, 212.5, 10.5);
+  T("(   )", 25, 221.5, 10.5); T("Der Urlaubsantrag wird aus folgendem Grund abgelehnt", 37.6, 221.5, 10.5);
+  L(24, 194.5, 234); L(24, 194.5, 243.5);
+  T("(Wenn der Urlaub nicht in Anspruch genommen wird, nachdem er genehmigt wurde)", 24, 249, 8.5);
+  T("(   )", 25, 266.5, 10.5); T("Ich widerspreche diesem Urlaubsantrag", 37, 266.5, 10.5);
+  T("Unterschrift Arbeitnehmer:", 37, 275.5, 10.5); L(87.5, 139.5, 276.2); T("Datum:", 140.5, 275.5, 10.5); L(155.5, 184, 276.2);
+  T("1000/001/Urlaub/1", 24, 287.5, 9); B.font(false, 9); T("13.11.24", 194 - B.width("13.11.24"), 287.5, 9);
+  const nm = [a.vorname, a.name].filter(Boolean).join(" ");
+  const blob = B.output("Urlaub / Überstunden " + (fmtD(a.uVon || a.oVon)), nm);
+  const fn = "Urlaubsantrag_" + (a.uVon || a.oVon || ymd(new Date())) + (a.name ? "_" + a.name.replace(/[^A-Za-z0-9ÄÖÜäöüß_-]/g, "") : "") + ".pdf";
+  await GT.deliver(blob, fn, "Antrag teilen");
+}
+
+renderSettings(); renderList(); show("list");
+window.addEventListener("pageshow", () => { try{ window.WB_look(localStorage.getItem("app.design")||"gosch", localStorage.getItem("app.mode")||"system"); }catch(e){} });
+})();
+</script>
+</body>
+</html>
