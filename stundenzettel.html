@@ -184,6 +184,7 @@ main .wrap{padding-block:16px 40px;display:grid;gap:14px}
 .dayh{margin-left:auto;font-weight:600}
 .dfrei{font-size:12px;font-weight:600;padding:2px 7px;border-radius:99px;background:var(--accent-soft);color:var(--muted);align-self:center}
 .dayh{white-space:nowrap;font-size:15px}
+.prow .ph.okh{color:var(--ok)} .prow .ph.parth{color:var(--warn)}
 .dayh.ok{color:var(--ok)} .dayh.part{color:var(--warn)}
 .soll{font-size:13px;color:var(--muted);margin-top:6px}
 .soll .pp,#perDays .pp{color:var(--ok);font-weight:600} .soll .pn,#perDays .pn{color:var(--danger);font-weight:600}
@@ -895,11 +896,7 @@ function renderSummary(){
   $("perTitle").textContent=perMode==="month"?MONTHS[perMonth]+" "+perYear:String(perYear);
   $("perLbl").textContent=perMode==="month"?"Monatsstunden":"Jahresstunden";
   $("perTotal").innerHTML=fmt2(res.t.zeit)+"<small>h</small>";
-  {const from=perMode==="month"?new Date(perYear,perMonth,1):new Date(perYear,0,1);const to=perMode==="month"?new Date(perYear,perMonth+1,0):new Date(perYear,11,31);
-   const today=new Date();today.setHours(0,0,0,0);const end=to<today?to:today;let soll=0;for(let d=new Date(from);d<=end;d.setDate(d.getDate()+1))soll+=sollTag(d).soll;
-   const ist=res.t.zeit+num(res.t.ul)+fzOf(res.t);const df=Math.round((ist-soll)*100)/100;
-   const base=res.days.size?(res.days.size+(res.days.size===1?" Arbeitstag":" Arbeitstage")+" · Ø "+fmt2(res.t.zeit/res.days.size)+" h pro Tag"):"";
-   $("perDays").innerHTML=(base?base+"<br>":"")+(from>today?"Liegt in der Zukunft.":"Soll"+(to>today?" bis heute":"")+" "+fmt2(soll)+" h · erledigt "+fmt2(ist)+' h · <span class="'+(df<0?"pn":"pp")+'">'+sgn(df)+" h</span>")}
+  $("perDays").innerHTML="Wochensoll "+fmt2(azGet().std*azGet().tage.length)+" h";
   const T=res.t;
   $("tUes").textContent=sgn(ot(T));$("tUes").className="tv "+(ot(T)>0?"pos":"zero");
   $("tUesSub").textContent=num(T.mk)?"ÜS "+fmt2(T.ues)+" · MK "+fmt2(T.mk):"ÜS + MK";
@@ -911,8 +908,8 @@ function renderSummary(){
   if(perMode==="month"){
     const ids=Object.keys(res.weeks).sort();
     if(!ids.length)h='<div class="empty">Für '+MONTHS[perMonth]+' '+perYear+' ist noch nichts eingetragen.</div>';
-    ids.forEach(id=>{const w=res.weeks[id];const kw=isoWeek(parseYmd(id)).week;const ex=extLine(w.t);
-      h+='<button type="button" class="prow" data-week="'+id+'"><div class="pname">KW '+kw+'<span>'+fmtShort(w.from)+' – '+fmtShort(w.to)+'</span></div><div class="ph">'+fmt2(w.t.zeit)+' h</div>'+(ex?'<div class="pext">'+ex+'</div>':'')+'</button>'});
+    ids.forEach(id=>{const w=res.weeks[id];const kw=isoWeek(parseYmd(id)).week;const ex=extLine(w.t);let ws=0;for(let i=0;i<7;i++){const d=addDays(parseYmd(id),i);if(d.getMonth()===perMonth&&d.getFullYear()===perYear)ws+=sollTag(d).soll}const wi=w.t.zeit+num(w.t.ul)+fzOf(w.t);
+      h+='<button type="button" class="prow" data-week="'+id+'"><div class="pname">KW '+kw+'<span>'+fmtShort(w.from)+' – '+fmtShort(w.to)+'</span></div><div class="ph '+(ws?(wi>=ws-0.001?'okh':'parth'):'')+'">'+(ws?fmt2(wi)+' / '+fmt2(ws)+' h':fmt2(w.t.zeit)+' h')+'</div>'+(ex?'<div class="pext">'+ex+'</div>':'')+'</button>'});
   }else{
     const max=Math.max(1,...res.months.map(m=>m.zeit));
     res.months.forEach((m,i)=>{const ex=extLine(m);const empty=!m.zeit&&!ex;
