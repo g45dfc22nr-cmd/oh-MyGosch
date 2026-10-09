@@ -153,11 +153,6 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
 /* Untere Leiste schwebend */
 :root[data-design="modern"] .bar{border-top:0;background:var(--surface);border-radius:26px 26px 0 0;box-shadow:0 -10px 30px rgba(20,24,28,.08)}
 /* Brandmeldeanlagen: schwebende dunkle Navigation wie im Vorbild */
-:root[data-design="modern"] nav.tabs:has(> .in){left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:6px;border:0;border-radius:99px;background:var(--navbg);box-shadow:0 12px 30px rgba(0,0,0,.22);-webkit-backdrop-filter:none;backdrop-filter:none}
-:root[data-design="modern"] nav.tabs:has(> .in) .in{gap:4px}
-:root[data-design="modern"] nav.tabs:has(> .in) button{color:rgba(255,255,255,.62);border-radius:99px;padding:9px 4px}
-:root[data-design="modern"] nav.tabs:has(> .in) button[aria-current="page"]{background:#ffffff;color:#003769}
-:root[data-design="modern"] nav.tabs:has(> .in) button[aria-current="page"]::before{display:none}
 :root[data-design="modern"] .fab{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
 :root[data-design="modern"] .toast,:root[data-design="modern"] #gtToast{border-radius:99px}
 /* Ausrichtung: Knöpfe gleich hoch, Eingabefelder in einer Zeile unten bündig */
@@ -170,9 +165,52 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
 :root[data-design="modern"] .brand{display:flex;justify-content:flex-start;padding:0}
 @media (prefers-color-scheme: dark){:root[data-design="modern"]:not([data-theme="light"]):not([data-mode="light"]) .brand img{filter:brightness(0) invert(.92)}}
 :root[data-design="modern"][data-mode="dark"] .brand img,:root[data-design="modern"][data-theme="dark"]:not([data-mode="light"]) .brand img{filter:brightness(0) invert(.92)}
+
+/* ===== Gemeinsamer Aufbau wie bei den Brandmeldeanlagen: großer Seitentitel + Navigationsleiste unten ===== */
+.pagehead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:6px 2px 2px;min-width:0}
+.pagehead h1{margin:0;font:800 32px/1.1 var(--f-display);letter-spacing:-.025em;color:var(--brand,var(--ink));min-width:0;overflow-wrap:anywhere}
+.pagehead .ctx{color:var(--muted);font-size:14px;white-space:nowrap}
+.appnav{position:fixed;z-index:20;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto;padding:6px;border-radius:99px;background:var(--navbg,var(--accent));box-shadow:0 12px 30px rgba(0,0,0,.22)}
+.appnav .in{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px}
+.appnav button{border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:52px;padding:6px 4px;border-radius:99px;color:rgba(255,255,255,.7);font:600 12px/1 var(--f-body);cursor:pointer}
+.appnav button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.appnav button[aria-selected="true"]{background:#ffffff;color:#003769}
+.appnav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+:root[data-design="neon"] .appnav{background:rgba(15,18,32,.92);border:1px solid #242a45;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+:root[data-design="neon"] .appnav button{color:#8e95ba}
+:root[data-design="neon"] .appnav button[aria-selected="true"]{background:linear-gradient(100deg,var(--neon-blue,#2f7bff),var(--neon-cyan,#35c8ff));color:#fff}
+:root[data-design="neon"] .pagehead h1{color:var(--ink)}
+/* Aktionsleiste schwebt über der Navigation */
+:root[data-design] .bar.over-nav{left:14px;right:14px;width:auto;bottom:calc(84px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto;border:0;border-radius:26px;padding-bottom:0;background:var(--surface);box-shadow:0 10px 30px rgba(0,55,105,.14)}
+:root[data-design="neon"] .bar.over-nav{border:1px solid #242a45}
+body.has-appnav{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+/* Stundenzettel: Knöpfe unter den Wochentagen */
+:root[data-design] .bar.inflow{position:static;display:grid;gap:10px;margin:6px 0 0;padding:0;background:none;border:0;border-radius:0;box-shadow:none}
+:root[data-design] .bar.inflow #saveBtn,:root[data-design] .bar.inflow #exportBtn{width:100%;height:52px;min-height:52px;font-size:16px;border-radius:99px;flex:none}
+:root[data-design="neon"] .bar.inflow{background:none;-webkit-backdrop-filter:none;backdrop-filter:none;border:0}
+/* Brandmeldeanlagen: gleiche Leiste wie überall */
+:root[data-design] nav.tabs:has(> .in){position:fixed;z-index:20;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto;padding:6px;border:0;border-radius:99px;background:var(--navbg,var(--accent));box-shadow:0 12px 30px rgba(0,0,0,.22);-webkit-backdrop-filter:none;backdrop-filter:none}
+:root[data-design] nav.tabs:has(> .in) .in{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px;max-width:none;margin:0}
+:root[data-design] nav.tabs:has(> .in) button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:52px;padding:6px 4px;border-radius:99px;color:rgba(255,255,255,.7);font:600 12px/1 var(--f-body);letter-spacing:0;text-transform:none;text-shadow:none;background:none}
+:root[data-design] nav.tabs:has(> .in) button svg{width:22px;height:22px;filter:none}
+:root[data-design] nav.tabs:has(> .in) button[aria-current="page"]{background:#ffffff;color:#003769;text-shadow:none}
+:root[data-design] nav.tabs:has(> .in) button[aria-current="page"] svg{filter:none}
+:root[data-design] nav.tabs:has(> .in) button::before{display:none}
+:root[data-design="neon"] nav.tabs:has(> .in){background:rgba(15,18,32,.92);border:1px solid #242a45;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+:root[data-design="neon"] nav.tabs:has(> .in) button{color:#8e95ba}
+:root[data-design="neon"] nav.tabs:has(> .in) button[aria-current="page"]{background:linear-gradient(100deg,var(--neon-blue,#2f7bff),var(--neon-cyan,#35c8ff));color:#fff}
+:root[data-design] .fab{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+
+/* Zurück-Knopf bleibt beim Scrollen oben links stehen */
+.backbtn{position:fixed!important;z-index:40;top:calc(10px + env(safe-area-inset-top,0px));left:max(16px,calc(50vw - 304px));margin:0!important;box-shadow:0 6px 18px rgba(0,30,60,.18)}
+header.top .backbtn{left:max(16px,calc(50vw - 344px))}
+#app .backbtn{left:max(16px,calc(50vw - 344px))}
+.backline{min-height:42px}
+#app .tools:has(> .backbtn),#app .strip:has(> .backbtn){min-height:42px}
+header.top{position:static!important;border-bottom:0!important}
 </style>
 </head>
-<body>
+<body class="has-appnav">
 <script>/* Gemeinsame Helfer für alle Seiten von Oh-MyGosch: Dateien weitergeben, Gerätespeicher für Grundrisse. */
 (function(){
   "use strict";
@@ -276,10 +314,17 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
 </script>
 <main class="wrap">
   <div class="backline"><a class="backbtn" id="backBtn" href="index.html">‹ Zurück</a></div>
+  <div class="pagehead"><h1 id="pageTitle">Anträge</h1><span class="ctx">Urlaub</span></div>
 
   <!-- Liste -->
   <section id="vList" style="display:grid;gap:14px">
-    <h1>Urlaub</h1>
+    <button class="btn primary" type="button" id="newBtn" style="height:50px;font-size:16px">+ Neuer Antrag</button>
+    <div class="list" id="list"></div>
+    <p class="hint" style="margin:0 4px">Name, Unterschrift, Urlaubstage und Arbeitszeit stellst du auf der Startseite unter „Einstellungen“ ein. Feiertage in Schleswig-Holstein werden automatisch abgezogen.</p>
+  </section>
+
+  <!-- Urlaubskonto -->
+  <section id="vKonto" style="display:grid;gap:14px" hidden>
     <div class="card">
       <div class="row" style="flex-wrap:nowrap"><h2 id="kontoTitle" style="flex:1">Urlaubskonto</h2><button class="yb" type="button" id="yPrev" aria-label="Vorheriges Jahr">‹</button><button class="yb" type="button" id="yNext" aria-label="Nächstes Jahr">›</button></div>
       <div class="konto">
@@ -289,14 +334,11 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
       </div>
       <p class="note" id="kNote"></p>
     </div>
-    <button class="btn primary" type="button" id="newBtn" style="height:50px;font-size:16px">+ Neuer Antrag</button>
-    <div class="list" id="list"></div>
-    <p class="hint" style="margin:0 4px">Name, Unterschrift, Urlaubstage und Arbeitszeit stellst du auf der Startseite unter Einstellungen (Zahnrad) ein. Feiertage in Schleswig-Holstein werden automatisch abgezogen.</p>
+    <div class="list" id="kList"></div>
   </section>
 
   <!-- Antrag -->
   <section id="vEdit" style="display:grid;gap:14px" hidden>
-    <h1 id="editTitle">Neuer Antrag</h1>
     <div class="card">
       <div class="grid2">
         <div class="field"><label for="fVorname">Vorname</label><input id="fVorname" data-k="vorname" autocomplete="given-name"></div>
@@ -340,12 +382,16 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
   </section>
 </main>
 
+<nav class="appnav" id="nav" aria-label="Urlaub"><div class="in" role="tablist">
+  <button type="button" role="tab" data-view="list" aria-selected="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5V3h6v1.5M8.5 10h7M8.5 13.5h7M8.5 17h4"/></svg>Anträge</button>
+  <button type="button" role="tab" data-view="konto" aria-selected="false"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="M9 14.5l2 2 4-4"/></svg>Urlaubskonto</button>
+</div></nav>
 <div class="bar" id="bar" hidden><div class="in"><button class="btn primary" type="button" id="saveBtn">Speichern</button><button class="btn primary" type="button" id="makeBtn">Antrag erstellen</button></div></div>
 
 <div class="sheet-bg" id="setup" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="suT">
     <h2 id="suT">Urlaubstage einrichten</h2>
-    <p class="note">Wie viele Urlaubstage hast du pro Jahr? Das brauchst du nur einmal einzutragen. Ändern kannst du es später auf der Startseite unter Einstellungen (Zahnrad).</p>
+    <p class="note">Wie viele Urlaubstage hast du pro Jahr? Das brauchst du nur einmal einzutragen. Ändern kannst du es später auf der Startseite unter „Einstellungen“.</p>
     <div class="field"><label for="suTage">Urlaubstage pro Jahr</label><input id="suTage" class="num" inputmode="decimal" placeholder="Tage" autocomplete="off"></div>
     <div class="row">
       <a class="btn" href="index.html" onclick="return GT.home(event)" style="display:inline-flex;align-items:center;text-decoration:none;color:var(--ink)">Zurück</a>
@@ -382,7 +428,7 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
 <div class="sheet-bg" id="sheet" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shT">
     <h2 id="shT">Unterschreiben</h2>
-    <p class="note">Unterschreib mit dem Finger. Datum und Uhrzeit werden beim Erstellen gestempelt. Tipp: Wenn du auf der Startseite unter Einstellungen (Zahnrad) eine Unterschrift speicherst, wird sie hier automatisch verwendet.</p>
+    <p class="note">Unterschreib mit dem Finger. Datum und Uhrzeit werden beim Erstellen gestempelt. Tipp: Wenn du auf der Startseite unter „Einstellungen“ eine Unterschrift speicherst, wird sie hier automatisch verwendet.</p>
     <canvas class="sigpad" id="pad" width="900" height="300"></canvas>
     <div class="row">
       <button class="btn" type="button" id="padClear">Feld leeren</button>
@@ -436,7 +482,9 @@ function workdays(von, bis){
 // ---------- Ansicht ----------
 let cur = null;      // Antrag in Bearbeitung
 function show(view){
-  $("vList").hidden = view !== "list"; $("vEdit").hidden = view !== "edit"; $("bar").hidden = view !== "edit";
+  $("vList").hidden = view !== "list"; $("vKonto").hidden = view !== "konto"; $("vEdit").hidden = view !== "edit"; $("bar").hidden = view !== "edit";
+  $("nav").hidden = view === "edit"; document.body.classList.toggle("has-appnav", view !== "edit");
+  if(view !== "edit"){ $("pageTitle").textContent = view === "konto" ? "Urlaubskonto" : "Anträge"; document.querySelectorAll("#nav [data-view]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === view))); }
   window.scrollTo(0,0);
 }
 let dirty = false;
@@ -459,7 +507,16 @@ function renderKonto(){
   $("kontoTitle").textContent = "Urlaubskonto " + y;
   $("kAnspruch").textContent = set ? numDE(an) : "–"; $("kBeantragt").textContent = numDE(b); $("kRest").textContent = set ? numDE(rest) : "–";
   $("kRestBox").className = "k " + (!set ? "" : rest < 0 ? "warn" : "ok");
-  $("kNote").textContent = store.settings.anspruchSet ? (g ? numDE(g) + " Tage genehmigt" : "Noch nichts genehmigt") + (h ? " · " + numDE(h) + " h Überstunden-Freizeit beantragt" : "") + "." : "Trag deine Urlaubstage auf der Startseite unter Einstellungen (Zahnrad) ein.";
+  const kl = $("kList"); kl.innerHTML = "";
+  const yr = Object.entries(store.antraege).filter(([,a]) => [a.uVon, a.oVon].some(d => d && parseD(d).getFullYear() === y)).sort((p,q) => (p[1].uVon||p[1].oVon).localeCompare(q[1].uVon||q[1].oVon));
+  if(!yr.length) kl.innerHTML = '<div class="empty">Keine Anträge in ' + y + '.</div>';
+  for(const [id, a] of yr){ const r = document.createElement("div"); r.className = "li";
+    const o = document.createElement("button"); o.type = "button"; o.className = "liopen"; o.dataset.id = id;
+    const t = document.createElement("b"); t.textContent = label(a); const sm = document.createElement("small");
+    sm.textContent = [a.uVon ? numDE(parseNum(a.uTage)||0) + " Tage" : "", a.oVon ? numDE(parseNum(a.oStd)||0) + " h" : ""].filter(Boolean).join(" · ");
+    o.append(t, sm); const c = document.createElement("button"); c.type = "button"; c.className = "chip " + (a.status||"offen"); c.dataset.opt = id;
+    c.textContent = a.status === "genehmigt" ? "Genehmigt" : a.status === "abgelehnt" ? "Abgelehnt" : "Offen"; r.append(o, c); kl.append(r); }
+  $("kNote").textContent = store.settings.anspruchSet ? (g ? numDE(g) + " Tage genehmigt" : "Noch nichts genehmigt") + (h ? " · " + numDE(h) + " h Überstunden-Freizeit beantragt" : "") + "." : "Trag deine Urlaubstage auf der Startseite unter „Einstellungen“ ein.";
 }
 function label(a){
   const p = [];
@@ -486,6 +543,8 @@ function renderList(){
 }
 $("yPrev").addEventListener("click", () => { kontoY--; renderKonto(); });
 $("yNext").addEventListener("click", () => { kontoY++; renderKonto(); });
+$("nav").addEventListener("click", ev => { const b = ev.target.closest("[data-view]"); if(b){ show(b.dataset.view); if(b.dataset.view === "konto") renderKonto(); } });
+$("kList").addEventListener("click", ev => { const o = ev.target.closest("[data-opt]"); if(o){ openOpt(o.dataset.opt); return; } const b = ev.target.closest("[data-id]"); if(b) openEdit(b.dataset.id); });
 $("list").addEventListener("click", ev => { const o = ev.target.closest("[data-opt]"); if(o){ openOpt(o.dataset.opt); return; } const b = ev.target.closest("[data-id]"); if(b) openEdit(b.dataset.id); });
 
 // ---------- Status ändern & Kalender (aus der Liste) ----------
@@ -537,7 +596,7 @@ function newAntrag(){
 let curId = null;
 function openEdit(id){
   curId = id || null; cur = id ? {...store.antraege[id]} : newAntrag();
-  $("editTitle").textContent = id ? "Antrag bearbeiten" : "Neuer Antrag";
+  $("pageTitle").textContent = id ? "Antrag bearbeiten" : "Neuer Antrag";
   document.querySelectorAll("#vEdit [data-k]").forEach(i => { i.value = cur[i.dataset.k] ?? ""; });
   renderBeantragt();
   if(cur.uBisSet === undefined) cur.uBisSet = !!(cur.uBis && cur.uBis !== cur.uVon);

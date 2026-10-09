@@ -14,7 +14,7 @@
 <link rel="icon" href="icon-192.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}</style>
 </head>
-<body>
+<body class="has-appnav">
 <script>/* Gemeinsame Helfer für alle Seiten von Oh-MyGosch: Dateien weitergeben, Gerätespeicher für Grundrisse. */
 (function(){
   "use strict";
@@ -202,7 +202,8 @@ main .wrap{padding-block:16px 40px;display:grid;gap:14px}
 .entry{padding:8px 14px;border-top:1px solid var(--line);display:grid;gap:8px}
 .erow{display:grid;grid-template-columns:minmax(0,1fr) 7.2rem 4.4rem 34px;gap:6px;align-items:end}
 .field{display:grid;gap:2px;min-width:0}
-.field label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.field label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:380px){.erow .field label{letter-spacing:.02em;font-size:10px}}
 .field input{width:100%;min-width:0;height:40px;border:1px solid transparent;border-radius:var(--rs);background:var(--sunk);padding:0 9px;font-size:16px}
 .field input.num{text-align:right}
 .field input:focus{border-color:var(--accent);outline:none;background:var(--surface)}
@@ -305,7 +306,7 @@ button.prow:hover{background:var(--accent-soft)}
 .lbl-s{display:none}
 @media (max-width:400px){.lbl-l{display:none}.lbl-s{display:inline}}
 @media (max-width:440px){.bar .wrap{flex-wrap:wrap;gap:6px 8px;padding-block:8px 10px}.bar .tot{flex:1 0 100%;display:flex;align-items:baseline;gap:8px}.bar .tot div:last-child{font-size:18px}.bar .btn{padding:0 12px;font-size:15px;height:46px}.bar #saveBtn,.bar #exportBtn{width:auto;flex:1 1 0}}
-#view-edit{padding-bottom:150px}
+#view-edit{padding-bottom:24px}
 #view-edit{padding-bottom:120px}
 
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;z-index:9;max-width:calc(100% - 32px);text-align:center}
@@ -425,11 +426,6 @@ button.prow:hover{background:var(--accent-soft)}
 /* Untere Leiste schwebend */
 :root[data-design="modern"] .bar{border-top:0;background:var(--surface);border-radius:26px 26px 0 0;box-shadow:0 -10px 30px rgba(20,24,28,.08)}
 /* Brandmeldeanlagen: schwebende dunkle Navigation wie im Vorbild */
-:root[data-design="modern"] nav.tabs:has(> .in){left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:6px;border:0;border-radius:99px;background:var(--navbg);box-shadow:0 12px 30px rgba(0,0,0,.22);-webkit-backdrop-filter:none;backdrop-filter:none}
-:root[data-design="modern"] nav.tabs:has(> .in) .in{gap:4px}
-:root[data-design="modern"] nav.tabs:has(> .in) button{color:rgba(255,255,255,.62);border-radius:99px;padding:9px 4px}
-:root[data-design="modern"] nav.tabs:has(> .in) button[aria-current="page"]{background:#ffffff;color:#003769}
-:root[data-design="modern"] nav.tabs:has(> .in) button[aria-current="page"]::before{display:none}
 :root[data-design="modern"] .fab{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
 :root[data-design="modern"] .toast,:root[data-design="modern"] #gtToast{border-radius:99px}
 /* Ausrichtung: Knöpfe gleich hoch, Eingabefelder in einer Zeile unten bündig */
@@ -442,6 +438,49 @@ button.prow:hover{background:var(--accent-soft)}
 :root[data-design="modern"] .brand{display:flex;justify-content:flex-start;padding:0}
 @media (prefers-color-scheme: dark){:root[data-design="modern"]:not([data-theme="light"]):not([data-mode="light"]) .brand img{filter:brightness(0) invert(.92)}}
 :root[data-design="modern"][data-mode="dark"] .brand img,:root[data-design="modern"][data-theme="dark"]:not([data-mode="light"]) .brand img{filter:brightness(0) invert(.92)}
+
+/* ===== Gemeinsamer Aufbau wie bei den Brandmeldeanlagen: großer Seitentitel + Navigationsleiste unten ===== */
+.pagehead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:6px 2px 2px;min-width:0}
+.pagehead h1{margin:0;font:800 32px/1.1 var(--f-display);letter-spacing:-.025em;color:var(--brand,var(--ink));min-width:0;overflow-wrap:anywhere}
+.pagehead .ctx{color:var(--muted);font-size:14px;white-space:nowrap}
+.appnav{position:fixed;z-index:20;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto;padding:6px;border-radius:99px;background:var(--navbg,var(--accent));box-shadow:0 12px 30px rgba(0,0,0,.22)}
+.appnav .in{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px}
+.appnav button{border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:52px;padding:6px 4px;border-radius:99px;color:rgba(255,255,255,.7);font:600 12px/1 var(--f-body);cursor:pointer}
+.appnav button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.appnav button[aria-selected="true"]{background:#ffffff;color:#003769}
+.appnav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+:root[data-design="neon"] .appnav{background:rgba(15,18,32,.92);border:1px solid #242a45;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+:root[data-design="neon"] .appnav button{color:#8e95ba}
+:root[data-design="neon"] .appnav button[aria-selected="true"]{background:linear-gradient(100deg,var(--neon-blue,#2f7bff),var(--neon-cyan,#35c8ff));color:#fff}
+:root[data-design="neon"] .pagehead h1{color:var(--ink)}
+/* Aktionsleiste schwebt über der Navigation */
+:root[data-design] .bar.over-nav{left:14px;right:14px;width:auto;bottom:calc(84px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto;border:0;border-radius:26px;padding-bottom:0;background:var(--surface);box-shadow:0 10px 30px rgba(0,55,105,.14)}
+:root[data-design="neon"] .bar.over-nav{border:1px solid #242a45}
+body.has-appnav{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+/* Stundenzettel: Knöpfe unter den Wochentagen */
+:root[data-design] .bar.inflow{position:static;display:grid;gap:10px;margin:6px 0 0;padding:0;background:none;border:0;border-radius:0;box-shadow:none}
+:root[data-design] .bar.inflow #saveBtn,:root[data-design] .bar.inflow #exportBtn{width:100%;height:52px;min-height:52px;font-size:16px;border-radius:99px;flex:none}
+:root[data-design="neon"] .bar.inflow{background:none;-webkit-backdrop-filter:none;backdrop-filter:none;border:0}
+/* Brandmeldeanlagen: gleiche Leiste wie überall */
+:root[data-design] nav.tabs:has(> .in){position:fixed;z-index:20;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto;padding:6px;border:0;border-radius:99px;background:var(--navbg,var(--accent));box-shadow:0 12px 30px rgba(0,0,0,.22);-webkit-backdrop-filter:none;backdrop-filter:none}
+:root[data-design] nav.tabs:has(> .in) .in{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px;max-width:none;margin:0}
+:root[data-design] nav.tabs:has(> .in) button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:52px;padding:6px 4px;border-radius:99px;color:rgba(255,255,255,.7);font:600 12px/1 var(--f-body);letter-spacing:0;text-transform:none;text-shadow:none;background:none}
+:root[data-design] nav.tabs:has(> .in) button svg{width:22px;height:22px;filter:none}
+:root[data-design] nav.tabs:has(> .in) button[aria-current="page"]{background:#ffffff;color:#003769;text-shadow:none}
+:root[data-design] nav.tabs:has(> .in) button[aria-current="page"] svg{filter:none}
+:root[data-design] nav.tabs:has(> .in) button::before{display:none}
+:root[data-design="neon"] nav.tabs:has(> .in){background:rgba(15,18,32,.92);border:1px solid #242a45;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+:root[data-design="neon"] nav.tabs:has(> .in) button{color:#8e95ba}
+:root[data-design="neon"] nav.tabs:has(> .in) button[aria-current="page"]{background:linear-gradient(100deg,var(--neon-blue,#2f7bff),var(--neon-cyan,#35c8ff));color:#fff}
+:root[data-design] .fab{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+
+/* Zurück-Knopf bleibt beim Scrollen oben links stehen */
+.backbtn{position:fixed!important;z-index:40;top:calc(10px + env(safe-area-inset-top,0px));left:max(16px,calc(50vw - 304px));margin:0!important;box-shadow:0 6px 18px rgba(0,30,60,.18)}
+header.top .backbtn{left:max(16px,calc(50vw - 344px))}
+#app .backbtn{left:max(16px,calc(50vw - 344px))}
+.backline{min-height:42px}
+#app .tools:has(> .backbtn),#app .strip:has(> .backbtn){min-height:42px}
+header.top{position:static!important;border-bottom:0!important}
 </style>
 
 <script>
@@ -452,6 +491,7 @@ window.WB_look(d,m);})();
 <header class="top">
   <div class="wrap">
     <div class="backline"><a class="backbtn" href="index.html" onclick="return GT.home(event)">‹ Zurück</a></div>
+    <div class="pagehead"><h1 id="pageTitle">Erfassen</h1><span class="ctx">Stundenzettel</span></div>
     <div class="weekrow">
       <button class="weekbtn" id="prevWeek" type="button" aria-label="Vorherige Woche"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></button>
       <div class="weekinfo">
@@ -461,11 +501,6 @@ window.WB_look(d,m);})();
       <button class="weekbtn" id="nextWeek" type="button" aria-label="Nächste Woche"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></button>
     </div>
     <div class="status" id="status" aria-live="polite">Lädt …</div>
-    <nav class="tabs" role="tablist">
-      <button class="tab" role="tab" id="tab-edit" aria-selected="true" data-tab="edit" type="button">Erfassen</button>
-      <button class="tab" role="tab" id="tab-sum" aria-selected="false" data-tab="sum" type="button">Übersicht</button>
-      <button hidden class="tab" role="tab" id="tab-settings" aria-selected="false" data-tab="settings" type="button">Einstellungen</button>
-    </nav>
   </div>
 </header>
 
@@ -491,6 +526,11 @@ window.WB_look(d,m);})();
     </form>
     <datalist id="dl-ort"></datalist>
     <datalist id="dl-nr"></datalist>
+    <div class="bar inflow" id="bar">
+      <div class="tot" hidden><div id="barKw">KW –</div><div id="barTotal">0,00 h</div></div>
+      <button class="btn primary" type="button" id="exportBtn">Stundenzettel erstellen</button>
+      <button class="btn primary" type="button" id="saveBtn">Speichern</button>
+    </div>
   </section>
 
 
@@ -572,13 +612,7 @@ window.WB_look(d,m);})();
   </section>
 </main>
 
-<div class="bar" id="bar">
-  <div class="wrap">
-    <div class="tot"><div id="barKw">KW –</div><div id="barTotal">0,00 h</div></div>
-    <button class="btn primary savebtn" type="button" id="saveBtn">Speichern</button>
-    <button class="btn primary" type="button" id="exportBtn"><span class="lbl-l">Stundenzettel erstellen</span><span class="lbl-s">Erstellen</span></button>
-  </div>
-</div>
+<nav class="appnav" aria-label="Stundenzettel"><div class="in" role="tablist"><button type="button" role="tab" id="tab-edit" data-tab="edit" aria-selected="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5V3h6v1.5M8.5 10h7M8.5 13.5h7M8.5 17h4"/></svg>Erfassen</button><button type="button" role="tab" id="tab-sum" data-tab="sum" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Übersicht</button></div></nav>
 <div class="toast" id="toast" role="status" hidden></div>
 <div class="sharebox" id="shareBox" hidden><button class="btn primary" type="button" id="shareNow">Stundenzettel teilen</button><button class="btn" type="button" id="shareClose" aria-label="Schließen">✕</button></div>
 <div class="sheet-bg" id="sheet" hidden>
@@ -841,15 +875,16 @@ $("nextWeek").onclick=()=>gotoWeek(ymd(addDays(parseYmd(curId),7)));
 
 // ---------- tabs ----------
 let currentTab="edit";
-document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>showTab(t.dataset.tab)));
+document.querySelectorAll("[data-tab]").forEach(t=>t.addEventListener("click",()=>showTab(t.dataset.tab)));
 function showTab(name){
   currentTab=name;
-  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",String(t.dataset.tab===name)));
+  {const t=document.getElementById("pageTitle");if(t)t.textContent=name==="sum"?"Übersicht":"Erfassen";}
+  document.querySelectorAll("[data-tab]").forEach(t=>t.setAttribute("aria-selected",String(t.dataset.tab===name)));
   if(!$("view-"+name))name="edit";currentTab=name;
   ["edit","sum","settings"].forEach(n=>$("view-"+n).hidden=n!==name);
   $("bar").hidden=name!=="edit";
   if(name==="sum")renderSummary();
-  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",String(t.dataset.tab===name)));
+  document.querySelectorAll("[data-tab]").forEach(t=>t.setAttribute("aria-selected",String(t.dataset.tab===name)));
   if(name==="preview")drawPreview();
   if(name==="list")renderList();
   if(name==="settings")renderSettings();

@@ -765,11 +765,6 @@ a.backbtn{text-decoration:none;display:inline-flex;align-items:center;align-self
 /* Untere Leiste schwebend */
 :root[data-design="modern"] .bar{border-top:0;background:var(--surface);border-radius:26px 26px 0 0;box-shadow:0 -10px 30px rgba(20,24,28,.08)}
 /* Brandmeldeanlagen: schwebende dunkle Navigation wie im Vorbild */
-:root[data-design="modern"] nav.tabs:has(> .in){left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:6px;border:0;border-radius:99px;background:var(--navbg);box-shadow:0 12px 30px rgba(0,0,0,.22);-webkit-backdrop-filter:none;backdrop-filter:none}
-:root[data-design="modern"] nav.tabs:has(> .in) .in{gap:4px}
-:root[data-design="modern"] nav.tabs:has(> .in) button{color:rgba(255,255,255,.62);border-radius:99px;padding:9px 4px}
-:root[data-design="modern"] nav.tabs:has(> .in) button[aria-current="page"]{background:#ffffff;color:#003769}
-:root[data-design="modern"] nav.tabs:has(> .in) button[aria-current="page"]::before{display:none}
 :root[data-design="modern"] .fab{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
 :root[data-design="modern"] .toast,:root[data-design="modern"] #gtToast{border-radius:99px}
 /* Ausrichtung: Knöpfe gleich hoch, Eingabefelder in einer Zeile unten bündig */
@@ -782,6 +777,49 @@ a.backbtn{text-decoration:none;display:inline-flex;align-items:center;align-self
 :root[data-design="modern"] .brand{display:flex;justify-content:flex-start;padding:0}
 @media (prefers-color-scheme: dark){:root[data-design="modern"]:not([data-theme="light"]):not([data-mode="light"]) .brand img{filter:brightness(0) invert(.92)}}
 :root[data-design="modern"][data-mode="dark"] .brand img,:root[data-design="modern"][data-theme="dark"]:not([data-mode="light"]) .brand img{filter:brightness(0) invert(.92)}
+
+/* ===== Gemeinsamer Aufbau wie bei den Brandmeldeanlagen: großer Seitentitel + Navigationsleiste unten ===== */
+.pagehead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:6px 2px 2px;min-width:0}
+.pagehead h1{margin:0;font:800 32px/1.1 var(--f-display);letter-spacing:-.025em;color:var(--brand,var(--ink));min-width:0;overflow-wrap:anywhere}
+.pagehead .ctx{color:var(--muted);font-size:14px;white-space:nowrap}
+.appnav{position:fixed;z-index:20;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto;padding:6px;border-radius:99px;background:var(--navbg,var(--accent));box-shadow:0 12px 30px rgba(0,0,0,.22)}
+.appnav .in{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px}
+.appnav button{border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:52px;padding:6px 4px;border-radius:99px;color:rgba(255,255,255,.7);font:600 12px/1 var(--f-body);cursor:pointer}
+.appnav button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.appnav button[aria-selected="true"]{background:#ffffff;color:#003769}
+.appnav button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+:root[data-design="neon"] .appnav{background:rgba(15,18,32,.92);border:1px solid #242a45;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+:root[data-design="neon"] .appnav button{color:#8e95ba}
+:root[data-design="neon"] .appnav button[aria-selected="true"]{background:linear-gradient(100deg,var(--neon-blue,#2f7bff),var(--neon-cyan,#35c8ff));color:#fff}
+:root[data-design="neon"] .pagehead h1{color:var(--ink)}
+/* Aktionsleiste schwebt über der Navigation */
+:root[data-design] .bar.over-nav{left:14px;right:14px;width:auto;bottom:calc(84px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto;border:0;border-radius:26px;padding-bottom:0;background:var(--surface);box-shadow:0 10px 30px rgba(0,55,105,.14)}
+:root[data-design="neon"] .bar.over-nav{border:1px solid #242a45}
+body.has-appnav{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+/* Stundenzettel: Knöpfe unter den Wochentagen */
+:root[data-design] .bar.inflow{position:static;display:grid;gap:10px;margin:6px 0 0;padding:0;background:none;border:0;border-radius:0;box-shadow:none}
+:root[data-design] .bar.inflow #saveBtn,:root[data-design] .bar.inflow #exportBtn{width:100%;height:52px;min-height:52px;font-size:16px;border-radius:99px;flex:none}
+:root[data-design="neon"] .bar.inflow{background:none;-webkit-backdrop-filter:none;backdrop-filter:none;border:0}
+/* Brandmeldeanlagen: gleiche Leiste wie überall */
+:root[data-design] nav.tabs:has(> .in){position:fixed;z-index:20;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto;padding:6px;border:0;border-radius:99px;background:var(--navbg,var(--accent));box-shadow:0 12px 30px rgba(0,0,0,.22);-webkit-backdrop-filter:none;backdrop-filter:none}
+:root[data-design] nav.tabs:has(> .in) .in{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px;max-width:none;margin:0}
+:root[data-design] nav.tabs:has(> .in) button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:52px;padding:6px 4px;border-radius:99px;color:rgba(255,255,255,.7);font:600 12px/1 var(--f-body);letter-spacing:0;text-transform:none;text-shadow:none;background:none}
+:root[data-design] nav.tabs:has(> .in) button svg{width:22px;height:22px;filter:none}
+:root[data-design] nav.tabs:has(> .in) button[aria-current="page"]{background:#ffffff;color:#003769;text-shadow:none}
+:root[data-design] nav.tabs:has(> .in) button[aria-current="page"] svg{filter:none}
+:root[data-design] nav.tabs:has(> .in) button::before{display:none}
+:root[data-design="neon"] nav.tabs:has(> .in){background:rgba(15,18,32,.92);border:1px solid #242a45;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+:root[data-design="neon"] nav.tabs:has(> .in) button{color:#8e95ba}
+:root[data-design="neon"] nav.tabs:has(> .in) button[aria-current="page"]{background:linear-gradient(100deg,var(--neon-blue,#2f7bff),var(--neon-cyan,#35c8ff));color:#fff}
+:root[data-design] .fab{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+
+/* Zurück-Knopf bleibt beim Scrollen oben links stehen */
+.backbtn{position:fixed!important;z-index:40;top:calc(10px + env(safe-area-inset-top,0px));left:max(16px,calc(50vw - 304px));margin:0!important;box-shadow:0 6px 18px rgba(0,30,60,.18)}
+header.top .backbtn{left:max(16px,calc(50vw - 344px))}
+#app .backbtn{left:max(16px,calc(50vw - 344px))}
+.backline{min-height:42px}
+#app .tools:has(> .backbtn),#app .strip:has(> .backbtn){min-height:42px}
+header.top{position:static!important;border-bottom:0!important}
 </style>
 
 <script>/* Gemeinsame Helfer für alle Seiten von Oh-MyGosch: Dateien weitergeben, Gerätespeicher für Grundrisse. */
