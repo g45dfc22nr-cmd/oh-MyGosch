@@ -671,19 +671,14 @@ header.top{position:static!important;border-bottom:0!important}
 <main class="wrap">
   <div class="backline"><a class="backbtn" href="index.html" onclick="return GT.home(event)">‹ Zurück</a></div>
   <div class="pagehead"><h1 id="pageTitle">SAT-Finder</h1></div>
-  <p class="lead" id="lead">Wohin zeigt die Schüssel? Richtung, Höhe und LNB-Drehung für deinen Standort.</p>
+  <p class="lead" id="lead">Wohin zeigt die Schüssel? Richtung, Höhe und LNB-Drehung für Schleswig-Holstein.</p>
 
   <!-- ======== Ausrichten ======== -->
   <section id="vCalc" style="display:grid;gap:14px">
     <div class="card" id="locCard">
       <h2>Standort</h2>
-      <button class="btn primary wide" type="button" id="gpsBtn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7"/></svg>Standort per GPS ermitteln</button>
-      <p class="locinfo" id="locInfo">Noch kein Standort.</p>
-      <div class="coords">
-        <label>Breite (Nord)<input id="lat" inputmode="decimal" placeholder="z. B. 54,32"></label>
-        <label>Länge (Ost)<input id="lon" inputmode="decimal" placeholder="z. B. 10,13"></label>
-      </div>
-      <p class="note">Ohne GPS: Koordinaten von Hand eintragen, z. B. aus der Karten-App (Ort lange gedrückt halten).</p>
+      <p class="locinfo">Gerechnet für den <b>Raum Schleswig / Rendsburg</b> (54,4° N, 9,6° O).</p>
+      <p class="note">Gilt für ganz Schleswig-Holstein und Hamburg: Von Flensburg bis Lübeck weichen die Werte um weniger als 1,5° ab – das gleicht die Feinjustage mit dem Messgerät sowieso aus.</p>
     </div>
 
     <div class="card">
@@ -707,7 +702,7 @@ header.top{position:static!important;border-bottom:0!important}
     <div class="card">
       <h2>Blick nach Süden</h2>
       <svg class="sky" id="sky" viewBox="0 0 340 170" role="img" aria-label="Satelliten am Himmel von Osten bis Westen"></svg>
-      <p class="note">So stehen die Satelliten von deinem Standort aus am Himmel. Bäume oder Häuser in dieser Richtung und Höhe stören den Empfang.</p>
+      <p class="note">So stehen die Satelliten von hier aus am Himmel. Bäume oder Häuser in dieser Richtung und Höhe stören den Empfang.</p>
     </div>
 
     <div class="card">
@@ -810,7 +805,7 @@ const DIRLONG = {N:"Norden",NNO:"Nord-Nordost",NO:"Nordost",ONO:"Ost-Nordost",O:
 
 // ---------- Zustand ----------
 let st = ls(); let sel = SATS.findIndex(x => x.lon === st.sat); if(sel < 0) sel = 0;
-let lat = typeof st.lat === "number" ? st.lat : null, lon = typeof st.lon === "number" ? st.lon : null;
+const lat = 54.41, lon = 9.61; // Raum Schleswig / Rendsburg
 const has = () => lat != null && lon != null;
 const cur = () => has() ? look(lat, lon, SATS[sel].lon) : null;
 const magAz = r => (r.az - declOf(lat, lon) + 360) % 360;
@@ -819,8 +814,6 @@ function skewText(sk){ const a = Math.round(Math.abs(sk)); if(a === 0) return "G
 
 function renderSats(){ $("sats").innerHTML = SATS.map((s,i) => '<button type="button" data-i="'+i+'" aria-pressed="'+(i===sel)+'">'+s.s+'</button>').join(""); }
 function render(){
-  $("lat").value = lat == null ? "" : de(lat, 5); $("lon").value = lon == null ? "" : de(lon, 5);
-  $("locInfo").innerHTML = has() ? "Standort: <b>" + de(lat, 4) + "° N, " + de(lon, 4) + "° O</b>" + (st.acc ? " · Genauigkeit ca. " + Math.round(st.acc) + " m" : "") : "Noch kein Standort – GPS antippen oder Koordinaten eintragen.";
   document.querySelectorAll("#sats button").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.i) === sel)));
   const r = cur();
   if(!r){ ["rAz","rEl","rSk"].forEach(id => $(id).textContent = "–"); $("rDir").textContent = "Richtung"; $("rTrue").textContent = ""; $("rSkTxt").textContent = "–"; $("rLow").hidden = true; $("tbl").innerHTML = ""; drawSky(); renderTargets(); return; }
@@ -852,21 +845,7 @@ function drawSky(){
 }
 
 // ---------- Standort ----------
-$("gpsBtn").addEventListener("click", () => {
-  if(!("geolocation" in navigator)){ GT.toast("GPS ist auf diesem Gerät nicht verfügbar. Koordinaten bitte von Hand eintragen."); return; }
-  $("gpsBtn").disabled = true; $("locInfo").textContent = "Standort wird ermittelt …";
-  navigator.geolocation.getCurrentPosition(p => {
-    $("gpsBtn").disabled = false; lat = p.coords.latitude; lon = p.coords.longitude; st.acc = p.coords.accuracy; save({lat, lon, acc: st.acc}); render(); GT.toast("Standort übernommen.");
-  }, e => {
-    $("gpsBtn").disabled = false;
-    GT.toast(e && e.code === 1 ? "Standort nicht erlaubt. In den Einstellungen des Geräts den Standort für den Browser bzw. die App erlauben." : "Standort konnte nicht ermittelt werden. Draußen erneut versuchen oder von Hand eintragen.");
-    render();
-  }, {enableHighAccuracy: true, timeout: 20000, maximumAge: 60000});
-});
-function manual(){ const a = num($("lat").value), b = num($("lon").value);
-  if(a == null || b == null) return; if(a < -80 || a > 80 || b < -180 || b > 180){ GT.toast("Koordinaten prüfen: Breite −80 bis 80, Länge −180 bis 180."); return; }
-  lat = a; lon = b; st.acc = null; save({lat, lon, acc: null}); render(); }
-["lat","lon"].forEach(id => { $(id).addEventListener("change", manual); $(id).addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); manual(); } }); });
+
 $("sats").addEventListener("click", e => { const b = e.target.closest("[data-i]"); if(!b) return; sel = Number(b.dataset.i); save({sat: SATS[sel].lon}); render(); });
 $("tbl").addEventListener("click", e => { const t = e.target.closest("[data-i]"); if(!t) return; sel = Number(t.dataset.i); save({sat: SATS[sel].lon}); render(); window.scrollTo({top: 0, behavior: "smooth"}); });
 
@@ -904,8 +883,8 @@ function roseBase(){
 function renderTargets(){
   const r = cur(); const tgt = document.getElementById("tgt");
   if(tgt) tgt.style.display = r ? "" : "none";
-  $("cSub").textContent = r ? "Ziel: " + SATS[sel].s + " · " + de(magAz(r),0) + "° " + dirName(magAz(r)) : "Ziel: erst Standort festlegen (Reiter Ausrichten)";
-  $("tSub").textContent = r ? "Ziel: " + de(r.el,1) + "° Höhe (" + SATS[sel].s + ")" : "Ziel: erst Standort festlegen";
+  $("cSub").textContent = r ? "Ziel: " + SATS[sel].s + " · " + de(magAz(r),0) + "° " + dirName(magAz(r)) : "Ziel: –";
+  $("tSub").textContent = r ? "Ziel: " + de(r.el,1) + "° Höhe (" + SATS[sel].s + ")" : "Ziel: –";
   $("declNote").textContent = has() ? "Der Kompass zeigt magnetisch Nord. Die Werte in der App sind schon um die Missweisung (ca. " + de(declOf(lat,lon),1) + "°) korrigiert." : "";
   drawRose(); drawTilt();
 }
@@ -951,7 +930,7 @@ $("compBtn").addEventListener("click", async () => { if(await startSensors()){ $
 $("tiltBtn").addEventListener("click", async () => { if(await startSensors()){ $("compBtn").hidden = true; $("tiltBtn").hidden = true; tick(); } });
 
 // ---------- Navigation ----------
-const LEADS = {calc:"Wohin zeigt die Schüssel? Richtung, Höhe und LNB-Drehung für deinen Standort.", comp:"Der Pfeil zeigt dir, wohin du die Schüssel drehen musst.", tilt:"Höhe peilen und prüfen, ob der Mast gerade steht."};
+const LEADS = {calc:"Wohin zeigt die Schüssel? Richtung, Höhe und LNB-Drehung für Schleswig-Holstein.", comp:"Der Pfeil zeigt dir, wohin du die Schüssel drehen musst.", tilt:"Höhe peilen und prüfen, ob der Mast gerade steht."};
 const TITLES = {calc:"SAT-Finder", comp:"Kompass", tilt:"Neigung"};
 $("nav").addEventListener("click", ev => { const b = ev.target.closest("[data-view]"); if(!b) return; const v = b.dataset.view;
   $("nav").querySelectorAll("[data-view]").forEach(x => x.setAttribute("aria-selected", String(x === b)));
@@ -960,7 +939,7 @@ $("nav").addEventListener("click", ev => { const b = ev.target.closest("[data-vi
 
 renderSats(); roseBase(); render();
 setTimeout(() => GT.tour("sat", [
-  {sel:"#gpsBtn", title:"Standort", text:"Tippe hier, damit das Gerät per GPS weiß, wo du stehst. Ohne GPS trägst du die Koordinaten darunter von Hand ein."},
+  {sel:"#locCard", title:"Standort", text:"Gerechnet wird für den Raum Schleswig / Rendsburg – das passt für ganz Schleswig-Holstein."},
   {sel:"#sats", title:"Satellit wählen", text:"Meist Astra 19,2° Ost. Für Türkisch, Polnisch oder Italienisch z. B. Türksat 42° oder Hotbird 13°."},
   {sel:"#big", title:"Die drei Werte", text:"Kompassrichtung (schon um die Missweisung korrigiert), Höhe für die Skala am Halter und wie weit du das LNB drehst."},
   {sel:'#nav [data-view="comp"]', fixed:true, title:"Kompass", text:"Der Pfeil zeigt, wohin du dich drehen musst. Handy flach halten und Abstand zu Metall."},
