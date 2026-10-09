@@ -18,6 +18,8 @@
 <script>/* Gemeinsame Helfer für alle Seiten von Oh-MyGosch: Dateien weitergeben, Gerätespeicher für Grundrisse. */
 (function(){
   "use strict";
+  // Designs Gosch und Klassisch gibt es nicht mehr: auf Modern umstellen
+  try{ const d = localStorage.getItem("app.design"); if(d && d !== "neon" && d !== "modern") localStorage.setItem("app.design", "modern"); }catch(e){}
   // ---------- kleiner Hinweis unten ----------
   function toast(msg){
     let t = document.getElementById("gtToast");
@@ -299,6 +301,11 @@ button.prow:hover{background:var(--accent-soft)}
 .bar .tot div:first-child{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 .bar .tot div:last-child{font-family:var(--f-display);font-weight:700;font-size:24px;line-height:1.1}
 .bar .btn{height:46px;padding:0 20px;font-size:16px}
+.bar #saveBtn,.bar #exportBtn{width:15rem;flex:0 0 auto;white-space:nowrap}
+.lbl-s{display:none}
+@media (max-width:400px){.lbl-l{display:none}.lbl-s{display:inline}}
+@media (max-width:440px){.bar .wrap{flex-wrap:wrap;gap:6px 8px;padding-block:8px 10px}.bar .tot{flex:1 0 100%;display:flex;align-items:baseline;gap:8px}.bar .tot div:last-child{font-size:18px}.bar .btn{padding:0 12px;font-size:15px;height:46px}.bar #saveBtn,.bar #exportBtn{width:auto;flex:1 1 0}}
+#view-edit{padding-bottom:150px}
 #view-edit{padding-bottom:120px}
 
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;z-index:9;max-width:calc(100% - 32px);text-align:center}
@@ -376,11 +383,70 @@ button.prow:hover{background:var(--accent-soft)}
 .backbtn{display:inline-flex;align-items:center;height:34px;padding:0 14px;border-radius:99px;background:var(--accent);color:var(--accent-ink);font:650 14px/1 var(--f-body);text-decoration:none}
 :root[data-design="gosch"] .backbtn{border-radius:6px}
 :root[data-design="neon"] .backbtn{background:linear-gradient(100deg,var(--neon-blue),var(--neon-cyan));color:#fff}
+
+/* ===== Design „Modern“: hellgrau, weiße Karten mit großen Rundungen, Pillen-Knöpfe in Fast-Schwarz ===== */
+:root[data-design="modern"]{--bg:#f3f5f8;--paper:#ffffff;--surface:#ffffff;--sunk:#eef2f6;--ink:#0d1b2e;--muted:#5d6b7c;--line:#d6dee8;--accent:#003769;--accent-ink:#ffffff;--accent-soft:#e2eaf3;--brand:#003769;--ok:#13804f;--ok-soft:#e3f3ea;--danger:#c62f2f;--danger-soft:#fbe9e9;--warn:#b05f0b;--warn-soft:#fcf0e1;--shadow:0 1px 2px rgba(0,55,105,.05),0 12px 32px rgba(0,55,105,.08);--navbg:#003769;--f-display:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--f-body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--f-mono:system-ui,-apple-system,sans-serif;--r:26px;--rs:16px;color-scheme:light}
+@media (prefers-color-scheme: dark){:root[data-design="modern"]:not([data-mode="light"]):not([data-theme="light"]){--bg:#08131f;--paper:#ffffff;--surface:#0f1e30;--sunk:#16283d;--ink:#e8eef5;--muted:#93a3b6;--line:#22374f;--accent:#7fb2e6;--accent-ink:#04121f;--accent-soft:#16304c;--brand:#e8eef5;--ok:#45c482;--ok-soft:#13291f;--danger:#ff6b5e;--danger-soft:#3a1916;--warn:#f2aa45;--warn-soft:#2d2210;--shadow:none;--navbg:#16304c;color-scheme:dark}}
+:root[data-design="modern"][data-mode="dark"],:root[data-design="modern"][data-theme="dark"]:not([data-mode="light"]){--bg:#08131f;--paper:#ffffff;--surface:#0f1e30;--sunk:#16283d;--ink:#e8eef5;--muted:#93a3b6;--line:#22374f;--accent:#7fb2e6;--accent-ink:#04121f;--accent-soft:#16304c;--brand:#e8eef5;--ok:#45c482;--ok-soft:#13291f;--danger:#ff6b5e;--danger-soft:#3a1916;--warn:#f2aa45;--warn-soft:#2d2210;--shadow:none;--navbg:#16304c;color-scheme:dark}
+:root[data-design="modern"] body{background:var(--bg)}
+/* Karten */
+:root[data-design="modern"] :is(.card,.tile,.day,.sum,details,.list,section.grp,.stamm,.empty,form.card,.mcard,.qplan,.plist,.hinweise){border:0;border-radius:var(--r);box-shadow:var(--shadow);background:var(--surface)}
+/* Überschriften */
+:root[data-design="modern"] h1{color:var(--brand);font-weight:700;letter-spacing:-.025em}
+:root[data-design="modern"] :is(.kw,.dayname,.tile b,.card h2,summary b){color:var(--ink);letter-spacing:-.015em}
+/* Knöpfe als Pillen */
+:root[data-design="modern"] .btn{border-radius:99px;border:0;background:var(--sunk);color:var(--ink);font-weight:600}
+:root[data-design="modern"] .btn.primary,:root[data-design="modern"] .fab{background:var(--accent);color:var(--accent-ink);box-shadow:none}
+:root[data-design="modern"] .btn.danger{background:var(--danger-soft);color:var(--danger)}
+:root[data-design="modern"] .btn.ghost{background:none;color:var(--muted)}
+:root[data-design="modern"] .backbtn.backbtn{background:var(--surface);color:var(--ink);border-radius:99px;box-shadow:var(--shadow);height:40px;padding:0 16px}
+:root[data-design="modern"] :is(.gear,.weekbtn,.yb){border:0;background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+/* Auswahl-Leisten als Chips */
+:root[data-design="modern"] .seg{background:var(--sunk);border:0;border-radius:99px;padding:4px;gap:4px}
+:root[data-design="modern"] .seg button{border-radius:99px;color:var(--muted);font-weight:600}
+:root[data-design="modern"] .seg button:is([aria-checked="true"],[aria-pressed="true"]){background:var(--accent);color:var(--accent-ink);box-shadow:none}
+:root[data-design="modern"] .tab{border-radius:99px;border-bottom:0;padding:9px 4px}
+:root[data-design="modern"] .tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
+:root[data-design="modern"] .tabs:not(:has(> .in)){gap:4px;padding:4px;margin:2px 0 8px;background:var(--surface);border-radius:99px;box-shadow:var(--shadow)}
+:root[data-design="modern"] .tab{color:var(--muted)}
+:root[data-design="modern"] .saldo{background:var(--surface);box-shadow:var(--shadow)}
+:root[data-design="modern"] .top{border-bottom:0}
+/* Eingabefelder */
+:root[data-design="modern"] :is(.field input,.field textarea,.row input,.row select,.row textarea,.search,.azstd input,.search input){border-radius:var(--rs);border:1px solid transparent;background:var(--sunk)}
+:root[data-design="modern"] .search{background:var(--surface);box-shadow:var(--shadow);border-radius:99px}
+/* Startseite */
+:root[data-design="modern"] .tic{border-radius:50%;background:var(--accent);color:var(--accent-ink)}
+:root[data-design="modern"] .tile{padding:20px 18px}
+:root[data-design="modern"] summary .ic{border-radius:50%}
+/* Kennzahlen & Status */
+:root[data-design="modern"] .k{border-radius:var(--rs)}
+:root[data-design="modern"] .chip{border-radius:99px}
+:root[data-design="modern"] .box{border-radius:var(--rs)}
+/* Untere Leiste schwebend */
+:root[data-design="modern"] .bar{border-top:0;background:var(--surface);border-radius:26px 26px 0 0;box-shadow:0 -10px 30px rgba(20,24,28,.08)}
+/* Brandmeldeanlagen: schwebende dunkle Navigation wie im Vorbild */
+:root[data-design="modern"] nav.tabs:has(> .in){left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:6px;border:0;border-radius:99px;background:var(--navbg);box-shadow:0 12px 30px rgba(0,0,0,.22);-webkit-backdrop-filter:none;backdrop-filter:none}
+:root[data-design="modern"] nav.tabs:has(> .in) .in{gap:4px}
+:root[data-design="modern"] nav.tabs:has(> .in) button{color:rgba(255,255,255,.62);border-radius:99px;padding:9px 4px}
+:root[data-design="modern"] nav.tabs:has(> .in) button[aria-current="page"]{background:#ffffff;color:#003769}
+:root[data-design="modern"] nav.tabs:has(> .in) button[aria-current="page"]::before{display:none}
+:root[data-design="modern"] .fab{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+:root[data-design="modern"] .toast,:root[data-design="modern"] #gtToast{border-radius:99px}
+/* Ausrichtung: Knöpfe gleich hoch, Eingabefelder in einer Zeile unten bündig */
+:root[data-design="modern"] .btn{min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:6px;line-height:1.15}
+:root[data-design="modern"] .seg button{min-height:32px}
+:root[data-design="modern"] .search{min-height:44px;box-sizing:border-box}
+:root[data-design="modern"] .tools > .btn{min-height:44px}
+:root[data-design="modern"] .row:has(> label){align-items:flex-end}
+/* Gosch-Logo auf der Startseite */
+:root[data-design="modern"] .brand{display:flex;justify-content:flex-start;padding:0}
+@media (prefers-color-scheme: dark){:root[data-design="modern"]:not([data-theme="light"]):not([data-mode="light"]) .brand img{filter:brightness(0) invert(.92)}}
+:root[data-design="modern"][data-mode="dark"] .brand img,:root[data-design="modern"][data-theme="dark"]:not([data-mode="light"]) .brand img{filter:brightness(0) invert(.92)}
 </style>
 
 <script>
-(function(){var d="gosch",m="system";try{d=localStorage.getItem("app.design")||"gosch";m=localStorage.getItem("app.mode")||"system"}catch(e){}
-window.WB_look=function(design,mode){var el=document.documentElement;el.setAttribute("data-design",design);if(mode==="light"||mode==="dark")el.setAttribute("data-mode",mode);else el.removeAttribute("data-mode")};
+(function(){var d="modern",m="system";try{d=localStorage.getItem("app.design")||"modern";m=localStorage.getItem("app.mode")||"system"}catch(e){}
+window.WB_look=function(design,mode){if(design!=="neon")design="modern";var el=document.documentElement;el.setAttribute("data-design",design);if(mode==="light"||mode==="dark")el.setAttribute("data-mode",mode);else el.removeAttribute("data-mode")};
 window.WB_look(d,m);})();
 </script>
 <header class="top">
@@ -509,7 +575,8 @@ window.WB_look(d,m);})();
 <div class="bar" id="bar">
   <div class="wrap">
     <div class="tot"><div id="barKw">KW –</div><div id="barTotal">0,00 h</div></div>
-    <button class="btn primary" type="button" id="exportBtn">Stundenzettel erstellen</button>
+    <button class="btn primary savebtn" type="button" id="saveBtn">Speichern</button>
+    <button class="btn primary" type="button" id="exportBtn"><span class="lbl-l">Stundenzettel erstellen</span><span class="lbl-s">Erstellen</span></button>
   </div>
 </div>
 <div class="toast" id="toast" role="status" hidden></div>
@@ -935,7 +1002,7 @@ $("perRows").addEventListener("click",ev=>{
 
 
 // ---------- Design (wie BMA-App, pro Gerät) ----------
-function getLook(){let d="gosch",m="system";try{d=localStorage.getItem("app.design")||"gosch";m=localStorage.getItem("app.mode")||"system"}catch(e){}return {d,m}}
+function getLook(){let d="modern",m="system";try{d=localStorage.getItem("app.design")||"modern";m=localStorage.getItem("app.mode")||"system"}catch(e){}return {d,m}}
 function renderLook(){const l=getLook();
   document.querySelectorAll("#designSeg button").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.design===l.d)));
   document.querySelectorAll("#modeSeg button").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.mode===l.m)));
@@ -946,6 +1013,7 @@ $("modeSeg").addEventListener("click",ev=>{const b=ev.target.closest("[data-mode
 
 // ---------- toast ----------
 let toastT=null;
+$("saveBtn").addEventListener("click",()=>{clearTimeout(saveTimer);saveCurrent();toast("Gespeichert – nur auf diesem Gerät.")});
 function toast(t){const el=$("toast");el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>el.hidden=true,3200)}
 
 // ---------- form drawing (shared by preview + PDF) ----------
@@ -1062,7 +1130,7 @@ function drawPreview(){
   const ctx=c.getContext("2d");ctx.fillStyle="#fff";ctx.fillRect(0,0,W,H);
   drawForm(canvasBackend(ctx,W/210),cur,settings);
 }
-window.addEventListener("pageshow",()=>{try{window.WB_look(localStorage.getItem("app.design")||"gosch",localStorage.getItem("app.mode")||"system")}catch(e){}});
+window.addEventListener("pageshow",()=>{try{window.WB_look(localStorage.getItem("app.design")||"modern",localStorage.getItem("app.mode")||"system")}catch(e){}});
 window.addEventListener("resize",()=>{if(currentTab==="preview")drawPreview()});
 
 // ---------- export ----------

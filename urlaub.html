@@ -13,8 +13,8 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>Urlaub – Oh-MyGosch</title>
 <script>
-(function(){var d="gosch",m="system";try{d=localStorage.getItem("app.design")||"gosch";m=localStorage.getItem("app.mode")||"system"}catch(e){}
-window.WB_look=function(design,mode){var el=document.documentElement;el.setAttribute("data-design",design);if(mode==="light"||mode==="dark")el.setAttribute("data-mode",mode);else el.removeAttribute("data-mode")};
+(function(){var d="modern",m="system";try{d=localStorage.getItem("app.design")||"modern";m=localStorage.getItem("app.mode")||"system"}catch(e){}
+window.WB_look=function(design,mode){if(design!=="neon")design="modern";var el=document.documentElement;el.setAttribute("data-design",design);if(mode==="light"||mode==="dark")el.setAttribute("data-mode",mode);else el.removeAttribute("data-mode")};
 window.WB_look(d,m);})();
 </script>
 <style>
@@ -57,11 +57,14 @@ h1{margin:4px 2px 0;font:800 30px/1.1 var(--f-display);letter-spacing:-.02em}
 .k.ok b{color:var(--ok)} .k.warn b{color:var(--danger)}
 .note{margin:0;font-size:13px;color:var(--muted)}
 .list{display:grid;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
-.li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:13px 16px;border:0;border-top:1px solid var(--line);background:none;text-align:left;width:100%}
+.li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:0 12px 0 0;border-top:1px solid var(--line)}
+.liopen{display:grid;gap:2px;min-width:0;padding:13px 0 13px 16px;border:0;background:none;text-align:left;width:100%;color:inherit;font:inherit}
 .li:first-child{border-top:0}
 .li b{font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.li small{grid-column:1;color:var(--muted);font-size:13px}
-.chip{grid-row:1 / span 2;grid-column:2;font-size:12px;font-weight:650;padding:4px 9px;border-radius:99px;background:var(--sunk);color:var(--muted)}
+.li small{color:var(--muted);font-size:13px}
+.chip::after{content:"";width:5px;height:5px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;transform:rotate(45deg);margin-top:-3px}
+.optbtn{height:48px;width:100%;font-size:16px}
+.chip{border:0;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:650;padding:4px 9px;border-radius:99px;background:var(--sunk);color:var(--muted)}
 .chip.genehmigt{background:var(--ok-soft);color:var(--ok)} .chip.abgelehnt{background:var(--danger-soft);color:var(--danger)}
 .empty{padding:20px 16px;color:var(--muted);text-align:center}
 .btn{height:44px;padding:0 16px;border-radius:var(--rs);border:1px solid var(--line);background:var(--surface);font-weight:650;font-size:15px}
@@ -99,7 +102,7 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
 .bar{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
 .bar .in{max-width:640px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center}
 .bar .btn{height:48px;font-size:16px}
-.bar .btn.primary{flex:1}
+.bar .btn.primary{flex:1 1 0}
 .sheet-bg{position:fixed;inset:0;z-index:20;background:rgba(10,18,22,.5);display:flex;align-items:flex-end;justify-content:center}
 .sheet{background:var(--surface);color:var(--ink);width:100%;max-width:640px;border-radius:16px 16px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));display:grid;gap:12px}
 .sheet h2{margin:0;font:700 22px/1.2 var(--f-display)}
@@ -108,12 +111,73 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
 :root[data-design="gosch"] .card,:root[data-design="gosch"] .list{box-shadow:none}
 :root[data-design="neon"]{background:radial-gradient(60% 40% at 0% 0%,rgba(255,46,77,.16),transparent 70%),radial-gradient(60% 40% at 100% 10%,rgba(47,123,255,.18),transparent 70%),var(--bg);background-attachment:fixed}
 :root[data-design="neon"] body{background:transparent}
+
+/* ===== Design „Modern“: hellgrau, weiße Karten mit großen Rundungen, Pillen-Knöpfe in Fast-Schwarz ===== */
+:root[data-design="modern"]{--bg:#f3f5f8;--paper:#ffffff;--surface:#ffffff;--sunk:#eef2f6;--ink:#0d1b2e;--muted:#5d6b7c;--line:#d6dee8;--accent:#003769;--accent-ink:#ffffff;--accent-soft:#e2eaf3;--brand:#003769;--ok:#13804f;--ok-soft:#e3f3ea;--danger:#c62f2f;--danger-soft:#fbe9e9;--warn:#b05f0b;--warn-soft:#fcf0e1;--shadow:0 1px 2px rgba(0,55,105,.05),0 12px 32px rgba(0,55,105,.08);--navbg:#003769;--f-display:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--f-body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--f-mono:system-ui,-apple-system,sans-serif;--r:26px;--rs:16px;color-scheme:light}
+@media (prefers-color-scheme: dark){:root[data-design="modern"]:not([data-mode="light"]):not([data-theme="light"]){--bg:#08131f;--paper:#ffffff;--surface:#0f1e30;--sunk:#16283d;--ink:#e8eef5;--muted:#93a3b6;--line:#22374f;--accent:#7fb2e6;--accent-ink:#04121f;--accent-soft:#16304c;--brand:#e8eef5;--ok:#45c482;--ok-soft:#13291f;--danger:#ff6b5e;--danger-soft:#3a1916;--warn:#f2aa45;--warn-soft:#2d2210;--shadow:none;--navbg:#16304c;color-scheme:dark}}
+:root[data-design="modern"][data-mode="dark"],:root[data-design="modern"][data-theme="dark"]:not([data-mode="light"]){--bg:#08131f;--paper:#ffffff;--surface:#0f1e30;--sunk:#16283d;--ink:#e8eef5;--muted:#93a3b6;--line:#22374f;--accent:#7fb2e6;--accent-ink:#04121f;--accent-soft:#16304c;--brand:#e8eef5;--ok:#45c482;--ok-soft:#13291f;--danger:#ff6b5e;--danger-soft:#3a1916;--warn:#f2aa45;--warn-soft:#2d2210;--shadow:none;--navbg:#16304c;color-scheme:dark}
+:root[data-design="modern"] body{background:var(--bg)}
+/* Karten */
+:root[data-design="modern"] :is(.card,.tile,.day,.sum,details,.list,section.grp,.stamm,.empty,form.card,.mcard,.qplan,.plist,.hinweise){border:0;border-radius:var(--r);box-shadow:var(--shadow);background:var(--surface)}
+/* Überschriften */
+:root[data-design="modern"] h1{color:var(--brand);font-weight:700;letter-spacing:-.025em}
+:root[data-design="modern"] :is(.kw,.dayname,.tile b,.card h2,summary b){color:var(--ink);letter-spacing:-.015em}
+/* Knöpfe als Pillen */
+:root[data-design="modern"] .btn{border-radius:99px;border:0;background:var(--sunk);color:var(--ink);font-weight:600}
+:root[data-design="modern"] .btn.primary,:root[data-design="modern"] .fab{background:var(--accent);color:var(--accent-ink);box-shadow:none}
+:root[data-design="modern"] .btn.danger{background:var(--danger-soft);color:var(--danger)}
+:root[data-design="modern"] .btn.ghost{background:none;color:var(--muted)}
+:root[data-design="modern"] .backbtn.backbtn{background:var(--surface);color:var(--ink);border-radius:99px;box-shadow:var(--shadow);height:40px;padding:0 16px}
+:root[data-design="modern"] :is(.gear,.weekbtn,.yb){border:0;background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+/* Auswahl-Leisten als Chips */
+:root[data-design="modern"] .seg{background:var(--sunk);border:0;border-radius:99px;padding:4px;gap:4px}
+:root[data-design="modern"] .seg button{border-radius:99px;color:var(--muted);font-weight:600}
+:root[data-design="modern"] .seg button:is([aria-checked="true"],[aria-pressed="true"]){background:var(--accent);color:var(--accent-ink);box-shadow:none}
+:root[data-design="modern"] .tab{border-radius:99px;border-bottom:0;padding:9px 4px}
+:root[data-design="modern"] .tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
+:root[data-design="modern"] .tabs:not(:has(> .in)){gap:4px;padding:4px;margin:2px 0 8px;background:var(--surface);border-radius:99px;box-shadow:var(--shadow)}
+:root[data-design="modern"] .tab{color:var(--muted)}
+:root[data-design="modern"] .saldo{background:var(--surface);box-shadow:var(--shadow)}
+:root[data-design="modern"] .top{border-bottom:0}
+/* Eingabefelder */
+:root[data-design="modern"] :is(.field input,.field textarea,.row input,.row select,.row textarea,.search,.azstd input,.search input){border-radius:var(--rs);border:1px solid transparent;background:var(--sunk)}
+:root[data-design="modern"] .search{background:var(--surface);box-shadow:var(--shadow);border-radius:99px}
+/* Startseite */
+:root[data-design="modern"] .tic{border-radius:50%;background:var(--accent);color:var(--accent-ink)}
+:root[data-design="modern"] .tile{padding:20px 18px}
+:root[data-design="modern"] summary .ic{border-radius:50%}
+/* Kennzahlen & Status */
+:root[data-design="modern"] .k{border-radius:var(--rs)}
+:root[data-design="modern"] .chip{border-radius:99px}
+:root[data-design="modern"] .box{border-radius:var(--rs)}
+/* Untere Leiste schwebend */
+:root[data-design="modern"] .bar{border-top:0;background:var(--surface);border-radius:26px 26px 0 0;box-shadow:0 -10px 30px rgba(20,24,28,.08)}
+/* Brandmeldeanlagen: schwebende dunkle Navigation wie im Vorbild */
+:root[data-design="modern"] nav.tabs:has(> .in){left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:6px;border:0;border-radius:99px;background:var(--navbg);box-shadow:0 12px 30px rgba(0,0,0,.22);-webkit-backdrop-filter:none;backdrop-filter:none}
+:root[data-design="modern"] nav.tabs:has(> .in) .in{gap:4px}
+:root[data-design="modern"] nav.tabs:has(> .in) button{color:rgba(255,255,255,.62);border-radius:99px;padding:9px 4px}
+:root[data-design="modern"] nav.tabs:has(> .in) button[aria-current="page"]{background:#ffffff;color:#003769}
+:root[data-design="modern"] nav.tabs:has(> .in) button[aria-current="page"]::before{display:none}
+:root[data-design="modern"] .fab{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+:root[data-design="modern"] .toast,:root[data-design="modern"] #gtToast{border-radius:99px}
+/* Ausrichtung: Knöpfe gleich hoch, Eingabefelder in einer Zeile unten bündig */
+:root[data-design="modern"] .btn{min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:6px;line-height:1.15}
+:root[data-design="modern"] .seg button{min-height:32px}
+:root[data-design="modern"] .search{min-height:44px;box-sizing:border-box}
+:root[data-design="modern"] .tools > .btn{min-height:44px}
+:root[data-design="modern"] .row:has(> label){align-items:flex-end}
+/* Gosch-Logo auf der Startseite */
+:root[data-design="modern"] .brand{display:flex;justify-content:flex-start;padding:0}
+@media (prefers-color-scheme: dark){:root[data-design="modern"]:not([data-theme="light"]):not([data-mode="light"]) .brand img{filter:brightness(0) invert(.92)}}
+:root[data-design="modern"][data-mode="dark"] .brand img,:root[data-design="modern"][data-theme="dark"]:not([data-mode="light"]) .brand img{filter:brightness(0) invert(.92)}
 </style>
 </head>
 <body>
 <script>/* Gemeinsame Helfer für alle Seiten von Oh-MyGosch: Dateien weitergeben, Gerätespeicher für Grundrisse. */
 (function(){
   "use strict";
+  // Designs Gosch und Klassisch gibt es nicht mehr: auf Modern umstellen
+  try{ const d = localStorage.getItem("app.design"); if(d && d !== "neon" && d !== "modern") localStorage.setItem("app.design", "modern"); }catch(e){}
   // ---------- kleiner Hinweis unten ----------
   function toast(msg){
     let t = document.getElementById("gtToast");
@@ -276,7 +340,7 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
   </section>
 </main>
 
-<div class="bar" id="bar" hidden><div class="in"><button class="btn primary" type="button" id="makeBtn">Antrag erstellen</button></div></div>
+<div class="bar" id="bar" hidden><div class="in"><button class="btn primary" type="button" id="saveBtn">Speichern</button><button class="btn primary" type="button" id="makeBtn">Antrag erstellen</button></div></div>
 
 <div class="sheet-bg" id="setup" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="suT">
@@ -287,6 +351,30 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
       <a class="btn" href="index.html" onclick="return GT.home(event)" style="display:inline-flex;align-items:center;text-decoration:none;color:var(--ink)">Zurück</a>
       <span style="flex:1"></span>
       <button class="btn primary" type="button" id="suOk">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<div class="sheet-bg" id="opt" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="optT">
+    <h2 id="optT">Antrag</h2>
+    <div class="field"><label>Status</label>
+      <div class="seg" role="radiogroup" id="optSeg"><button type="button" role="radio" data-v="offen">Offen</button><button type="button" role="radio" data-v="genehmigt">Genehmigt</button><button type="button" role="radio" data-v="abgelehnt">Abgelehnt</button></div>
+    </div>
+    <button class="btn primary optbtn" type="button" id="optCal">In Kalender eintragen</button>
+    <p class="note">Legt den Zeitraum als ganztägigen Termin in deinem Handy-Kalender an (iPhone und Android).</p>
+    <button class="btn optbtn" type="button" id="optClose">Fertig</button>
+  </div>
+</div>
+
+<div class="sheet-bg" id="discard" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="dcT">
+    <h2 id="dcT">Änderungen verwerfen?</h2>
+    <p class="note">Du hast etwas geändert, aber noch nicht gespeichert. Beim Zurückgehen gehen diese Änderungen verloren.</p>
+    <div class="row">
+      <button class="btn danger" type="button" id="dcYes">Verwerfen</button>
+      <span style="flex:1"></span>
+      <button class="btn primary" type="button" id="dcNo">Weiter bearbeiten</button>
     </div>
   </div>
 </div>
@@ -351,8 +439,10 @@ function show(view){
   $("vList").hidden = view !== "list"; $("vEdit").hidden = view !== "edit"; $("bar").hidden = view !== "edit";
   window.scrollTo(0,0);
 }
+let dirty = false;
+function leaveEdit(){ dirty = false; curId = null; cur = null; show("list"); renderList(); }
 $("backBtn").addEventListener("click", ev => {
-  if(!$("vEdit").hidden){ ev.preventDefault(); show("list"); renderList(); return; }
+  if(!$("vEdit").hidden){ ev.preventDefault(); if(dirty){ $("discard").hidden = false; return; } leaveEdit(); return; }
   return GT.home(ev);
 });
 
@@ -383,18 +473,56 @@ function renderList(){
   const el = $("list"); el.innerHTML = "";
   if(!arr.length){ el.innerHTML = '<div class="empty">Noch keine Anträge. Tippe auf „+ Neuer Antrag“.</div>'; return; }
   for(const [id, a] of arr){
-    const b = document.createElement("button"); b.type = "button"; b.className = "li"; b.dataset.id = id;
+    const row = document.createElement("div"); row.className = "li";
+    const b = document.createElement("button"); b.type = "button"; b.className = "liopen"; b.dataset.id = id;
     const t = document.createElement("b"); t.textContent = label(a);
     const s = document.createElement("small"); const bits = [];
     if(a.uVon) bits.push(numDE(parseNum(a.uTage)||0) + " Tage"); if(a.oVon) bits.push(numDE(parseNum(a.oStd)||0) + " h");
     bits.push(a.beantragt ? "beantragt " + fmtD(a.beantragt) : "erstellt " + (a.created ? fmtD(ymd(new Date(a.created))) : "–") + ", noch nicht exportiert"); s.textContent = bits.join(" · ");
-    const c = document.createElement("span"); c.className = "chip " + (a.status||"offen"); c.textContent = a.status === "genehmigt" ? "Genehmigt" : a.status === "abgelehnt" ? "Abgelehnt" : "Offen";
-    b.append(t, c, s); el.append(b);
+    const c = document.createElement("button"); c.type = "button"; c.className = "chip " + (a.status||"offen"); c.dataset.opt = id; c.setAttribute("aria-label", "Status und Kalender: " + label(a));
+    c.textContent = a.status === "genehmigt" ? "Genehmigt" : a.status === "abgelehnt" ? "Abgelehnt" : "Offen";
+    b.append(t, s); row.append(b, c); el.append(row);
   }
 }
 $("yPrev").addEventListener("click", () => { kontoY--; renderKonto(); });
 $("yNext").addEventListener("click", () => { kontoY++; renderKonto(); });
-$("list").addEventListener("click", ev => { const b = ev.target.closest("[data-id]"); if(b) openEdit(b.dataset.id); });
+$("list").addEventListener("click", ev => { const o = ev.target.closest("[data-opt]"); if(o){ openOpt(o.dataset.opt); return; } const b = ev.target.closest("[data-id]"); if(b) openEdit(b.dataset.id); });
+
+// ---------- Status ändern & Kalender (aus der Liste) ----------
+let optId = null;
+function openOpt(id){ optId = id; const a = store.antraege[id]; if(!a) return;
+  $("optT").textContent = label(a); renderSeg("optSeg", a.status || "offen"); $("opt").hidden = false; }
+$("optSeg").addEventListener("click", ev => { const b = ev.target.closest("[data-v]"); if(!b || !optId) return;
+  store.antraege[optId].status = b.dataset.v; save(); renderSeg("optSeg", b.dataset.v); renderList();
+  GT.toast("Status: " + b.textContent); });
+$("optCal").addEventListener("click", () => { if(optId) addToCalendar(store.antraege[optId]); });
+$("optClose").addEventListener("click", () => { $("opt").hidden = true; optId = null; });
+$("opt").addEventListener("click", ev => { if(ev.target.id === "opt"){ $("opt").hidden = true; optId = null; } });
+
+const icsDate = d => d.replace(/-/g, "");
+function nextDay(d){ const x = parseD(d); x.setDate(x.getDate() + 1); return ymd(x); }
+function icsEsc(t){ return String(t || "").replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n"); }
+function addToCalendar(a){
+  const st = a.status === "genehmigt" ? "genehmigt" : a.status === "abgelehnt" ? "abgelehnt" : "beantragt";
+  const ev = [];
+  if(a.uVon) ev.push({von:a.uVon, bis:a.uBis || a.uVon, t:"Urlaub", d:numDE(parseNum(a.uTage)||0) + " Urlaubstage (" + st + ")"});
+  if(a.oVon) ev.push({von:a.oVon, bis:a.oBis || a.oVon, t:"Freizeitausgleich (Überstunden)", d:numDE(parseNum(a.oStd)||0) + " Stunden (" + st + ")"});
+  if(!ev.length){ GT.toast("Dieser Antrag hat keinen Zeitraum."); return; }
+  const now = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, "");
+  const L = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Oh-MyGosch//Urlaub//DE","CALSCALE:GREGORIAN","METHOD:PUBLISH"];
+  ev.forEach((e, i) => L.push("BEGIN:VEVENT", "UID:ohmygosch-" + (a.created || Date.now()) + "-" + i + "@oh-mygosch", "DTSTAMP:" + now,
+    "DTSTART;VALUE=DATE:" + icsDate(e.von), "DTEND;VALUE=DATE:" + icsDate(nextDay(e.bis)), "SUMMARY:" + icsEsc(e.t), "DESCRIPTION:" + icsEsc(e.d),
+    "X-MICROSOFT-CDO-BUSYSTATUS:OOF", "X-MICROSOFT-CDO-ALLDAYEVENT:TRUE", "END:VEVENT"));
+  L.push("END:VCALENDAR");
+  const blob = new Blob([L.join("\r\n") + "\r\n"], {type:"text/calendar;charset=utf-8"});
+  const fn = (a.uVon ? "Urlaub_" + a.uVon : "Freizeitausgleich_" + a.oVon) + ".ics";
+  if(window.claude && window.claude.use){ GT.deliver(blob, fn, "Termin speichern"); return; }
+  const url = URL.createObjectURL(blob);
+  const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if(ios){ location.href = url; }   // iPhone: öffnet „Zum Kalender hinzufügen“
+  else { const x = document.createElement("a"); x.href = url; x.download = fn; document.body.appendChild(x); x.click(); x.remove(); GT.toast("Termin-Datei gespeichert – antippen und mit dem Kalender öffnen."); }
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
 
 // ---------- Einstellungen ----------
 const WD = ["Mo","Di","Mi","Do","Fr","Sa","So"];
@@ -418,10 +546,12 @@ function openEdit(id){
   $("fUTage").value = cur.uTage === "" ? "" : numDE(parseNum(cur.uTage)); $("fOStd").value = cur.oStd === "" ? "" : numDE(parseNum(cur.oStd));
   renderSeg("ndSeg", cur.nd || ""); renderSeg("stSeg", cur.status || "offen");
   $("delBtn").hidden = !id; $("delBtn").dataset.armed = ""; $("delBtn").textContent = "Antrag löschen";
+  dirty = false;
   show("edit");
 }
 function renderSeg(id, v){ document.querySelectorAll("#"+id+" button").forEach(b => b.setAttribute("aria-checked", String(b.dataset.v === v))); }
-function persist(){ if(!curId) curId = "a" + Date.now().toString(36); store.antraege[curId] = {...cur}; save(); }
+function persist(){ if(!curId) curId = "a" + Date.now().toString(36); store.antraege[curId] = {...cur}; save(); dirty = false; }
+function touch(){ dirty = true; }
 function recalc(changed){
   // "bis" läuft mit "vom" mit, bis man es selbst ändert (und ist nie früher als "vom")
   if(changed === "uBis") cur.uBisSet = !!cur.uBis;
@@ -445,11 +575,11 @@ $("vEdit").addEventListener("input", ev => {
   else if(k === "oStd"){ cur.oStd = parseNum(ev.target.value) ?? ""; cur.autoS = ev.target.value === ""; }
   else cur[k] = ev.target.value;
   if(ev.target.type === "date") recalc(k);
-  persist();
+  touch();
 });
-$("vEdit").addEventListener("change", ev => { if(ev.target.type === "date"){ cur[ev.target.dataset.k] = ev.target.value; recalc(ev.target.dataset.k); persist(); } });
-$("ndSeg").addEventListener("click", ev => { const b = ev.target.closest("[data-v]"); if(!b) return; cur.nd = b.dataset.v; renderSeg("ndSeg", cur.nd); persist(); });
-$("stSeg").addEventListener("click", ev => { const b = ev.target.closest("[data-v]"); if(!b) return; cur.status = b.dataset.v; renderSeg("stSeg", cur.status); persist(); });
+$("vEdit").addEventListener("change", ev => { if(ev.target.type === "date"){ cur[ev.target.dataset.k] = ev.target.value; recalc(ev.target.dataset.k); touch(); } });
+$("ndSeg").addEventListener("click", ev => { const b = ev.target.closest("[data-v]"); if(!b) return; cur.nd = b.dataset.v; renderSeg("ndSeg", cur.nd); touch(); });
+$("stSeg").addEventListener("click", ev => { const b = ev.target.closest("[data-v]"); if(!b) return; cur.status = b.dataset.v; renderSeg("stSeg", cur.status); touch(); });
 $("delBtn").addEventListener("click", () => { const b = $("delBtn");
   if(b.dataset.armed !== "1"){ b.dataset.armed = "1"; b.textContent = "Wirklich löschen?"; setTimeout(()=>{ b.dataset.armed = ""; b.textContent = "Antrag löschen"; }, 3000); return; }
   if(curId){ delete store.antraege[curId]; save(); } curId = null; show("list"); renderList(); });
@@ -474,6 +604,9 @@ $("padOk").onclick = async () => { if(!inked) return; cur.sig = padPng(); cur.si
 const loadImg = src => new Promise(res => { if(!src) return res(null); const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; });
 let savedImg = null; const savedSig = wbSet().signature; if(savedSig) loadImg(savedSig).then(im => savedImg = im);
 
+$("saveBtn").addEventListener("click", () => { persist(); GT.toast("Gespeichert – nur auf diesem Gerät. Exportieren kannst du später."); leaveEdit(); });
+$("dcYes").addEventListener("click", () => { $("discard").hidden = true; leaveEdit(); GT.toast("Änderungen verworfen."); });
+$("dcNo").addEventListener("click", () => { $("discard").hidden = true; });
 $("makeBtn").addEventListener("click", async () => {
   if(!cur.uVon && !cur.oVon){ GT.toast("Bitte einen Zeitraum für Urlaub oder Überstunden eintragen."); return; }
   if((cur.uBis && cur.uBis < cur.uVon) || (cur.oBis && cur.oBis < cur.oVon)){ GT.toast("„bis“ liegt vor „vom“. Bitte die Daten prüfen."); return; }
@@ -592,7 +725,7 @@ function setupDone(){ const v = parseNum($("suTage").value); if(v == null || v <
 $("suOk").addEventListener("click", setupDone);
 $("suTage").addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); setupDone(); } });
 if(!store.settings.anspruchSet){ $("setup").hidden = false; setTimeout(() => $("suTage").focus(), 300); }
-window.addEventListener("pageshow", () => { try{ window.WB_look(localStorage.getItem("app.design")||"gosch", localStorage.getItem("app.mode")||"system"); }catch(e){} });
+window.addEventListener("pageshow", () => { try{ window.WB_look(localStorage.getItem("app.design")||"modern", localStorage.getItem("app.mode")||"system"); }catch(e){} });
 })();
 </script>
 </body>
