@@ -103,6 +103,13 @@
     try{ if(document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1){ if(ev) ev.preventDefault(); history.back(); return false; } }catch(e){}
     return true;
   }
+  // App nach mehr als 15 Minuten im Hintergrund wieder auf dem Startbildschirm öffnen
+  let hiddenAt = 0;
+  document.addEventListener("visibilitychange", () => {
+    if(document.hidden){ hiddenAt = Date.now(); return; }
+    if(hiddenAt && Date.now() - hiddenAt > 15*60*1000 && !/(^|\/)(index\.html)?$/.test(location.pathname)){ location.replace("index.html"); }
+    hiddenAt = 0;
+  });
   window.GT = {toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home};
   persist(); registerSW();
 })();
@@ -153,7 +160,7 @@ button{cursor:pointer}
 .range{color:var(--muted);font-size:14px}
 .status{font-size:12px;color:var(--muted);text-align:center;min-height:16px}
 .status.err{color:var(--danger)}
-.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:2px}
 .tab{border:0;background:none;padding:8px 2px 10px;font-weight:600;font-size:14px;color:var(--muted);border-bottom:3px solid transparent}
 .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
 
@@ -391,7 +398,7 @@ window.WB_look(d,m);})();
     <nav class="tabs" role="tablist">
       <button class="tab" role="tab" id="tab-edit" aria-selected="true" data-tab="edit" type="button">Erfassen</button>
       <button class="tab" role="tab" id="tab-sum" aria-selected="false" data-tab="sum" type="button">Übersicht</button>
-      <button class="tab" role="tab" id="tab-settings" aria-selected="false" data-tab="settings" type="button">Einstellungen</button>
+      <button hidden class="tab" role="tab" id="tab-settings" aria-selected="false" data-tab="settings" type="button">Einstellungen</button>
     </nav>
   </div>
 </header>
@@ -472,7 +479,7 @@ window.WB_look(d,m);})();
       </div>
       <p class="note" style="margin:0">Gilt nur auf diesem Gerät. Deine Daten bleiben beim Umschalten unverändert.</p>
     </div>
-    <div class="card">
+    <div class="card" hidden>
       <h2>Datensicherung</h2>
       <p class="note" style="margin:0">Sichert nur den Stundenzettel. Für alles zusammen (auch Brandmeldeanlagen) nimm „Alles sichern“ auf dem Startbildschirm.</p>
       <div class="row">
@@ -1176,7 +1183,7 @@ function applyRemoteReports(map,first){
   renderDatalists();if(currentTab==="list")renderList();if(currentTab==="sum")renderSummary();
 }
 async function boot(){
-  try{const t=sessionStorage.getItem("wb.tab");if(t&&t!=="edit")showTab(t)}catch(e){}
+  
   loadCurrent();renderEdit();
   const C=null;
   let user=null;
