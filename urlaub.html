@@ -264,7 +264,8 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
       </div>
       <div class="field"><label for="fNdText">Bemerkung zum Notdienst</label><input id="fNdText" data-k="ndText" placeholder="z. B. Mo–Do"></div>
       <div class="field"><label for="fNdTausch">Notdienst getauscht mit</label><input id="fNdTausch" data-k="ndTausch" placeholder="Name des Mitarbeiters"></div>
-      <div class="field"><label>Beantragt am</label><div class="note" id="fBeantragt" style="font-size:15px;padding:4px 0">Wird beim Erstellen des Antrags eingetragen.</div></div>
+      <div class="grid2"><div class="field"><label>Erstellt am</label><div id="fErstellt" style="font-size:15px;padding:4px 0">–</div></div><div class="field"><label>Beantragt am</label><div id="fBeantragt" style="font-size:15px;padding:4px 0">–</div></div></div>
+      <span class="hint">„Beantragt am“ ist das Datum, an dem der Antrag als PDF exportiert wird.</span>
     </div>
     <div class="card">
       <h2>Status</h2>
@@ -386,7 +387,7 @@ function renderList(){
     const t = document.createElement("b"); t.textContent = label(a);
     const s = document.createElement("small"); const bits = [];
     if(a.uVon) bits.push(numDE(parseNum(a.uTage)||0) + " Tage"); if(a.oVon) bits.push(numDE(parseNum(a.oStd)||0) + " h");
-    bits.push(a.beantragt ? "beantragt " + fmtD(a.beantragt) : "noch nicht erstellt"); s.textContent = bits.join(" · ");
+    bits.push(a.beantragt ? "beantragt " + fmtD(a.beantragt) : "erstellt " + (a.created ? fmtD(ymd(new Date(a.created))) : "–") + ", noch nicht exportiert"); s.textContent = bits.join(" · ");
     const c = document.createElement("span"); c.className = "chip " + (a.status||"offen"); c.textContent = a.status === "genehmigt" ? "Genehmigt" : a.status === "abgelehnt" ? "Abgelehnt" : "Offen";
     b.append(t, c, s); el.append(b);
   }
@@ -411,6 +412,9 @@ function openEdit(id){
   $("editTitle").textContent = id ? "Antrag bearbeiten" : "Neuer Antrag";
   document.querySelectorAll("#vEdit [data-k]").forEach(i => { i.value = cur[i.dataset.k] ?? ""; });
   renderBeantragt();
+  if(cur.uBisSet === undefined) cur.uBisSet = !!(cur.uBis && cur.uBis !== cur.uVon);
+  if(cur.oBisSet === undefined) cur.oBisSet = !!(cur.oBis && cur.oBis !== cur.oVon);
+  $("fUBis").min = cur.uVon || ""; $("fOBis").min = cur.oVon || "";
   $("fUTage").value = cur.uTage === "" ? "" : numDE(parseNum(cur.uTage)); $("fOStd").value = cur.oStd === "" ? "" : numDE(parseNum(cur.oStd));
   renderSeg("ndSeg", cur.nd || ""); renderSeg("stSeg", cur.status || "offen");
   $("delBtn").hidden = !id; $("delBtn").dataset.armed = ""; $("delBtn").textContent = "Antrag löschen";
@@ -419,8 +423,16 @@ function openEdit(id){
 function renderSeg(id, v){ document.querySelectorAll("#"+id+" button").forEach(b => b.setAttribute("aria-checked", String(b.dataset.v === v))); }
 function persist(){ if(!curId) curId = "a" + Date.now().toString(36); store.antraege[curId] = {...cur}; save(); }
 function recalc(changed){
-  if(cur.uVon && !cur.uBis){ cur.uBis = cur.uVon; $("fUBis").value = cur.uBis; }
-  if(cur.oVon && !cur.oBis){ cur.oBis = cur.oVon; $("fOBis").value = cur.oBis; }
+  // "bis" läuft mit "vom" mit, bis man es selbst ändert (und ist nie früher als "vom")
+  if(changed === "uBis") cur.uBisSet = !!cur.uBis;
+  if(changed === "oBis") cur.oBisSet = !!cur.oBis;
+  if(cur.uVon && (!cur.uBis || !cur.uBisSet || cur.uBis < cur.uVon)){ if(cur.uBis !== cur.uVon){ cur.uBis = cur.uVon; if(changed !== "uBis") cur.uBisSet = false; } }
+  if(cur.oVon && (!cur.oBis || !cur.oBisSet || cur.oBis < cur.oVon)){ if(cur.oBis !== cur.oVon){ cur.oBis = cur.oVon; if(changed !== "oBis") cur.oBisSet = false; } }
+  if($("fUBis").value !== (cur.uBis||"")) $("fUBis").value = cur.uBis || "";
+  if($("fOBis").value !== (cur.oBis||"")) $("fOBis").value = cur.oBis || "";
+  $("fUBis").min = cur.uVon || ""; $("fOBis").min = cur.oVon || "";
+  if(changed === "uVon" && cur.autoT) changed = "uBis";
+  if(changed === "oVon" && cur.autoS) changed = "oBis";
   if(cur.autoT && (changed === "uVon" || changed === "uBis")){ const n = cur.uVon ? workdays(cur.uVon, cur.uBis) : ""; cur.uTage = n === "" ? "" : n; $("fUTage").value = n === "" ? "" : numDE(n); }
   if(cur.autoS && (changed === "oVon" || changed === "oBis")){ const n = cur.oVon ? workdays(cur.oVon, cur.oBis) * az().std : ""; cur.oStd = n === "" ? "" : n; $("fOStd").value = n === "" ? "" : numDE(n); }
   const bad = (a,b) => a && b && b < a;
@@ -519,7 +531,7 @@ function MiniPDF(){
 }
 
 
-function renderBeantragt(){ $("fBeantragt").textContent = cur && cur.beantragt ? fmtD(cur.beantragt) + " (wird beim nächsten Erstellen auf das aktuelle Datum gesetzt)" : "Wird beim Erstellen des Antrags eingetragen."; }
+function renderBeantragt(){ $("fErstellt").textContent = cur && cur.created ? fmtD(ymd(new Date(cur.created))) : fmtD(ymd(new Date())); $("fBeantragt").textContent = cur && cur.beantragt ? fmtD(cur.beantragt) : "noch nicht exportiert"; }
 async function makePdf(){
   // "Beantragt am" ist immer der Tag, an dem der Antrag erstellt wird
   cur.beantragt = ymd(new Date()); persist(); renderBeantragt();
