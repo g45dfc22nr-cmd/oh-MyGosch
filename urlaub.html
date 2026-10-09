@@ -264,7 +264,7 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
       </div>
       <div class="field"><label for="fNdText">Bemerkung zum Notdienst</label><input id="fNdText" data-k="ndText" placeholder="z. B. Mo–Do"></div>
       <div class="field"><label for="fNdTausch">Notdienst getauscht mit</label><input id="fNdTausch" data-k="ndTausch" placeholder="Name des Mitarbeiters"></div>
-      <div class="field"><label for="fBeantragt">Beantragt am</label><input id="fBeantragt" type="date" data-k="beantragt"></div>
+      <div class="field"><label>Beantragt am</label><div class="note" id="fBeantragt" style="font-size:15px;padding:4px 0">Wird beim Erstellen des Antrags eingetragen.</div></div>
     </div>
     <div class="card">
       <h2>Status</h2>
@@ -386,7 +386,7 @@ function renderList(){
     const t = document.createElement("b"); t.textContent = label(a);
     const s = document.createElement("small"); const bits = [];
     if(a.uVon) bits.push(numDE(parseNum(a.uTage)||0) + " Tage"); if(a.oVon) bits.push(numDE(parseNum(a.oStd)||0) + " h");
-    bits.push("beantragt " + (fmtD(a.beantragt) || "–")); s.textContent = bits.join(" · ");
+    bits.push(a.beantragt ? "beantragt " + fmtD(a.beantragt) : "noch nicht erstellt"); s.textContent = bits.join(" · ");
     const c = document.createElement("span"); c.className = "chip " + (a.status||"offen"); c.textContent = a.status === "genehmigt" ? "Genehmigt" : a.status === "abgelehnt" ? "Abgelehnt" : "Offen";
     b.append(t, c, s); el.append(b);
   }
@@ -403,13 +403,14 @@ function newAntrag(){
   const nm = (wbSet().name || "").trim().split(/\s+/);
   const last = nm.length > 1 ? nm.pop() : ""; const first = nm.join(" ");
   const prev = Object.values(store.antraege).sort((a,b)=>(b.created||0)-(a.created||0))[0] || {};
-  return {vorname: prev.vorname || first, name: prev.name || last, uVon:"", uBis:"", uTage:"", oVon:"", oBis:"", oStd:"", gruende:"", nd:"", ndText:"", ndTausch:"", beantragt: ymd(new Date()), status:"offen", created: Date.now(), autoT:true, autoS:true};
+  return {vorname: prev.vorname || first, name: prev.name || last, uVon:"", uBis:"", uTage:"", oVon:"", oBis:"", oStd:"", gruende:"", nd:"", ndText:"", ndTausch:"", beantragt: "", status:"offen", created: Date.now(), autoT:true, autoS:true};
 }
 let curId = null;
 function openEdit(id){
   curId = id || null; cur = id ? {...store.antraege[id]} : newAntrag();
   $("editTitle").textContent = id ? "Antrag bearbeiten" : "Neuer Antrag";
   document.querySelectorAll("#vEdit [data-k]").forEach(i => { i.value = cur[i.dataset.k] ?? ""; });
+  renderBeantragt();
   $("fUTage").value = cur.uTage === "" ? "" : numDE(parseNum(cur.uTage)); $("fOStd").value = cur.oStd === "" ? "" : numDE(parseNum(cur.oStd));
   renderSeg("ndSeg", cur.nd || ""); renderSeg("stSeg", cur.status || "offen");
   $("delBtn").hidden = !id; $("delBtn").dataset.armed = ""; $("delBtn").textContent = "Antrag löschen";
@@ -518,7 +519,10 @@ function MiniPDF(){
 }
 
 
+function renderBeantragt(){ $("fBeantragt").textContent = cur && cur.beantragt ? fmtD(cur.beantragt) + " (wird beim nächsten Erstellen auf das aktuelle Datum gesetzt)" : "Wird beim Erstellen des Antrags eingetragen."; }
 async function makePdf(){
+  // "Beantragt am" ist immer der Tag, an dem der Antrag erstellt wird
+  cur.beantragt = ymd(new Date()); persist(); renderBeantragt();
   const a = cur;
   const sigSrc = a.sig === "@saved" ? wbSet().signature : a.sig;
   const sigImg = a.sig === "@saved" && savedImg ? savedImg : await loadImg(sigSrc);
