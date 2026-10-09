@@ -219,7 +219,7 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
     <div class="card">
       <div class="row" style="flex-wrap:nowrap"><h2 id="kontoTitle" style="flex:1">Urlaubskonto</h2><button class="yb" type="button" id="yPrev" aria-label="Vorheriges Jahr">‹</button><button class="yb" type="button" id="yNext" aria-label="Nächstes Jahr">›</button></div>
       <div class="konto">
-        <button type="button" class="k kbtn" id="kAnspruchBtn" aria-label="Urlaubsanspruch ändern"><span>Anspruch ✎</span><b id="kAnspruch">–</b></button>
+        <div class="k" id="kAnspruchBtn"><span>Anspruch</span><b id="kAnspruch">–</b></div>
         <div class="k"><span>Beantragt</span><b id="kBeantragt">–</b></div>
         <div class="k" id="kRestBox"><span>Rest</span><b id="kRest">–</b></div>
       </div>
@@ -227,15 +227,7 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
     </div>
     <button class="btn primary" type="button" id="newBtn" style="height:50px;font-size:16px">+ Neuer Antrag</button>
     <div class="list" id="list"></div>
-    <details class="card" id="setBox">
-      <summary>Einstellungen</summary>
-      <div class="in">
-        <div class="grid2">
-          <div class="field"><label for="setAnspruch">Urlaubstage pro Jahr</label><input id="setAnspruch" class="num" inputmode="decimal"></div>
-        </div>
-        <span class="hint">Arbeitstage und Stunden pro Tag stellst du auf dem Startbildschirm unter „Einstellungen → Arbeitszeit“ ein. Sie gelten für Stundenzettel und Urlaub. Feiertage in Schleswig-Holstein werden automatisch abgezogen. Die Unterschrift kommt aus dem Stundenzettel.</span>
-      </div>
-    </details>
+    <p class="hint" style="margin:0 4px">Name, Unterschrift, Urlaubstage und Arbeitszeit stellst du auf der Startseite unter Einstellungen (Zahnrad) ein. Feiertage in Schleswig-Holstein werden automatisch abgezogen.</p>
   </section>
 
   <!-- Antrag -->
@@ -288,7 +280,7 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
 <div class="sheet-bg" id="setup" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="suT">
     <h2 id="suT">Urlaubstage einrichten</h2>
-    <p class="note">Wie viele Urlaubstage hast du pro Jahr? Das brauchst du nur einmal einzutragen. Ändern kannst du es später jederzeit über „Anspruch“.</p>
+    <p class="note">Wie viele Urlaubstage hast du pro Jahr? Das brauchst du nur einmal einzutragen. Ändern kannst du es später auf der Startseite unter Einstellungen (Zahnrad).</p>
     <div class="field"><label for="suTage">Urlaubstage pro Jahr</label><input id="suTage" class="num" inputmode="decimal" placeholder="Tage" autocomplete="off"></div>
     <div class="row">
       <a class="btn" href="index.html" onclick="return GT.home(event)" style="display:inline-flex;align-items:center;text-decoration:none;color:var(--ink)">Zurück</a>
@@ -376,7 +368,7 @@ function renderKonto(){
   $("kontoTitle").textContent = "Urlaubskonto " + y;
   $("kAnspruch").textContent = set ? numDE(an) : "–"; $("kBeantragt").textContent = numDE(b); $("kRest").textContent = set ? numDE(rest) : "–";
   $("kRestBox").className = "k " + (!set ? "" : rest < 0 ? "warn" : "ok");
-  $("kNote").textContent = store.settings.anspruchSet ? (g ? numDE(g) + " Tage genehmigt" : "Noch nichts genehmigt") + (h ? " · " + numDE(h) + " h Überstunden-Freizeit beantragt" : "") + "." : "Tippe auf „Anspruch“ und trag deine Urlaubstage pro Jahr ein.";
+  $("kNote").textContent = store.settings.anspruchSet ? (g ? numDE(g) + " Tage genehmigt" : "Noch nichts genehmigt") + (h ? " · " + numDE(h) + " h Überstunden-Freizeit beantragt" : "") + "." : "Trag deine Urlaubstage auf der Startseite unter Einstellungen (Zahnrad) ein.";
 }
 function label(a){
   const p = [];
@@ -405,9 +397,6 @@ $("list").addEventListener("click", ev => { const b = ev.target.closest("[data-i
 
 // ---------- Einstellungen ----------
 const WD = ["Mo","Di","Mi","Do","Fr","Sa","So"];
-function renderSettings(){ $("setAnspruch").value = store.settings.anspruchSet ? numDE(store.settings.anspruch) : ""; $("setAnspruch").placeholder = "Tage"; }
-$("setAnspruch").addEventListener("change", () => { const v = parseNum($("setAnspruch").value); if(v != null && v >= 0 && v < 100){ store.settings.anspruch = v; store.settings.anspruchSet = true; save(); renderKonto(); GT.toast("Urlaubsanspruch: " + numDE(v) + " Tage pro Jahr"); } renderSettings(); });
-$("kAnspruchBtn").addEventListener("click", () => { $("setBox").open = true; const i = $("setAnspruch"); i.scrollIntoView({block:"center"}); setTimeout(() => { i.focus(); i.select(); }, 250); });
 
 // ---------- Antrag bearbeiten ----------
 function newAntrag(){
@@ -580,10 +569,10 @@ async function makePdf(){
   await GT.deliver(blob, fn, "Antrag teilen");
 }
 
-renderSettings(); renderList(); show("list");
+renderList(); show("list");
 // Beim ersten Öffnen: Urlaubstage einrichten
 function setupDone(){ const v = parseNum($("suTage").value); if(v == null || v <= 0 || v >= 100){ GT.toast("Bitte deine Urlaubstage pro Jahr eintragen."); $("suTage").focus(); return; }
-  store.settings.anspruch = v; store.settings.anspruchSet = true; save(); renderKonto(); renderSettings(); $("setup").hidden = true; GT.toast("Urlaubsanspruch: " + numDE(v) + " Tage pro Jahr"); }
+  store.settings.anspruch = v; store.settings.anspruchSet = true; save(); renderKonto(); $("setup").hidden = true; GT.toast("Urlaubsanspruch: " + numDE(v) + " Tage pro Jahr"); }
 $("suOk").addEventListener("click", setupDone);
 $("suTage").addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); setupDone(); } });
 if(!store.settings.anspruchSet){ $("setup").hidden = false; setTimeout(() => $("suTage").focus(), 300); }

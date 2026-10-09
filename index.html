@@ -50,7 +50,7 @@ button{cursor:pointer}
 :root[data-design="gosch"] .backbtn{border-radius:6px}
 .sigpad{border:1px dashed var(--line);border-radius:var(--rs);background:#fff;touch-action:none;width:100%;aspect-ratio:3/1;display:block}
 .sigcur{background:#fff;border:1px solid var(--line);border-radius:var(--rs);padding:6px;min-height:56px;display:grid;place-items:center}
-.sigcur img{max-height:64px}
+.sigcur{overflow:hidden}.sigcur img{max-height:64px;max-width:100%;object-fit:contain}
 .brand{display:none}
 :root[data-design="gosch"] .brand{display:flex;justify-content:flex-start;padding:0}
 .brand img{display:block;width:min(100%,150px);height:auto}
@@ -73,12 +73,14 @@ h1{margin:6px 2px 0;font:800 30px/1.1 var(--f-display);letter-spacing:-.02em}
 .card h2{margin:0;font:700 18px/1.2 var(--f-display)}
 .card h3{margin:4px 0 -4px;font:650 14px/1.2 var(--f-body);color:var(--muted)}
 .set{display:grid;gap:10px}.set h3{margin:14px 0 0;font-size:16px}.set h3:first-child{margin-top:0}
-details.card{padding:0}
+details.card{padding:0;display:block;min-width:0}
+details.card + details.card{margin-top:0}
 details.card > summary{list-style:none;cursor:pointer;padding:16px;font:700 18px/1.2 var(--f-display);display:flex;align-items:center;gap:10px}
 details.card > summary::-webkit-details-marker{display:none}
 details.card > summary::after{content:"";margin-left:auto;width:9px;height:9px;border-right:2.5px solid var(--muted);border-bottom:2.5px solid var(--muted);transform:rotate(45deg);margin-top:-5px}
 details.card[open] > summary::after{transform:rotate(-135deg);margin-top:4px}
-details.card .in{display:grid;gap:12px;padding:0 16px 16px}
+details.card .in{display:grid;gap:12px;padding:0 16px 16px;min-width:0}
+details.card .in > *{min-width:0;max-width:100%}
 .seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--line);border-radius:11px;padding:2px;gap:2px}
 .seg button{border:0;background:none;border-radius:9px;height:38px;font-weight:600;color:var(--ink)}
 .seg button[aria-checked="true"]{background:var(--surface);box-shadow:0 1px 3px rgba(16,24,40,.14)}
@@ -132,26 +134,27 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
   </div>
   <p class="note" id="noneNote" hidden>Alle Bereiche sind ausgeblendet. Schalte unten unter „Einstellungen“ einen Bereich ein.</p>
 
-  <p class="ver">Oh-MyGosch · Version 2.5</p>
+  <p class="ver">Oh-MyGosch · Version 2.6</p>
 </main>
 <main class="wrap" id="vSet" hidden>
   <div><button type="button" class="backbtn" id="setBack">‹ Zurück</button></div>
   <h1>Einstellungen</h1>
-  <section class="card">
-    <h2>Name</h2>
-    <label class="azstd" style="display:grid;gap:4px;justify-content:stretch">Vorname Name<input id="gName" autocomplete="name" style="width:100%;text-align:left"></label>
-    <p class="note">Gilt für Stundenzettel, Urlaubsantrag und als Prüfer bei den Brandmeldeanlagen, wenn dort kein eigener eingetragen ist.</p>
-  </section>
-  <section class="card">
-    <h2>Unterschrift</h2>
-    <div class="sigcur" id="sigCur"><span class="note">Noch keine Unterschrift gespeichert</span></div>
-    <p class="note">Einmal mit dem Finger unterschreiben und auf „Übernehmen“ tippen. Sie wird beim Stundenzettel und beim Urlaubsantrag automatisch eingesetzt, jedes Mal mit aktuellem Datum und Uhrzeit.</p>
-    <canvas class="sigpad" id="sigPad" width="900" height="300" aria-label="Unterschriftsfeld"></canvas>
-    <div class="row"><button class="btn" type="button" id="sigClear">Feld leeren</button><button class="btn primary" type="button" id="sigSave">Übernehmen</button><button class="btn" type="button" id="sigDel" style="color:var(--danger)">Entfernen</button></div>
-  </section>
-  <section class="card">
-    <div class="set">
-      <h3>Design</h3>
+  <details class="card" id="secMe">
+    <summary>Persönliche Daten</summary>
+    <div class="in">
+      <label class="azstd" style="display:grid;gap:4px;justify-content:stretch">Vorname Name<input id="gName" autocomplete="name" style="width:100%;text-align:left"></label>
+      <p class="note">Gilt für Stundenzettel, Urlaubsantrag und als Prüfer bei den Brandmeldeanlagen, wenn dort kein eigener eingetragen ist.</p>
+      <label class="azstd">Urlaubstage pro Jahr <input id="gUrlaub" inputmode="decimal" placeholder="Tage"></label>
+      <h3>Unterschrift</h3>
+      <div class="sigcur" id="sigCur"><span class="note">Noch keine Unterschrift gespeichert</span></div>
+      <p class="note">Einmal mit dem Finger unterschreiben und auf „Übernehmen“ tippen. Sie wird beim Stundenzettel und beim Urlaubsantrag automatisch eingesetzt, jedes Mal mit aktuellem Datum und Uhrzeit.</p>
+      <canvas class="sigpad" id="sigPad" width="900" height="300" aria-label="Unterschriftsfeld"></canvas>
+      <div class="row"><button class="btn" type="button" id="sigClear">Feld leeren</button><button class="btn primary" type="button" id="sigSave">Übernehmen</button><button class="btn" type="button" id="sigDel" style="color:var(--danger)">Entfernen</button></div>
+    </div>
+  </details>
+  <details class="card" id="secDesign">
+    <summary>Design</summary>
+    <div class="in">
       <div class="seg" role="radiogroup" aria-label="Design" id="designSeg">
         <button type="button" role="radio" data-design="gosch" aria-checked="false">Gosch</button>
         <button type="button" role="radio" data-design="neon" aria-checked="false">Neon</button>
@@ -165,15 +168,27 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
           <button type="button" role="radio" data-mode="dark" aria-checked="false">Dunkel</button>
         </div>
       </div>
-      <h3>Arbeitszeit</h3>
+    </div>
+  </details>
+  <details class="card" id="secAz">
+    <summary>Arbeitszeit</summary>
+    <div class="in">
       <div class="days" id="azDays"></div>
       <label class="azstd">Stunden pro Arbeitstag <input id="azStd" inputmode="decimal"></label>
       <p class="note">Gilt für Stundenzettel (Soll-Stunden) und Urlaub (Urlaubstage). Feiertage in Schleswig-Holstein werden abgezogen.</p>
-      <h3>Bereiche anzeigen</h3>
+    </div>
+  </details>
+  <details class="card" id="secMod">
+    <summary>Bereiche anzeigen</summary>
+    <div class="in">
       <label class="check"><input type="checkbox" id="m-bma"> Brandmeldeanlagen</label>
       <label class="check"><input type="checkbox" id="m-wb"> Stundenzettel</label>
       <label class="check"><input type="checkbox" id="m-ur"> Urlaub beantragen</label>
-      <h3>Datensicherung</h3>
+    </div>
+  </details>
+  <details class="card" id="secBk">
+    <summary>Datensicherung</summary>
+    <div class="in">
       <p class="note">Alles liegt nur auf diesem Gerät. „Alles sichern“ speichert Stundenzettel, Brandmeldeanlagen mit Grundrissen und Urlaubsanträge in eine Datei. Leg sie z. B. in deinen Dateien oder Downloads auf dem Gerät ab.</p>
       <div class="row">
         <button class="btn primary" type="button" id="bkAll">Alles sichern</button>
@@ -186,8 +201,8 @@ details.card .in{display:grid;gap:12px;padding:0 16px 16px}
       </div>
       <p class="note">Eingelesen werden Sicherungen aus dieser App, aus dem alten Wochenbericht und aus der alten Brandmelde-App. Einträge mit gleicher Kennung werden ersetzt, alle anderen bleiben.</p>
     </div>
-  </section>
-  <p class="ver">Oh-MyGosch · Version 2.5</p>
+  </details>
+  <p class="ver">Oh-MyGosch · Version 2.6</p>
 </main>
 <script>/* Gemeinsame Helfer für alle Seiten von Oh-MyGosch: Dateien weitergeben, Gerätespeicher für Grundrisse. */
 (function(){
@@ -403,7 +418,7 @@ $("bkYes").addEventListener("click", async () => {
 });
 
 // ---------- Einstellungen-Seite ----------
-function showSet(on){ $("vHome").hidden = on; $("vSet").hidden = !on; $("gearBtn").hidden = on; window.scrollTo(0,0); if(on){ renderGlobal(); } else summary(); }
+function showSet(on){ $("vHome").hidden = on; $("vSet").hidden = !on; $("gearBtn").hidden = on; window.scrollTo(0,0); if(on){ renderGlobal(); renderUrlaub(); } else summary(); }
 $("gearBtn").addEventListener("click", () => showSet(true));
 $("setBack").addEventListener("click", () => showSet(false));
 const gset = () => ls("wb.settings.v1") || {};
@@ -429,6 +444,16 @@ $("sigDel").addEventListener("click", () => { const b = $("sigDel"); if(b.datase
 
 renderLook(); renderModules(); renderAz(); summary();
 window.addEventListener("pageshow", () => { const l = look(); window.WB_look(l.d, l.m); summary(); renderLook(); renderModules(); });
+// Urlaubstage pro Jahr (gilt für "Urlaub beantragen")
+function renderUrlaub(){ const U = ls("urlaub.v1") || {}; const st = U.settings || {}; $("gUrlaub").value = st.anspruchSet ? String(st.anspruch).replace(".", ",") : ""; }
+$("gUrlaub").addEventListener("change", () => {
+  const v = Number(String($("gUrlaub").value).replace(",", ".").trim());
+  if(!$("gUrlaub").value.trim() || !(v > 0 && v < 100)){ GT.toast("Bitte eine Zahl zwischen 1 und 99 eintragen."); renderUrlaub(); return; }
+  const U = ls("urlaub.v1") || {antraege:{}}; U.settings = Object.assign({}, U.settings || {}, {anspruch: v, anspruchSet: true});
+  try{ localStorage.setItem("urlaub.v1", JSON.stringify(U)); GT.toast("Urlaubstage: " + String(v).replace(".", ",") + " pro Jahr"); }catch(e){ GT.toast("Speichern nicht möglich."); }
+  renderUrlaub(); summary();
+});
+renderUrlaub();
 })();
 </script>
 </body>
