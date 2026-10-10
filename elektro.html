@@ -83,6 +83,60 @@ h1{margin:4px 2px 0;font:800 30px/1.1 var(--f-display);letter-spacing:-.02em}
 .grp{margin:6px 2px -4px;font:700 13px/1.2 var(--f-body);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .hint{background:var(--accent-soft);border-radius:var(--rs);padding:12px 14px;font-size:15px}
 .frow{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{border:0;border-radius:99px;background:var(--sunk);min-height:38px;padding:0 14px;font-weight:700;font-size:14px;color:var(--ink)}
+.chips button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+:root[data-design="neon"] .chips button[aria-pressed="true"]{background:linear-gradient(100deg,var(--neon-blue),var(--neon-cyan));color:#fff}
+.port.off .jack{opacity:.45}
+.port .jack em.poe{position:absolute;right:8%;bottom:10%;width:22%;height:22%;border-radius:50%;background:#f5c518}
+.legend button.add{background:none;box-shadow:inset 0 0 0 1.5px var(--line)}
+#nav{left:8px;right:8px}#nav .in{gap:2px}#nav button{font-size:10.5px;padding:6px 1px;letter-spacing:-.01em}
+/* Switch-Front */
+#swPanelBox,#swPanelBox>*{min-width:0}
+.swc{position:relative;min-width:0;max-width:100%;box-sizing:border-box;background:linear-gradient(#3b434b,#2a3036 30%,#22272c);border-radius:6px;padding:10px 24px 12px;box-shadow:0 6px 18px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.08)}
+.swc::before,.swc::after{content:"";position:absolute;top:0;bottom:0;width:16px;background:radial-gradient(ellipse 4px 3px at 50% 18%,#3c444c 92%,transparent 100%),radial-gradient(ellipse 4px 3px at 50% 82%,#3c444c 92%,transparent 100%),linear-gradient(90deg,#aeb6be,#dfe3e7 45%,#b5bcc3)}
+.swc::before{left:0;border-radius:6px 0 0 6px}.swc::after{right:0;border-radius:0 6px 6px 0}
+.swtop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;color:#e6ebf0;min-width:0}
+.swtop .swbrand{display:block;flex:1;font:800 11px/1.1 var(--f-body);letter-spacing:.08em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.swc .swtop .swbrand .mdl{display:block;font-weight:600;letter-spacing:.02em;text-transform:none;color:#9aa4ae;font-size:10px;margin-top:2px;overflow:hidden;text-overflow:ellipsis}
+.swtop .leds{display:flex;align-items:center;gap:5px;font:700 10px/1 var(--f-body);color:#9aa4ae;white-space:nowrap}
+.swtop .leds i{width:6px;height:6px;border-radius:50%;background:#2ecc71;box-shadow:0 0 5px #2ecc71}
+.swtop .leds b{margin-left:4px;font-weight:700}
+.swports{display:grid;gap:10px}
+.swblk{display:grid;grid-template-columns:repeat(var(--cols,12),minmax(0,1fr));gap:3px}
+.swblk.sfpb{grid-template-columns:repeat(var(--cols,2),minmax(0,30px));justify-content:start;position:relative;padding-top:12px}
+.swblk.sfpb::before{content:"SFP";position:absolute;top:0;left:0;font:800 9px/1 var(--f-body);color:#9aa4ae;letter-spacing:.08em}
+.port.sp{gap:2px}
+.port.sp .jack{aspect-ratio:1/.82;border-radius:2px;background:#0d1013;box-shadow:inset 0 0 0 2px var(--pc,#5f6873);padding:0;display:block}
+.port.sp .jack::before{left:33%;right:33%;top:12%;height:20%;background:#2f363e;border-radius:1px}
+.port.sp.bot .jack::before{top:auto;bottom:12%}
+.port.sp .jack i{position:absolute;left:26%;right:26%;bottom:16%;height:9%;width:auto;border-radius:0;background:repeating-linear-gradient(90deg,#b08d3a 0 1.5px,transparent 1.5px 3px)}
+.port.sp.bot .jack i{bottom:auto;top:16%}
+.port.sp .jack u{position:absolute;top:10%;width:15%;aspect-ratio:1;background:#3d454e;border-radius:1px}
+.port.sp .jack u.l1{left:10%}.port.sp .jack u.l2{right:10%}
+.port.sp.bot .jack u{top:auto;bottom:10%}
+.port.sp .jack u.l1.on{background:#2ecc71;box-shadow:0 0 4px #2ecc71}
+.port.sp .jack u.l2.on{background:#f5a623;box-shadow:0 0 4px #f5a623}
+.port.sp .no{font-size:9px}
+.port.sp.bot .no{order:2}
+.port.sp.up .no{color:#fff;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:2px}
+.port.sp.sfp .jack{aspect-ratio:1.3/.75;box-shadow:inset 0 0 0 2px var(--pc,#9aa4ae),0 0 0 1px #8d969f}
+.port.sp.sfp .jack::before,.port.sp.sfp .jack u{display:none}
+.port.sp.sfp .jack i{left:20%;right:20%;top:46%;bottom:auto;height:8%;background:#3a4148}
+.port.sp.off .jack{opacity:.45}
+/* Export */
+.xl{display:grid;gap:6px}
+.xi{display:grid;grid-template-columns:26px 1fr;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;background:var(--sunk);padding:10px 12px;color:var(--ink);font:inherit;min-height:52px}
+.xi b{display:block;font-weight:750;font-size:15px}.xi small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.xi .ck{width:24px;height:24px;border-radius:7px;box-shadow:inset 0 0 0 2px var(--line);display:grid;place-items:center}
+.xi[aria-pressed="true"] .ck{background:var(--accent);box-shadow:none}
+.xi[aria-pressed="true"] .ck::after{content:"";width:10px;height:6px;border:solid var(--accent-ink);border-width:0 0 2.5px 2.5px;transform:translateY(-1px) rotate(-45deg)}
+.xi:disabled{opacity:.45}
+.xh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:6px}
+.xh h3{margin:0;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.xh button{border:0;background:none;color:var(--accent);font-weight:700;font-size:13px;padding:4px 0}
+:root[data-design="neon"] .xh button{color:var(--neon-cyan,#35c8ff)}
+.qx{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
 /* Patchfeld */
 .panel{background:linear-gradient(#2b3138,#1d2227);border-radius:14px;padding:12px 10px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),0 6px 18px rgba(0,0,0,.18)}
 .panel .ears{display:flex;justify-content:space-between;color:#8f99a4;font:700 11px/1 var(--f-body);letter-spacing:.06em;margin:0 2px 8px}
@@ -161,26 +215,47 @@ h1{margin:4px 2px 0;font:800 30px/1.1 var(--f-display);letter-spacing:-.02em}
 .cab{background:linear-gradient(#e9edf1,#dfe5ea);border-radius:14px;padding:10px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08),0 6px 18px rgba(0,0,0,.12);display:grid;gap:10px}
 :root[data-design="neon"] .cab,:root[data-mode="dark"] .cab{background:linear-gradient(#cfd6dd,#c3cbd3)}
 .cab .hd{display:flex;justify-content:space-between;font:700 11px/1 var(--f-body);color:#5d6b7c;letter-spacing:.06em;margin:0 2px}
-.rail{position:relative;display:grid;grid-template-columns:repeat(var(--te,12),minmax(0,1fr));gap:2px;padding:6px 4px;background:#c4ccd4;border-radius:6px;min-height:92px}
-.rail::before{content:"";position:absolute;left:0;right:0;top:50%;height:10px;margin-top:-5px;background:linear-gradient(#aab4be,#d5dbe0 40%,#9aa5b0);z-index:0}
+.rail{position:relative;display:grid;grid-template-columns:repeat(var(--te,12),minmax(0,1fr));gap:2px;padding:6px 4px;background:#c4ccd4;border-radius:6px;min-height:140px}
+.rail::before{content:"";position:absolute;left:0;right:0;top:50%;height:14px;margin-top:-7px;background:linear-gradient(#aab4be,#d5dbe0 40%,#9aa5b0);z-index:0}
 .rail .rn{position:absolute;left:-2px;top:-2px;font:800 9px/1 var(--f-body);color:#6b7785;background:#e9edf1;border-radius:4px;padding:2px 4px;z-index:2}
-.dev{position:relative;z-index:1;border:0;padding:0;background:#fbfcfd;border-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,.25),inset 0 0 0 1px rgba(0,0,0,.12);display:grid;grid-template-rows:auto 1fr auto;justify-items:center;min-width:0;overflow:hidden;color:#1b1f24;cursor:pointer}
-.dev .tp{width:100%;font:800 9px/1.1 var(--f-body);padding:3px 1px 0;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dev .sw{width:46%;max-width:16px;height:22px;border-radius:3px;background:#2b3138;align-self:center;position:relative}
-.dev .sw::after{content:"";position:absolute;left:18%;right:18%;top:3px;height:7px;border-radius:2px;background:#e5484d}
-.dev.fi .sw::after{background:#2b3138}
-.dev .tb{position:absolute;right:3px;top:22px;width:9px;height:9px;border-radius:50%;background:#f5c518;box-shadow:inset 0 0 0 1px rgba(0,0,0,.3)}
-.dev .lb{width:100%;font:600 8px/1.1 var(--f-body);color:#5d6b7c;padding:0 1px 3px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dev.res{background:repeating-linear-gradient(135deg,#eef1f4 0 6px,#e2e7ec 6px 12px)}
-.dev.res .sw{display:none}
-.dev.hs .sw::after{background:#e5484d;height:9px}
-.dev.uess{background:#fdf6e3}
-.dev.uess .sw::after{background:#f2811d}
-.dev.kl{background:#f1f3f5}
-.dev.kl .sw{background:repeating-linear-gradient(90deg,#8b98a5 0 3px,#c4ccd4 3px 6px)}
-.dev.kl .sw::after{display:none}
-.dev .fg{position:absolute;left:0;right:0;top:0;height:3px}
-.addslot{position:relative;z-index:1;border:2px dashed #8b98a5;border-radius:4px;background:rgba(255,255,255,.55);color:#5d6b7c;font:800 18px/1 var(--f-body);display:grid;place-items:center;cursor:pointer}
+.dev{position:relative;z-index:1;border:0;padding:0;background:linear-gradient(90deg,#c9cfd5,#dde2e6 18%,#dde2e6 82%,#c3c9cf);border-radius:3px;box-shadow:0 2px 3px rgba(0,0,0,.28),inset 0 0 0 1px rgba(0,0,0,.2);display:grid;grid-template-rows:17px 1fr 17px;min-width:0;height:132px;overflow:hidden;color:#1b1f24;cursor:pointer}
+.dev .trm{display:block;background:radial-gradient(circle at 50% 55%,#4a535d 0 .9px,#aab3bc 1.3px 3.6px,#7f8994 4px,transparent 4.4px) center/calc(100% / var(--p,1)) 100% repeat-x}
+.dev .trm.b{background-position:center 0}
+.dev .face{position:relative;margin:0 1.5px;background:linear-gradient(#fdfdfe,#eef1f3 60%,#e6e9ec);border-radius:2px;box-shadow:0 -1px 0 rgba(255,255,255,.7),0 1px 2px rgba(0,0,0,.25),inset 0 0 0 1px rgba(0,0,0,.07);display:grid;grid-template-rows:auto auto 1fr auto;justify-items:center;padding:3px 1px 3px;min-height:0;gap:2px}
+.dev .tp{max-width:100%;font:800 9px/1 var(--f-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff;border-radius:2px;padding:1px 2px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.dev .rt{max-width:100%;font:800 9.5px/1.05 var(--f-body);text-align:center;color:#2b3138;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
+.dev .lv{align-self:center;width:min(62%,13px);height:30px;background:#2f363d;border-radius:2px;position:relative;box-shadow:inset 0 1px 3px rgba(0,0,0,.6)}
+.dev.mp .lv{width:min(calc(100% - 10px),34px)}
+.dev.pp .lv{width:calc(100% - 2px);background:repeating-linear-gradient(90deg,transparent 0 calc(100% / var(--p) * .2),#2f363d calc(100% / var(--p) * .2) calc(100% / var(--p) * .8),transparent calc(100% / var(--p) * .8) calc(100% / var(--p)));box-shadow:none}
+.dev.pp .lv i{left:0;right:0;background:repeating-linear-gradient(90deg,transparent 0 calc(100% / var(--p) * .28),#5a636d calc(100% / var(--p) * .28) calc(100% / var(--p) * .72),transparent calc(100% / var(--p) * .72) calc(100% / var(--p)));box-shadow:none}
+.dev.pp .lv::after{content:"";position:absolute;left:calc(100% / var(--p) * .28);right:calc(100% / var(--p) * .28);top:5px;height:3px;border-radius:1px;background:#454d56}
+.dev.sls.pp .lv i{background:repeating-linear-gradient(90deg,transparent 0 calc(100% / var(--p) * .28),#8b949d calc(100% / var(--p) * .28) calc(100% / var(--p) * .72),transparent calc(100% / var(--p) * .72) calc(100% / var(--p)))}
+.dev.kl .rt{display:none}
+.dev .lv i{position:absolute;left:14%;right:14%;top:2px;height:46%;border-radius:2px;background:linear-gradient(#77818c,#4d5660);box-shadow:0 1px 1px rgba(0,0,0,.4)}
+.dev .wn{width:9px;height:4px;border-radius:1px;background:#e5484d;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25)}
+.dev .tb{position:absolute;right:2px;top:17px;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#ffe27a,#e2ad00);box-shadow:0 1px 1px rgba(0,0,0,.35);font:900 6.5px/10px var(--f-body);color:#5d4500;text-align:center}
+.dev.fi .lv i,.dev.fils .lv i{background:linear-gradient(#59636e,#353c44)}
+.dev.hs .lv i{background:linear-gradient(#f0605c,#c2302c)}
+.dev.hs .face{background:linear-gradient(#fdfdfe,#eef1f3)}
+.dev.sls .face{background:linear-gradient(#e9edf0,#d9dfe4)}
+.dev.sls .lv i{background:linear-gradient(#a7b0b9,#7d8792)}
+.dev.uess .face{background:linear-gradient(#f0f2f4,#e1e5e9)}
+.dev.uess .lv{height:10px;width:calc(100% - 6px);background:repeating-linear-gradient(90deg,#c3c9cf 0 1px,transparent 1px calc(100% / var(--p,1)));box-shadow:none}
+.dev.uess .lv i{left:0;right:0;top:2px;height:6px;border-radius:0;background:repeating-linear-gradient(90deg,transparent 0 3px,#2fb36b 3px calc(100% / var(--p,1) - 3px),transparent calc(100% / var(--p,1) - 3px) calc(100% / var(--p,1)));box-shadow:none}
+.dev.uess .wn{display:none}
+.dev.kl{background:none;box-shadow:none;grid-template-rows:1fr}
+.dev.kl .trm,.dev.kl .wn,.dev.kl .lv{display:none}
+.dev.kl .face{margin:0;background:linear-gradient(90deg,#2f6fd6 0 25%,#8b949d 25% 26%,#9aa4ae 26% 50%,#7f8892 50% 51%,#9aa4ae 51% 75%,#7f8892 75% 76%,#d6c21a 76%);box-shadow:0 2px 3px rgba(0,0,0,.28)}
+.dev.kl .face::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(25% - 1px),rgba(0,0,0,.25) calc(25% - 1px) 25%),linear-gradient(transparent 0 42%,#2fa84f 42% 58%,transparent 58%) 100% 0/25% 100% no-repeat;opacity:.8}
+.dev.kl .tp,.dev.kl .rt{position:relative;z-index:1}
+.dev.kl .rt{color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.6)}
+.dev.res{grid-template-rows:1fr;background:linear-gradient(90deg,#c9cfd5,#dde2e6 18%,#dde2e6 82%,#c3c9cf)}
+.dev.res .trm,.dev.res .lv,.dev.res .wn{display:none}
+.dev.res .face{margin:12px 1.5px;background:repeating-linear-gradient(0deg,#eceff2 0 5px,#e1e5e9 5px 6px)}
+.dev.res .rt{color:#8b98a5;font-weight:700}
+.dev.son .wn{background:#2fb36b}
+.dev .fg{position:absolute;left:0;right:0;top:0;height:3px;z-index:2}
+.addslot{position:relative;z-index:1;height:132px;border:2px dashed #8b98a5;border-radius:4px;background:rgba(255,255,255,.55);color:#5d6b7c;font:800 18px/1 var(--f-body);display:grid;place-items:center;cursor:pointer}
 .railinfo{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:-6px 2px 0}
 .railinfo.over{color:var(--danger);font-weight:700}
 .ctab{display:grid}
@@ -488,7 +563,43 @@ header.top{position:static!important;border-bottom:0!important}
     show(0, 1);
   }
   function tourReset(){ try{ Object.keys(localStorage).filter(k => k.indexOf("app.tour.") === 0).forEach(k => localStorage.removeItem(k)); }catch(e){} }
-  window.GT = {toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home, tour, tourDone, tourReset};
+
+  // ---------- Drag & Drop (Maus sofort, Touch nach kurzem Halten) ----------
+  function drag(root, opts){
+    if(!root) return; let st = null, suppress = false;
+    if(!document.getElementById("gtDragCss")){ const c = document.createElement("style"); c.id = "gtDragCss";
+      c.textContent = ".gt-dragsrc{opacity:.35!important}.gt-dropover{outline:3px solid #35c8ff!important;outline-offset:1px;border-radius:6px}"
+        + ".gt-ghost{position:fixed;z-index:300;pointer-events:none;opacity:.92;transform:scale(1.06);box-shadow:0 12px 28px rgba(0,0,0,.35);border-radius:6px;transition:none}"
+        + ".gt-ghost.chip{background:#003769;color:#fff;font:700 13px/1 var(--f-body,system-ui);padding:10px 14px;border-radius:99px;white-space:nowrap}"
+        + ".gt-dragging,.gt-dragging *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}";
+      document.head.appendChild(c); }
+    const P = e => e.touches ? (e.touches[0] || e.changedTouches[0]) : e;
+    const clear = () => { if(!st) return; clearTimeout(st.timer); if(st.gh) st.gh.remove(); st.it.classList.remove("gt-dragsrc"); if(st.tgt) st.tgt.classList.remove("gt-dropover"); document.documentElement.classList.remove("gt-dragging"); };
+    function start(e){ if(e.button > 0 || st) return; const it = e.target.closest(opts.item); if(!it || !root.contains(it)) return; if(opts.can && !opts.can(it)) return;
+      const p = P(e); st = {it, x0: p.clientX, y0: p.clientY, x: p.clientX, y: p.clientY, touch: !!e.touches, on: false, tgt: null};
+      if(st.touch){ document.documentElement.classList.add("gt-dragging"); st.timer = setTimeout(activate, opts.hold || 320); } }
+    function activate(){ if(!st || st.on) return; st.on = true; const it = st.it, r = it.getBoundingClientRect(); let gh;
+      if(it instanceof SVGElement || opts.chip){ gh = document.createElement("div"); gh.className = "gt-ghost chip"; gh.textContent = opts.label ? opts.label(it) : "verschieben"; st.ox = -14; st.oy = -46; }
+      else { gh = it.cloneNode(true); gh.classList.add("gt-ghost"); gh.style.width = r.width + "px"; gh.style.height = r.height + "px"; gh.style.margin = "0"; st.ox = r.left - st.x; st.oy = r.top - st.y; }
+      document.body.appendChild(gh); st.gh = gh; it.classList.add("gt-dragsrc"); document.documentElement.classList.add("gt-dragging"); place(); try{ navigator.vibrate && navigator.vibrate(12); }catch(e){} }
+    function place(){ st.gh.style.left = (st.x + st.ox) + "px"; st.gh.style.top = (st.y + st.oy) + "px"; }
+    function move(e){ if(!st) return; const p = P(e); st.x = p.clientX; st.y = p.clientY;
+      if(!st.on){ if(Math.hypot(st.x - st.x0, st.y - st.y0) > 8){ if(st.touch){ clear(); st = null; } else activate(); } return; }
+      if(e.cancelable) e.preventDefault(); place();
+      const el = document.elementFromPoint(st.x, st.y); let t = el && el.closest(opts.target); if(t && (!root.contains(t) || t === st.it || (opts.accept && !opts.accept(st.it, t)))) t = null;
+      if(t !== st.tgt){ if(st.tgt) st.tgt.classList.remove("gt-dropover"); st.tgt = t; if(t) t.classList.add("gt-dropover"); }
+      if(st.y < 70) window.scrollBy(0, -12); else if(st.y > innerHeight - 120) window.scrollBy(0, 12);
+      const sc = opts.scroller; if(sc){ const b = sc.getBoundingClientRect(); if(st.x < b.left + 30) sc.scrollLeft -= 10; else if(st.x > b.right - 30) sc.scrollLeft += 10; } }
+    function end(){ if(!st) return; const s = st; clear(); st = null; if(!s.on) return; suppress = true; setTimeout(() => suppress = false, 150);
+      if(s.tgt) opts.drop(s.it, s.tgt, {x: s.x, y: s.y}); }
+    root.addEventListener("touchstart", start, {passive: true}); root.addEventListener("mousedown", start);
+    document.addEventListener("touchmove", move, {passive: false}); document.addEventListener("mousemove", move);
+    document.addEventListener("touchend", end); document.addEventListener("touchcancel", () => { clear(); st = null; }); document.addEventListener("mouseup", end);
+    root.addEventListener("click", e => { if(suppress){ e.preventDefault(); e.stopPropagation(); suppress = false; } }, true);
+    root.addEventListener("contextmenu", e => { if(e.target.closest(opts.item)) e.preventDefault(); });
+    root.addEventListener("dragstart", e => e.preventDefault());
+  }
+  window.GT = {drag, toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home, tour, tourDone, tourReset};
   persist(); registerSW();
 })();
 
@@ -804,13 +915,24 @@ header.top{position:static!important;border-bottom:0!important}
     <div class="card">
       <div style="display:grid;gap:4px"><h2 id="fName"></h2><p class="note" id="fMeta"></p></div>
       <div class="cab" id="cab"></div>
-      <p class="note">Gerät antippen zum Bearbeiten, <b>+</b> fügt am Ende der Reihe ein Gerät ein.</p>
+      <p class="note">Gerät antippen zum Bearbeiten, <b>+</b> fügt am Ende der Reihe ein Gerät ein. <b>Verschieben:</b> Gerät gedrückt halten und an die neue Stelle ziehen – auch in eine andere Reihe. Ein LS rechts neben einem FI wird diesem FI automatisch zugeordnet.</p>
     </div>
     <div class="card">
       <div class="row" style="justify-content:space-between"><h2>Stromkreise</h2><span class="chip" id="fStat"></span></div>
       <div class="ctab" id="ctab"></div>
     </div>
     <button class="btn primary wide" type="button" id="pdfField">Belegungsplan für die Tür (PDF)</button>
+  </section>
+
+  <!-- Export -->
+  <section id="vExp" style="display:grid;gap:12px" hidden>
+    <div class="hint" id="xHint">Wähle zuerst unter <b>Kunden</b> einen Kunden aus. <button class="btn" type="button" id="xPick" style="margin-top:8px">Kunde wählen</button></div>
+    <div id="xBody" style="display:grid;gap:12px" hidden>
+      <div class="card" style="display:grid;gap:10px"><h2 id="xKunde"></h2><p class="note">Grob auswählen, was in die PDF-Dokumentation soll – darunter kannst du einzelne Teile an- oder abhaken.</p>
+        <div class="qx" id="xQuick"><button class="btn" type="button" data-q="all">Ganze Doku</button><button class="btn" type="button" data-q="door">Pläne für die Tür</button><button class="btn" type="button" data-q="plan">Nur Grafiken</button><button class="btn" type="button" data-q="tab">Nur Tabellen</button></div></div>
+      <div class="card" style="display:grid;gap:8px"><div id="xList" class="xl"></div></div>
+      <button class="btn primary wide" type="button" id="xPdf">PDF erstellen</button>
+    </div>
   </section>
 </main>
 
@@ -880,6 +1002,7 @@ header.top{position:static!important;border-bottom:0!important}
 <nav class="appnav" id="nav" aria-label="Elektro"><div class="in" role="tablist">
   <button type="button" role="tab" data-view="kunden" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg>Kunden</button>
   <button type="button" role="tab" data-view="list" aria-selected="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9.5h18M3 15h18"/><path d="M7 6.2v1M10 6.2v1M13 6.2v1M7 11.7v1M10 11.7v1"/></svg>Verteilungen</button>
+  <button type="button" role="tab" data-view="exp" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M14 2.5H6.5a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8z"/><path d="M14 2.5V8h5.5"/><path d="M12 11v6.5M9 14.5l3 3 3-3"/></svg>Export</button>
 </div></nav>
 <script>
 (function(){
@@ -949,7 +1072,7 @@ function renderList(){
   if(k){ const adr = [k.strasse, [k.plz, k.ort].filter(Boolean).join(" ")].filter(Boolean).join(", ");
     $("kCard").innerHTML = '<div class="kn"><b>'+esc(k.name)+'</b><small>'+(k.nr ? 'Nr. '+esc(k.nr) : '')+'</small></div>' + (adr ? '<p>'+esc(adr)+'</p>' : '') + (k.ansprech ? '<p>'+esc(k.ansprech)+'</p>' : '')
       + ((k.tel || k.mail) ? '<p>'+(k.tel ? '<a href="tel:'+esc(k.tel.replace(/[^0-9+]/g, ""))+'">'+esc(k.tel)+'</a>' : '')+(k.tel && k.mail ? ' · ' : '')+(k.mail ? '<a href="mailto:'+esc(k.mail)+'">'+esc(k.mail)+'</a>' : '')+'</p>' : '')
-      + '<div class="row"><button class="btn" type="button" id="kEdit">Kundendaten</button><button class="btn" type="button" id="kSwitch">Kunde wechseln</button><button class="btn ghost" type="button" id="kAll">Alle anzeigen</button></div>'; }
+      + '<div class="row"><button class="btn" type="button" id="kEdit">Kundendaten</button><button class="btn primary" type="button" id="kExp">Doku exportieren</button><button class="btn" type="button" id="kSwitch">Kunde wechseln</button><button class="btn ghost" type="button" id="kAll">Alle anzeigen</button></div>'; }
   const all = Object.keys(store.vt);
   if(k){ const ids = all.filter(id => store.vt[id].kunde === store.sel).sort(byName); $("flist").innerHTML = ids.length ? ids.map(vItem).join("") : '<p class="empty">Für diesen Kunden gibt es noch keine Verteilung.</p>'; return; }
   if(!all.length){ $("flist").innerHTML = '<p class="empty">Noch keine Verteilung. Leg oben die erste an.</p>'; return; }
@@ -959,6 +1082,7 @@ function renderList(){
 }
 $("flist").addEventListener("click", e => { const b = e.target.closest("[data-id]"); if(b) openField(b.dataset.id); });
 $("kCard").addEventListener("click", e => { const b = e.target.closest("button"); if(!b) return;
+  if(b.id === "kExp"){ showView("exp"); window.scrollTo(0,0); return; }
   if(b.id === "kEdit") openKS(store.sel); else if(b.id === "kSwitch") showView("kunden"); else if(b.id === "kAll"){ store.sel = null; save(); renderList(); } });
 
 // ---------- Kunden ----------
@@ -1006,9 +1130,9 @@ function renderField(){
   const G = fiGroups(v); const R = rowsOf(v);
   let h = '<div class="hd"><span>'+esc((v.name || "").toUpperCase())+'</span><span>'+v.rows+' × '+v.te+' TE</span></div>';
   R.forEach((row, ri) => { const used = row.reduce((a, d) => a + (Number(d.te) || 1), 0);
-    h += '<div class="rail" style="--te:'+v.te+'"><span class="rn">'+(ri+1)+'</span>';
+    h += '<div class="rail" data-row="'+ri+'" style="--te:'+v.te+'"><span class="rn">'+(ri+1)+'</span>';
     row.forEach(d => { const w = Math.max(1, Number(d.te) || 1); const gc = d.t === "fi" ? G[d.id] : (d.fi && G[d.fi]) || "";
-      h += '<button class="dev '+d.t+'" type="button" data-d="'+d.id+'" style="grid-column:span '+Math.min(w, v.te)+'" aria-label="'+esc((d.kz ? d.kz + " " : "") + longName(d) + (d.kreis ? ", " + d.kreis : ""))+'">'+(gc ? '<span class="fg" style="background:'+gc+'"></span>' : '')+'<span class="tp">'+esc(d.kz || "")+'</span><span class="sw"></span>'+(d.t === "fi" || d.t === "fils" ? '<span class="tb"></span>' : '')+'<span class="lb">'+esc(short(d))+'</span></button>'; });
+      const sw = Math.min(w, v.te); h += '<button class="dev '+d.t+(sw > 1 ? ' mp' : '')+(sw > 1 && (d.t === "ls" || d.t === "sls") ? ' pp' : '')+'" type="button" data-d="'+d.id+'" style="grid-column:span '+sw+';--p:'+sw+'" aria-label="'+esc((d.kz ? d.kz + " " : "") + longName(d) + (d.kreis ? ", " + d.kreis : ""))+'">'+(gc ? '<span class="fg" style="background:'+gc+'"></span>' : '')+'<span class="trm"></span><span class="face">'+(d.kz ? '<span class="tp">'+esc(d.kz)+'</span>' : '<span></span>')+'<span class="rt">'+esc(short(d))+'</span><span class="lv"><i></i></span><span class="wn"></span>'+(d.t === "fi" || d.t === "fils" ? '<span class="tb">T</span>' : '')+'</span><span class="trm b"></span></button>'; });
     if(used < v.te) h += '<button class="addslot" type="button" data-add="'+ri+'" style="grid-column:span '+Math.min(v.te - used, 2)+'" aria-label="Gerät in Reihe '+(ri+1)+' hinzufügen">+</button>';
     h += '</div><div class="railinfo'+(used > v.te ? ' over' : '')+'"><span>Reihe '+(ri+1)+'</span><span>'+(used > v.te ? 'zu voll: ' + used + ' / ' + v.te + ' TE' : (v.te - used) + ' TE frei')+'</span></div>'; });
   $("cab").innerHTML = h;
@@ -1027,6 +1151,47 @@ function renderField(){
 $("cab").addEventListener("click", e => { const a = e.target.closest("[data-add]"); if(a){ openDev(null, Number(a.dataset.add)); return; } const b = e.target.closest("[data-d]"); if(b) openDev(b.dataset.d); });
 $("ctab").addEventListener("click", e => { const b = e.target.closest("[data-d]"); if(b) openDev(b.dataset.d); });
 $("toList").addEventListener("click", () => { cur = null; showView("list"); });
+// Drag & Drop in der Verteilung
+GT.drag($("cab"), {item: ".dev", target: ".dev, .addslot, .rail", drop: (it, t, pt) => {
+  const v = store.vt[cur]; if(!v) return; const d = v.devs.find(x => x.id === it.dataset.d); if(!d) return;
+  let row, ref = null, after = false;
+  if(t.matches(".dev")){ ref = v.devs.find(x => x.id === t.dataset.d); row = ref ? (ref.r || 0) : 0; const r = t.getBoundingClientRect(); after = pt.x > r.left + r.width / 2; }
+  else row = Number(t.matches(".addslot") ? t.dataset.add : t.dataset.row) || 0;
+  const oldRow = d.r || 0; v.devs.splice(v.devs.indexOf(d), 1); d.r = row;
+  if(ref){ v.devs.splice(v.devs.indexOf(ref) + (after ? 1 : 0), 0, d); }
+  else { let last = -1; v.devs.forEach((x, i) => { if((x.r || 0) === row) last = i; }); v.devs.splice(last < 0 ? v.devs.length : last + 1, 0, d); }
+  let msg = (d.kz || typOf(d.t).n) + (oldRow !== row ? " → Reihe " + (row + 1) : " verschoben");
+  if(["ls", "son"].includes(d.t)){ const R = rowsOf(v)[row]; const k = R.indexOf(d); for(let i = k - 1; i >= 0; i--){ if(R[i].t === "fi"){ if(d.fi !== R[i].id){ d.fi = R[i].id; msg += " · jetzt unter " + (R[i].kz || "FI"); } break; } } }
+  if(d.t === "fi"){ const R = rowsOf(v)[row]; const k = R.indexOf(d); let n = 0; for(let i = k + 1; i < R.length && R[i].t !== "fi"; i++){ if(["ls","son"].includes(R[i].t) && !R[i].fi){ R[i].fi = d.id; n++; } } if(n) msg += " · " + n + " LS zugeordnet"; }
+  const used = rowsOf(v)[row].reduce((a, x) => a + (Number(x.te) || 1), 0); if(used > v.te) msg += " · Achtung: Reihe zu voll";
+  v.updated = Date.now(); save(); renderField(); GT.toast(msg); }});
+
+// ---------- Export ----------
+let xKid = null, xSel = new Set();
+const xParts = kid => { const vt = Object.keys(store.vt).filter(id => store.vt[id].kunde === kid).sort(byName); return {vt, all: ["cover", "plan", "table", "hint"].concat(vt.map(id => "vt:" + id))}; };
+function renderExp(){ kunden = kGet(); const k = knd(store.sel); $("xHint").hidden = !!k; $("xBody").hidden = !k; if(!k) return;
+  const X = xParts(store.sel); if(xKid !== store.sel){ xKid = store.sel; xSel = new Set(X.all); } xSel.forEach(x => { if(!X.all.includes(x)) xSel.delete(x); });
+  $("xKunde").textContent = k.name;
+  const it = (key, t, sub) => '<button class="xi" type="button" data-x="'+key+'" aria-pressed="'+xSel.has(key)+'"><span class="ck"></span><span><b>'+esc(t)+'</b>'+(sub ? '<small>'+esc(sub)+'</small>' : '')+'</span></button>';
+  const vk = X.vt.map(id => "vt:" + id);
+  let h = '<div class="xh"><h3>Verteilungen ('+X.vt.length+')</h3>'+(vk.length ? '<button type="button" data-g="'+vk.join(",")+'">'+(vk.every(x => xSel.has(x)) ? 'keine' : 'alle')+'</button>' : '')+'</div>';
+  h += X.vt.length ? X.vt.map(id => { const v = store.vt[id], n = (v.devs || []).filter(d => d.t !== "res" && d.t !== "kl").length; return it("vt:" + id, v.name, [v.ort, v.rows + " × " + v.te + " TE", n + " Geräte"].filter(Boolean).join(" · ")); }).join("") : '<p class="note">Für diesen Kunden gibt es noch keine Verteilung.</p>';
+  h += '<div class="xh"><h3>Inhalt je Verteilung</h3></div>' + it("plan", "Verteilungsplan (Grafik)", "Reihen mit allen Geräten und Beschriftungsstreifen") + it("table", "Stromkreis-Tabelle", "Nach FI gruppiert, mit Raum und Leitung") + it("hint", "FI-Prüfhinweis", "Gelber Hinweis: Prüftaste regelmäßig drücken");
+  h += '<div class="xh"><h3>Allgemein</h3></div>' + it("cover", "Deckblatt mit Kundendaten & Inhalt", "Eigene erste Seite mit Seitenübersicht");
+  $("xList").innerHTML = h;
+  const nv = X.vt.filter(id => xSel.has("vt:" + id)).length, ok = nv && (xSel.has("plan") || xSel.has("table"));
+  $("xPdf").disabled = !ok; $("xPdf").textContent = !nv ? "Bitte eine Verteilung wählen" : !ok ? "Grafik oder Tabelle wählen" : "PDF erstellen (" + nv + (nv === 1 ? " Verteilung)" : " Verteilungen)"); }
+$("xPick").addEventListener("click", () => showView("kunden"));
+$("xList").addEventListener("click", e => { const b = e.target.closest("[data-x]"), g = e.target.closest("[data-g]");
+  if(b){ const k = b.dataset.x; if(xSel.has(k)) xSel.delete(k); else xSel.add(k); renderExp(); }
+  if(g){ const ks = g.dataset.g.split(","); const all = ks.every(x => xSel.has(x)); ks.forEach(x => all ? xSel.delete(x) : xSel.add(x)); renderExp(); } });
+$("xQuick").addEventListener("click", e => { const b = e.target.closest("[data-q]"); if(!b) return; const X = xParts(store.sel), q = b.dataset.q, vt = X.vt.map(id => "vt:" + id);
+  xSel = new Set(q === "all" ? X.all : q === "door" ? ["plan", "table", "hint"].concat(vt) : q === "plan" ? ["plan"].concat(vt) : ["table"].concat(vt)); renderExp(); GT.toast(b.textContent + " ausgewählt"); });
+$("xPdf").addEventListener("click", async () => { const X = xParts(store.sel), k = knd(store.sel), b = $("xPdf"), t = b.textContent; const ids = X.vt.filter(id => xSel.has("vt:" + id));
+  const full = X.all.every(x => xSel.has(x)); b.disabled = true; b.textContent = "PDF wird erstellt …";
+  try{ const r = await elPdf(ids, {cover: xSel.has("cover"), plan: xSel.has("plan"), table: xSel.has("table"), hint: xSel.has("hint")});
+    if(r) await GT.deliver(r.B.output("Elektro-Dokumentation " + (k ? k.name : "")), "Elektro-Doku_" + safeFn(k ? k.name : "") + (ids.length === 1 ? "_" + safeFn(store.vt[ids[0]].name) : "") + (full ? "" : "_Auszug") + ".pdf", "PDF teilen"); }
+  catch(err){ console.error(err); GT.toast("PDF konnte nicht erstellt werden."); } finally{ b.disabled = false; renderExp(); } });
 
 // ---------- Gerät bearbeiten ----------
 let dsId = null, dsRowNew = 0, D = {};
@@ -1209,46 +1374,135 @@ function NetPDF(){
 }
 const loadImg = src => new Promise(res => { if(!src) return res(null); const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
 const dDE = d => String(d.getDate()).padStart(2,"0") + "." + String(d.getMonth()+1).padStart(2,"0") + "." + d.getFullYear();
+const sfpOf = g => { const np = Number(g && g.ports) || 0; if(g && g.sfp !== undefined && g.sfp !== "") return Math.max(0, Math.min(np, Number(g.sfp) || 0));
+  if(np >= 26 && (np - 2) % 24 === 0) return 2; if(np >= 28 && (np - 4) % 24 === 0) return 4; if(np === 10 || np === 18) return 2; return 0; };
+const swLinked = (sg, sid, n) => { const P = (sg.pc || {})[n] || {}; return !P.off && !!(childAt(sid, n) || P.name || Number(sg.uplinkPort) === n); };
+const swOrder = kid => { const L = topoLayout(kid); const o = L.ids.filter(id => hasPorts(store.geraete[id])); devsOf(kid).forEach(id => { if(hasPorts(store.geraete[id]) && !o.includes(id)) o.push(id); }); return o; };
+// Switch als Geraet zeichnen (19-Zoll-Front). Gibt die Hoehe zurueck.
+function drawSwitchPDF(B, sg, sid, x0, y0, w){
+  const np = Number(sg.ports) || 0, sfp = sfpOf(sg), rj = np - sfp, st = gtOf(sg.typ);
+  const units = []; for(let s = 1; s <= rj; s += 48) units.push([s, Math.min(48, rj - s + 1)]); if(!units.length) units.push([1, 0]);
+  let yy = y0;
+  units.forEach(([start, cnt], ui) => { const last = ui === units.length - 1, sf = last ? sfp : 0;
+    const two = cnt > 12, cols = two ? Math.ceil(cnt / 2) : cnt, groups = Math.max(1, Math.ceil(cols / 6)), sfc = sf ? (two ? Math.ceil(sf / 2) : sf) : 0;
+    const EAR = 7, LBL = 27, g = 0.7, gg = 2.4, sw = 1.3;
+    const avail = w - 2*EAR - LBL - 6;
+    let pw = (avail - Math.max(0, cols - 1)*g - (groups - 1)*gg - (sfc ? 4 + (sfc - 1)*g : 0)) / Math.max(1, cols + sfc*sw); pw = Math.min(8.5, pw);
+    const ph = pw * 0.8, rowsN = two || (sf > 1 && !cnt) ? 2 : 1, numH = 3.2, pad = 2.2;
+    const H = pad + numH + rowsN*ph + (rowsN - 1)*1.4 + numH + pad;
+    // Gehaeuse
+    B.fill(x0, yy, w, H, "#2b3036"); B.fill(x0, yy, w, 1.1, "#454d56"); B.fill(x0, yy + H - 0.9, w, 0.9, "#1b1f23");
+    [x0, x0 + w - EAR].forEach(ex => { B.fill(ex, yy, EAR, H, "#c4cad0"); B.fill(ex, yy, EAR, 0.8, "#e1e5e9"); B.fill(ex + (ex === x0 ? EAR - 0.5 : 0), yy, 0.5, H, "#8f98a1");
+      [0.24, 0.76].forEach(f => { const hy = yy + H*f - 1.1; B.fill(ex + EAR/2 - 1.8, hy, 3.6, 2.2, "#4a525b"); B.fill(ex + EAR/2 - 1.8, hy, 3.6, 0.5, "#2a3036"); }); });
+    // Beschriftung + LEDs
+    const lx = x0 + EAR + 3; const brand = (sg.hersteller || st.n).toUpperCase(); B.font(true, 6.6); B.text(B.fit(brand, LBL - 2), lx, yy + 6.2, "#ffffff");
+    B.font(false, 5.2); B.text(B.fit(sg.modell || (np + "-Port"), LBL - 2), lx, yy + 9.6, "#aab3bc");
+    if(units.length > 1){ B.text("Einheit " + (ui + 1) + "/" + units.length, lx, yy + 12.6, "#8b98a5"); }
+    const ly = yy + H - pad - 2.2; [["PWR", "#2ecc71"], ["SYS", "#2ecc71"], ["PoE", Object.values(sg.pc || {}).some(P => P && P.poe) ? "#f5a623" : "#4a535d"]].forEach(([t, c], i) => { const ex = lx + i*7.6;
+      B.fill(ex, ly - 1.4, 1.6, 1.6, c); B.font(false, 4); B.text(t, ex + 2.2, ly, "#9aa4ae"); });
+    B.fill(x0 + EAR + LBL, yy + 2, 0.3, H - 4, "#454d56");
+    // Ports
+    const used = cols*pw + Math.max(0, cols - 1)*g + (groups - 1)*gg + (sfc ? 4 + sfc*pw*sw + (sfc - 1)*g : 0);
+    let px0 = x0 + EAR + LBL + 3 + Math.max(0, (avail - used) / 2);
+    const rowY = r => yy + pad + numH + r*(ph + 1.4);
+    const jack = (n, px, py, flip, sfpP) => { const P = (sg.pc || {})[n] || {}; const col = swPortCol(sg, sid, n); const pW = sfpP ? pw*sw : pw;
+      const fr = Math.max(0.45, pw*0.11);
+      if(sfpP){ B.fill(px, py + ph*0.12, pW, ph*0.76, col || "#9aa4ae"); B.fill(px + fr, py + ph*0.12 + fr, pW - 2*fr, ph*0.76 - 2*fr, P.off ? "#3a4048" : "#0d1013");
+        B.fill(px + pW*0.2, py + ph*0.5 - 0.25, pW*0.6, 0.5, "#3a4148"); }
+      else { B.fill(px, py, pW, ph, col || "#5f6873"); B.fill(px + fr, py + fr, pW - 2*fr, ph - 2*fr, P.off ? "#3a4048" : "#0d1013");
+        const nw = pW*0.34, nh = ph*0.2; B.fill(px + (pW - nw)/2, flip ? py + ph - fr - nh : py + fr, nw, nh, "#2f363e");
+        for(let k = 0; k < 4; k++) B.fill(px + pW*0.24 + k*pW*0.15, flip ? py + fr + ph*0.12 : py + ph - fr - ph*0.2, pW*0.06, ph*0.08, "#b08d3a");
+        const ls = Math.max(0.7, pw*0.15), ly2 = flip ? py + ph - fr - ls - 0.2 : py + fr + 0.2;
+        B.fill(px + fr + 0.2, ly2, ls, ls, swLinked(sg, sid, n) ? "#2ecc71" : "#3d454e"); B.fill(px + pW - fr - 0.2 - ls, ly2, ls, ls, P.poe && !P.off ? "#f5a623" : "#3d454e"); }
+      B.font(true, pw < 5 ? 4 : 4.8); const t = String(n), tw = B.width(t); B.text(t, px + (pW - tw)/2, flip ? py + ph + 2.6 : py - 0.9, "#c9d1d9");
+      if(Number(sg.uplinkPort) === n){ const oy = sfpP ? py + ph*0.12 : py, oh = sfpP ? ph*0.76 : ph; B.rect(px - 0.55, oy - 0.55, pW + 1.1, oh + 1.1, 0.4, "#ffffff"); } };
+    let cx = px0;
+    for(let c = 0; c < cols; c++){ if(c && c % 6 === 0) cx += gg - g;
+      if(two){ const a = start + c*2, b = a + 1; jack(a, cx, rowY(0), false); if(b < start + cnt) jack(b, cx, rowY(1), true); }
+      else jack(start + c, cx, rowY(0), false);
+      cx += pw + g; }
+    if(sfc){ cx += 4 - g; const s0 = rj + 1, sx = cx;
+      for(let c = 0; c < sfc; c++){ if(two){ const a = s0 + c*2, b = a + 1; jack(a, cx, rowY(0), false, true); if(b <= np) jack(b, cx, rowY(1), true, true); } else jack(s0 + c, cx, rowY(0), false, true); cx += pw*sw + g; }
+      B.font(true, 3.6); const tw = B.width("SFP"); B.fill(sx, yy + 1.6, cx - g - sx, 0.25, "#6b7580"); B.fill(sx + (cx - g - sx - tw)/2 - 0.8, yy + 0.9, tw + 1.6, 1.6, "#2b3036"); B.text("SFP", sx + (cx - g - sx - tw)/2, yy + 2.2, "#9aa4ae"); }
+    yy += H + (last ? 0 : 1.2); });
+  return yy - y0;
+}
 
-async function doorPdf(id){
-  const v = store.vt[id]; if(!v) return; v.devs = v.devs || [];
-  const B = NetPDF(); const logo = await loadImg(LOGO_SRC); const k = knd(v.kunde);
+async function elPdf(ids, opt){
+  opt = Object.assign({cover: false, plan: true, table: true, hint: true}, opt || {});
+  ids = ids.filter(id => store.vt[id]); if(!ids.length) return null;
+  const B = NetPDF(); const logo = await loadImg(LOGO_SRC); const k = knd(store.vt[ids[0]].kunde);
   const ML = 14, MR = 196, W = MR - ML, BOT = 280; const today = dDE(new Date());
   const who = (() => { try{ return (JSON.parse(localStorage.getItem("wb.settings.v1") || "{}").name || "").trim(); }catch(e){ return ""; } })();
-  let y = 0;
+  let y = 0, v = null; const toc = []; let tocY = null;
+  if(opt.cover){ B.page(); if(logo) B.image(logo, MR - 38, 9, 38, 38 * logo.naturalHeight / logo.naturalWidth);
+    B.font(true, 17); B.text("Elektro-Dokumentation", ML, 18, "#003769"); B.font(false, 9.5); B.text(B.fit([k ? k.name : "", k && k.nr ? "Kunden-Nr. " + k.nr : "", "Stand " + today].filter(Boolean).join(" · "), MR - 44 - ML), ML, 25, "#5d6b7c");
+    B.line(ML, 32.5, MR, 32.5, 0.4, "#003769"); y = 41;
+    if(k){ const adr = [k.strasse, [k.plz, k.ort].filter(Boolean).join(" ")].filter(Boolean).join(", "); B.fill(ML, y - 4.5, W, 18, "#eef2f6");
+      B.font(true, 11); B.text(B.fit(k.name, W - 6), ML + 3, y + 0.5); B.font(false, 9.5); B.text(B.fit([adr, k.ansprech].filter(Boolean).join(" · "), W - 6), ML + 3, y + 5.5);
+      B.text(B.fit([k.tel ? "Tel. " + k.tel : "", k.mail].filter(Boolean).join(" · "), W - 6), ML + 3, y + 10.5); y += 22; }
+    const nDev = ids.reduce((a, id) => a + (store.vt[id].devs || []).filter(d => d.t !== "res" && d.t !== "kl").length, 0), nFi = ids.reduce((a, id) => a + (store.vt[id].devs || []).filter(d => d.t === "fi" || d.t === "fils").length, 0);
+    B.font(false, 9.5); B.text(ids.length + (ids.length === 1 ? " Verteilung" : " Verteilungen") + " · " + nDev + " Schutzorgane · " + nFi + " FI-Schutzschalter", ML, y, "#5d6b7c"); y += 9;
+    tocY = y; }
   const header = sub => { B.page(); if(logo) B.image(logo, MR - 38, 9, 38, 38 * logo.naturalHeight / logo.naturalWidth);
     B.font(true, 17); B.text("Stromkreisverteiler", ML, 18, "#003769"); B.font(true, 12); B.text(B.fit(v.name, MR - 44 - ML), ML, 24.5, "#1b1f24");
     B.font(false, 9); B.text(B.fit(sub, MR - 44 - ML), ML, 29.5, "#5d6b7c"); B.line(ML, 32.5, MR, 32.5, 0.4, "#003769"); y = 39; };
+  for(const vid of ids){ v = store.vt[vid]; v.devs = v.devs || [];
   const sub = [k ? k.name : "", v.ort, "Stand " + today].filter(Boolean).join(" · ");
-  header(sub);
+  header(sub); toc.push({t: v.name, o: [v.ort, v.rows + " × " + v.te + " TE"].filter(Boolean).join(" · "), p: B.pageCount});
+  const need = h => { if(y + h > BOT){ header(sub + " (Fortsetzung)"); return true; } return false; };
   // Eckdaten
   const facts = [["Kunde", k ? [k.name, [k.strasse, [k.plz, k.ort].filter(Boolean).join(" ")].filter(Boolean).join(", ")].filter(Boolean).join(", ") : ""], ["Standort", v.ort], ["Zuleitung", v.zul], ["Vorsicherung", v.vor], ["Netzform", v.netz]].filter(f => f[1]);
   if(facts.length){ B.fill(ML, y - 4.5, W, 4 + facts.length * 5, "#eef2f6"); facts.forEach(([a, b], i) => { B.font(true, 9); B.text(a + ":", ML + 3, y + i*5, "#5d6b7c"); B.font(false, 9.5); B.text(B.fit(b, W - 35), ML + 30, y + i*5, "#1b1f24"); }); y += facts.length * 5 + 4; }
-  // Grafik
-  const G = fiGroups(v), R = rowsOf(v); const mw = (W - 12) / v.te, mh = 22, rowH = mh + 6;
-  const cabH = R.length * rowH + 8;
+  if(opt.plan){
+  const G = fiGroups(v), R = rowsOf(v); const mw = (W - 12) / v.te, LS = 6, mh = 30, rowH = LS + mh + 6;
+  const cabH = R.length * rowH + 6;
   if(y + cabH > BOT) header(sub);
   B.fill(ML, y, W, cabH, "#dfe5ea"); B.rect(ML, y, W, cabH, 0.3, "#aab4be");
-  R.forEach((row, ri) => { const ry = y + 4 + ri*rowH; B.fill(ML + 4, ry, W - 8, mh + 2, "#c4ccd4"); B.fill(ML + 4, ry + mh/2 - 1.5, W - 8, 3, "#aab4be");
+  const drawDev = (d, x, ry, w, wte, gc) => { const T = d.t, th = mh*0.2, fy = ry + th, fh = mh - 2*th;
+    if(T === "kl"){ const cols = ["#2f6fd6", "#9aa4ae", "#9aa4ae", "#d6c21a"]; const cw = w / 4; cols.forEach((c, i) => { B.fill(x + i*cw, ry + 2, cw - 0.25, mh - 4, c); B.fill(x + i*cw + cw*0.25, ry + 4, cw*0.5, cw*0.5, "#5d6670"); B.fill(x + i*cw + cw*0.25, ry + mh - 4 - cw*0.5 - 2, cw*0.5, cw*0.5, "#5d6670"); });
+      B.fill(x + 3*cw, ry + mh/2 - 1.6, cw - 0.25, 3.2, "#2fa84f"); B.font(true, 4.5); ["N","L","L","PE"].forEach((t, i) => B.text(t, x + i*cw + (cw - B.width(t))/2, ry + mh/2 + 1.2, i === 3 ? "#1b1f24" : "#ffffff")); return; }
+    B.fill(x, ry, w, mh, "#cfd5db"); B.fill(x + w*0.12, ry, w*0.76, mh, "#dde2e6"); B.rect(x, ry, w, mh, 0.15, "#7f8994");
+    if(gc) B.fill(x, ry, w, 1.1, gc);
+    if(T === "res"){ B.fill(x + 0.4, ry + 4, w - 0.8, mh - 8, "#eceff2"); for(let yy = ry + 6; yy < ry + mh - 5; yy += 2.2) B.fill(x + 0.4, yy, w - 0.8, 0.25, "#d5dbe0");
+      B.font(false, w < 7 ? 4.5 : 5.2); const t = B.fit("Reserve", w - 0.8); B.text(t, x + (w - B.width(t))/2, ry + mh/2 + 1, "#8b98a5"); return; }
+    // Klemmschrauben
+    const sc = Math.min(mw*0.42, 3.4); for(let i = 0; i < wte; i++){ const cx = x + (i + 0.5) * (w / wte) - sc/2; [ry + (th - sc)/2 + 0.3, ry + mh - th + (th - sc)/2 - 0.3].forEach(sy => { B.fill(cx, sy, sc, sc, "#a9b2bb"); B.rect(cx, sy, sc, sc, 0.12, "#6b7580"); B.fill(cx + sc*0.15, sy + sc*0.44, sc*0.7, sc*0.12, "#4a535d"); }); }
+    // Front
+    const faceC = T === "sls" ? "#e3e8ec" : T === "uess" ? "#eceff2" : "#f7f8fa"; B.fill(x + 0.4, fy, w - 0.8, fh, faceC); B.rect(x + 0.4, fy, w - 0.8, fh, 0.12, "#9aa4ae"); B.fill(x + 0.4, fy + fh - 0.6, w - 0.8, 0.6, "#d0d6dc");
+    let ty = fy + 3; if(d.kz){ B.font(true, w < 7 ? 5 : 6); const kz = B.fit(d.kz, w - 2); const kw = B.width(kz) + 1.2; B.fill(x + (w - kw)/2, fy + 0.8, kw, 3, "#ffffff"); B.rect(x + (w - kw)/2, fy + 0.8, kw, 3, 0.1, "#b4bdc6"); B.text(kz, x + (w - kw)/2 + 0.6, fy + 3.1, "#1b1f24"); ty = fy + 7; }
+    B.font(true, w < 7 ? 4.8 : 6); const rt = B.fit(short(d), w - 1); B.text(rt, x + (w - B.width(rt))/2, ty, "#2b3138");
+    if(T === "uess"){ const pw2 = (w - 1.6) / Math.max(1, wte); for(let i = 0; i < wte; i++){ B.fill(x + 0.8 + i*pw2 + 0.3, fy + fh*0.5, pw2 - 0.6, fh*0.38, "#e4e8ec"); B.rect(x + 0.8 + i*pw2 + 0.3, fy + fh*0.5, pw2 - 0.6, fh*0.38, 0.1, "#9aa4ae"); B.fill(x + 0.8 + i*pw2 + pw2*0.3, fy + fh*0.58, pw2*0.4, 1.4, "#2fb36b"); } return; }
+    // Kippschalter
+    const lh = fh*0.42, ly = fy + fh*0.42; const hc = T === "hs" ? "#d6403c" : T === "sls" ? "#8b949d" : T === "fi" || T === "fils" ? "#3e464f" : "#5a636d";
+    if(wte > 1 && (T === "ls" || T === "sls")){ const pw2 = w / wte; for(let i = 0; i < wte; i++){ const px = x + i*pw2; const sw2 = Math.min(pw2*0.6, 4.2);
+        B.fill(px + (pw2 - sw2)/2, ly, sw2, lh, "#2f363d"); B.fill(px + (pw2 - sw2*0.76)/2, ly + 0.5, sw2*0.76, lh*0.48, hc); B.fill(px + (pw2 - sw2*0.76)/2, ly + 0.5, sw2*0.76, 0.4, "#9aa4ae"); }
+      B.fill(x + pw2/2 - 1, ly + lh*0.2, w - pw2 + 2, 1.1, "#454d56"); }
+    else { const lw = wte > 1 ? Math.min(w - 3, 2*mw) : Math.min(w*0.6, 4.2), lx = x + (w - lw)/2;
+      B.fill(lx, ly, lw, lh, "#2f363d"); B.fill(lx + lw*0.12, ly + 0.5, lw*0.76, lh*0.48, hc); B.fill(lx + lw*0.12, ly + 0.5, lw*0.76, 0.4, "#9aa4ae"); }
+    if(T !== "sls"){ B.fill(x + (w - 2.4)/2, ly + lh + 0.9, 2.4, 1.1, T === "son" ? "#2fb36b" : "#e5484d"); }
+    if(T === "fi" || T === "fils"){ const tb = Math.min(2.8, w*0.22); B.fill(x + w - tb - 1, fy + fh*0.22 + (d.kz ? 1.5 : 0), tb, tb, "#e9b400"); B.font(true, 3.6); B.text("T", x + w - tb - 1 + (tb - B.width("T"))/2, fy + fh*0.22 + (d.kz ? 1.5 : 0) + tb*0.78, "#5d4500"); }
+  };
+  R.forEach((row, ri) => { const ry0 = y + 3 + ri*rowH, ry = ry0 + LS; B.fill(ML + 4, ry, W - 8, mh, "#c4ccd4"); B.fill(ML + 4, ry + mh/2 - 2, W - 8, 4, "#aab4be"); B.fill(ML + 4, ry + mh/2 - 2, W - 8, 0.6, "#d5dbe0");
+    B.fill(ML + 4, ry0, W - 8, LS - 1, "#ffffff"); B.rect(ML + 4, ry0, W - 8, LS - 1, 0.15, "#aab4be");
     B.font(true, 6.5); B.text(String(ri+1), ML + 1, ry + 4, "#6b7785");
     let x = ML + 6;
-    row.forEach(d => { const w = Math.min(Math.max(1, Number(d.te) || 1), v.te) * mw - 0.8; const gc = d.t === "fi" ? G[d.id] : (d.fi && G[d.fi]) || null;
-      B.fill(x, ry + 1, w, mh, d.t === "res" ? "#e9edf1" : d.t === "uess" ? "#fdf6e3" : "#fbfcfd"); B.rect(x, ry + 1, w, mh, 0.15, "#8b98a5");
-      if(gc) B.fill(x, ry + 1, w, 1.2, gc);
-      if(d.t !== "res" && d.t !== "kl"){ const sw = Math.min(w*0.5, 4.5); B.fill(x + (w - sw)/2, ry + 8, sw, 6.5, "#2b3138"); B.fill(x + (w - sw)/2 + sw*0.2, ry + 8.8, sw*0.6, 2, d.t === "fi" ? "#2b3138" : d.t === "uess" ? "#f2811d" : "#e5484d"); }
-      if(d.t === "fi" || d.t === "fils") B.fill(x + w - 2.6, ry + 3.6, 1.8, 1.8, "#f5c518");
-      B.font(true, w < 7 ? 5.5 : 6.5); const kz = B.fit(d.kz || "", w - 0.8); B.text(kz, x + (w - B.width(kz))/2, ry + 5, "#1b1f24");
-      B.font(false, w < 7 ? 4.8 : 5.5); const s = B.fit(short(d), w - 0.6); B.text(s, x + (w - B.width(s))/2, ry + 19, "#5d6b7c");
+    row.forEach(d => { const wte = Math.min(Math.max(1, Number(d.te) || 1), v.te), w = wte * mw - 0.8; const gc = d.t === "fi" ? G[d.id] : (d.fi && G[d.fi]) || null;
+      drawDev(d, x, ry, w, wte, gc);
+      // Beschriftungsstreifen
+      if(x > ML + 6) B.line(x - 0.4, ry0 + 0.4, x - 0.4, ry0 + LS - 1.4, 0.12, "#c4ccd4");
+      const lab = d.t === "res" ? "" : d.kreis || (d.t === "fi" ? "FI " + (d.idn || 30) + " mA" : d.t === "hs" ? "Hauptschalter" : d.t === "uess" ? "ÜSS" : d.t === "sls" ? "SLS" : "");
+      if(lab){ B.font(false, w < 7 ? 4 : 4.8); const t = B.fit(lab, w - 0.6); B.text(t, x + (w - B.width(t))/2, ry0 + 3.5, "#1b1f24"); }
       x += w + 0.8; });
   });
-  y += cabH + 7;
-  // Tabelle
+  y += cabH + 7; }
+  if(opt.table){ const G = fiGroups(v);
   const cx = [ML, ML + 16, ML + 52, ML + 140, MR];
   const th = () => { B.fill(ML, y - 4.4, W, 6.2, "#003769"); B.font(true, 9.5); [["Kennz.",0],["Schutzorgan",1],["Stromkreis / Raum",2],["Leitung",3]].forEach(([t,i]) => B.text(t, cx[i] + 1.5, y, "#ffffff")); y += 6.8; };
-  const need = h => { if(y + h > BOT){ header(sub + " (Fortsetzung)"); th(); } };
+  const needT = h => { if(need(h)) th(); };
   if(y + 20 > BOT) header(sub); th();
   const devs = v.devs.filter(d => d.t !== "res" && d.t !== "kl"); const fis = devs.filter(d => d.t === "fi"); const done = new Set(); let zebra = 0;
-  const row = (d, bold, col) => { need(6.2); if(zebra++ % 2) B.fill(ML, y - 4.3, W, 6.1, "#f3f5f8");
+  const row = (d, bold, col) => { needT(6.2); if(zebra++ % 2) B.fill(ML, y - 4.3, W, 6.1, "#f3f5f8");
     if(col) B.fill(ML, y - 4.3, 1.4, 6.1, col);
     B.font(true, 10); B.text(B.fit(d.kz || "–", cx[1] - cx[0] - 3), cx[0] + 2.5, y, col || "#1b1f24");
     if(bold){ B.font(true, 9.5); const ln = longName(d); B.text(B.fit(ln, cx[3] - cx[1] - 3), cx[1] + 1.5, y, "#1b1f24");
@@ -1257,29 +1511,35 @@ async function doorPdf(id){
       B.font(!!d.kreis, 10); B.text(B.fit(d.kreis || (d.t === "ls" || d.t === "fils" ? "frei / Reserve" : longName(d)), cx[3] - cx[2] - 3), cx[2] + 1.5, y, d.kreis ? "#1b1f24" : "#8b98a5"); }
     B.font(false, 9); if(!bold && d.ltg) B.text(B.fit(d.ltg, cx[4] - cx[3] - 2), cx[3] + 1.5, y, "#5d6b7c"); y += 6.1; done.add(d.id); };
   devs.filter(d => ["hs","sls","uess"].includes(d.t) && !d.fi).forEach(d => row(d, true));
-  fis.forEach(fi => { need(14); y += 1; row(fi, true, G[fi.id]); devs.filter(d => d.fi === fi.id).forEach(d => row(d, false, G[fi.id])); });
-  const rest = devs.filter(d => !done.has(d.id)); if(rest.length){ if(fis.length){ need(10); y += 1.5; B.font(true, 9); B.text("Ohne FI-Schutzschalter", ML + 1.5, y, "#5d6b7c"); y += 5; } rest.forEach(d => row(d, false)); }
+  fis.forEach(fi => { needT(14); y += 1; row(fi, true, G[fi.id]); devs.filter(d => d.fi === fi.id).forEach(d => row(d, false, G[fi.id])); });
+  const rest = devs.filter(d => !done.has(d.id)); if(rest.length){ if(fis.length){ needT(10); y += 1.5; B.font(true, 9); B.text("Ohne FI-Schutzschalter", ML + 1.5, y, "#5d6b7c"); y += 5; } rest.forEach(d => row(d, false)); } }
   // Hinweis
-  if(fis.length || devs.some(d => d.t === "fils")){ need(16); y += 4; B.fill(ML, y - 4.5, W, 11, "#fff6d6"); B.font(true, 9.5); B.text("FI-Schutzschalter regelmäßig prüfen", ML + 3, y, "#7a5a00");
+  if(opt.hint && v.devs.some(d => d.t === "fi" || d.t === "fils")){ need(16); y += 4; B.fill(ML, y - 4.5, W, 11, "#fff6d6"); B.font(true, 9.5); B.text("FI-Schutzschalter regelmäßig prüfen", ML + 3, y, "#7a5a00");
     B.font(false, 8.8); B.text("Prüftaste „T“ etwa alle 6 Monate drücken (Herstellerangabe beachten). Löst der Schalter nicht aus: Elektrofachbetrieb rufen.", ML + 3, y + 4.6, "#5d4500"); y += 12; }
+  }
+  if(tocY != null) B.eachPage(i => { if(i !== 0) return; let yy = tocY; B.font(true, 11); B.text("Inhalt", ML, yy, "#003769"); yy += 7;
+    toc.forEach(e => { if(yy > BOT) return; B.font(true, 10); B.text(B.fit(e.t, W - 60), ML, yy, "#1b1f24"); B.font(false, 9); B.text(B.fit(e.o, 50), ML + W - 62, yy, "#5d6b7c");
+      const pg = "Seite " + e.p; B.text(pg, MR - B.width(pg), yy, "#5d6b7c"); B.line(ML, yy + 1.6, MR, yy + 1.6, 0.1, "#d6dee8"); yy += 6.5; }); });
   B.eachPage((i, n) => { B.line(ML, 287, MR, 287, 0.2, "#d6dee8"); B.font(false, 8);
     B.text("Gosch Elektroanlagen GmbH" + (who ? " · " + who : "") + " · erstellt am " + today, ML, 291.5, "#8b98a5");
     const t = "Seite " + (i + 1) + " von " + n; B.text(t, MR - B.width(t), 291.5, "#8b98a5"); });
-  const safe = t => String(t || "").replace(/[^A-Za-z0-9ÄÖÜäöüß_-]+/g, "_").replace(/^_+|_+$/g, "");
-  await GT.deliver(B.output("Stromkreisverteiler " + v.name), "Verteilung_" + safe(k ? k.name : "") + (k ? "_" : "") + safe(v.name) + ".pdf", "PDF teilen");
+  return {B, k};
 }
+const safeFn = t => String(t || "").replace(/[^A-Za-z0-9ÄÖÜäöüß_-]+/g, "_").replace(/^_+|_+$/g, "");
+async function doorPdf(id){ const v = store.vt[id]; if(!v) return; const r = await elPdf([id]); if(!r) return;
+  await GT.deliver(r.B.output("Stromkreisverteiler " + v.name), "Verteilung_" + safeFn(r.k ? r.k.name : "") + (r.k ? "_" : "") + safeFn(v.name) + ".pdf", "PDF teilen"); }
 async function runPdf(btn){ if(!cur) return; const t = btn.textContent; btn.disabled = true; btn.textContent = "PDF wird erstellt …";
   try{ await doorPdf(cur); }catch(e){ GT.toast("PDF konnte nicht erstellt werden."); } finally{ btn.disabled = false; btn.textContent = t; } }
 $("pdfField").addEventListener("click", () => runPdf($("pdfField")));
 $("pdfTop").addEventListener("click", () => runPdf($("pdfTop")));
 
 // ---------- Ansichten ----------
-const TITLES = {kunden:"Kunden", list:"Verteilungen", field:"Verteilung"};
-const LEADS = {kunden:"Kunden anlegen und auswählen – danach siehst du nur ihre Verteilungen.", list:"Stromkreisverteiler dokumentieren und den Belegungsplan für die Tür erstellen.", field:"Geräte eintragen, Stromkreise beschriften, PDF für die Tür."};
-function showView(v){ view = v; $("vKunden").hidden = v !== "kunden"; $("vList").hidden = v !== "list"; $("vField").hidden = v !== "field";
+const TITLES = {exp:"Doku exportieren", kunden:"Kunden", list:"Verteilungen", field:"Verteilung"};
+const LEADS = {exp:"Alle Verteilungen eines Kunden oder nur Teile davon als ein PDF.", kunden:"Kunden anlegen und auswählen – danach siehst du nur ihre Verteilungen.", list:"Stromkreisverteiler dokumentieren und den Belegungsplan für die Tür erstellen.", field:"Geräte eintragen, Stromkreise beschriften, PDF für die Tür."};
+function showView(v){ view = v; $("vKunden").hidden = v !== "kunden"; $("vList").hidden = v !== "list"; $("vField").hidden = v !== "field"; $("vExp").hidden = v !== "exp";
   $("pageTitle").textContent = TITLES[v]; $("lead").textContent = LEADS[v];
   document.querySelectorAll("#nav [data-view]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === (v === "field" ? "list" : v))));
-  if(v === "list") renderList(); if(v === "kunden") renderKunden(); }
+  if(v === "list") renderList(); if(v === "kunden") renderKunden(); if(v === "exp") renderExp(); }
 $("nav").addEventListener("click", e => { const b = e.target.closest("[data-view]"); if(!b) return; if(b.dataset.view === "list" && cur && view === "kunden"){ showView("field"); renderField(); } else { if(b.dataset.view === "list") cur = null; showView(b.dataset.view); } window.scrollTo(0,0); });
 document.addEventListener("click", e => { if(e.target.classList && e.target.classList.contains("sheet-bg")) e.target.hidden = true; });
 
@@ -1288,7 +1548,8 @@ setTimeout(() => GT.tour("el", [
   {sel:'#nav [data-view="kunden"]', fixed:true, title:"Kunden", text:"Eigener Kundenstamm für Elektro. Kunde auswählen – dann siehst du nur seine Verteilungen. Kunden aus den Brandmeldeanlagen kannst du beim Anlegen übernehmen."},
   {sel:"#newBtn", title:"Verteilung anlegen", text:"Bezeichnung, Standort, Anzahl Reihen und TE pro Reihe. Zuleitung, Vorsicherung und Netzform kommen mit aufs Türblatt."},
   {title:"Geräte eintragen", text:"In der Verteilung auf + tippen: LS, FI, FI/LS, Hauptschalter, SLS, Überspannungsschutz oder Reserve. Kennzeichnung (F1, Q1 …) wird automatisch hochgezählt, LS-Schalter ordnest du ihrem FI zu."},
-  {title:"Belegungsplan für die Tür", text:"Ein Tipp auf „PDF“ erstellt den Plan mit Grafik und Stromkreisliste – nach FI gruppiert, zum Ausdrucken und in die Verteilertür hängen."}
+  {title:"Belegungsplan für die Tür", text:"Ein Tipp auf „PDF“ erstellt den Plan mit Grafik und Stromkreisliste – nach FI gruppiert, zum Ausdrucken und in die Verteilertür hängen."},
+  {sel:'#nav [data-view="exp"]', fixed:true, title:"Doku exportieren", text:"Alle Verteilungen eines Kunden in ein PDF – oder nur Teile: einzelne Verteilungen, nur Grafiken oder nur Tabellen, mit oder ohne Deckblatt."}
 ]), 700);
 })();
 </script>

@@ -82,6 +82,60 @@ h1{margin:4px 2px 0;font:800 30px/1.1 var(--f-display);letter-spacing:-.02em}
 .grp{margin:6px 2px -4px;font:700 13px/1.2 var(--f-body);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .hint{background:var(--accent-soft);border-radius:var(--rs);padding:12px 14px;font-size:15px}
 .frow{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{border:0;border-radius:99px;background:var(--sunk);min-height:38px;padding:0 14px;font-weight:700;font-size:14px;color:var(--ink)}
+.chips button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+:root[data-design="neon"] .chips button[aria-pressed="true"]{background:linear-gradient(100deg,var(--neon-blue),var(--neon-cyan));color:#fff}
+.port.off .jack{opacity:.45}
+.port .jack em.poe{position:absolute;right:8%;bottom:10%;width:22%;height:22%;border-radius:50%;background:#f5c518}
+.legend button.add{background:none;box-shadow:inset 0 0 0 1.5px var(--line)}
+#nav{left:8px;right:8px}#nav .in{gap:2px}#nav button{font-size:10.5px;padding:6px 1px;letter-spacing:-.01em}
+/* Switch-Front */
+#swPanelBox,#swPanelBox>*{min-width:0}
+.swc{position:relative;min-width:0;max-width:100%;box-sizing:border-box;background:linear-gradient(#3b434b,#2a3036 30%,#22272c);border-radius:6px;padding:10px 24px 12px;box-shadow:0 6px 18px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.08)}
+.swc::before,.swc::after{content:"";position:absolute;top:0;bottom:0;width:16px;background:radial-gradient(ellipse 4px 3px at 50% 18%,#3c444c 92%,transparent 100%),radial-gradient(ellipse 4px 3px at 50% 82%,#3c444c 92%,transparent 100%),linear-gradient(90deg,#aeb6be,#dfe3e7 45%,#b5bcc3)}
+.swc::before{left:0;border-radius:6px 0 0 6px}.swc::after{right:0;border-radius:0 6px 6px 0}
+.swtop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;color:#e6ebf0;min-width:0}
+.swtop .swbrand{display:block;flex:1;font:800 11px/1.1 var(--f-body);letter-spacing:.08em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.swc .swtop .swbrand .mdl{display:block;font-weight:600;letter-spacing:.02em;text-transform:none;color:#9aa4ae;font-size:10px;margin-top:2px;overflow:hidden;text-overflow:ellipsis}
+.swtop .leds{display:flex;align-items:center;gap:5px;font:700 10px/1 var(--f-body);color:#9aa4ae;white-space:nowrap}
+.swtop .leds i{width:6px;height:6px;border-radius:50%;background:#2ecc71;box-shadow:0 0 5px #2ecc71}
+.swtop .leds b{margin-left:4px;font-weight:700}
+.swports{display:grid;gap:10px}
+.swblk{display:grid;grid-template-columns:repeat(var(--cols,12),minmax(0,1fr));gap:3px}
+.swblk.sfpb{grid-template-columns:repeat(var(--cols,2),minmax(0,30px));justify-content:start;position:relative;padding-top:12px}
+.swblk.sfpb::before{content:"SFP";position:absolute;top:0;left:0;font:800 9px/1 var(--f-body);color:#9aa4ae;letter-spacing:.08em}
+.port.sp{gap:2px}
+.port.sp .jack{aspect-ratio:1/.82;border-radius:2px;background:#0d1013;box-shadow:inset 0 0 0 2px var(--pc,#5f6873);padding:0;display:block}
+.port.sp .jack::before{left:33%;right:33%;top:12%;height:20%;background:#2f363e;border-radius:1px}
+.port.sp.bot .jack::before{top:auto;bottom:12%}
+.port.sp .jack i{position:absolute;left:26%;right:26%;bottom:16%;height:9%;width:auto;border-radius:0;background:repeating-linear-gradient(90deg,#b08d3a 0 1.5px,transparent 1.5px 3px)}
+.port.sp.bot .jack i{bottom:auto;top:16%}
+.port.sp .jack u{position:absolute;top:10%;width:15%;aspect-ratio:1;background:#3d454e;border-radius:1px}
+.port.sp .jack u.l1{left:10%}.port.sp .jack u.l2{right:10%}
+.port.sp.bot .jack u{top:auto;bottom:10%}
+.port.sp .jack u.l1.on{background:#2ecc71;box-shadow:0 0 4px #2ecc71}
+.port.sp .jack u.l2.on{background:#f5a623;box-shadow:0 0 4px #f5a623}
+.port.sp .no{font-size:9px}
+.port.sp.bot .no{order:2}
+.port.sp.up .no{color:#fff;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:2px}
+.port.sp.sfp .jack{aspect-ratio:1.3/.75;box-shadow:inset 0 0 0 2px var(--pc,#9aa4ae),0 0 0 1px #8d969f}
+.port.sp.sfp .jack::before,.port.sp.sfp .jack u{display:none}
+.port.sp.sfp .jack i{left:20%;right:20%;top:46%;bottom:auto;height:8%;background:#3a4148}
+.port.sp.off .jack{opacity:.45}
+/* Export */
+.xl{display:grid;gap:6px}
+.xi{display:grid;grid-template-columns:26px 1fr;align-items:center;gap:10px;text-align:left;border:0;border-radius:12px;background:var(--sunk);padding:10px 12px;color:var(--ink);font:inherit;min-height:52px}
+.xi b{display:block;font-weight:750;font-size:15px}.xi small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.xi .ck{width:24px;height:24px;border-radius:7px;box-shadow:inset 0 0 0 2px var(--line);display:grid;place-items:center}
+.xi[aria-pressed="true"] .ck{background:var(--accent);box-shadow:none}
+.xi[aria-pressed="true"] .ck::after{content:"";width:10px;height:6px;border:solid var(--accent-ink);border-width:0 0 2.5px 2.5px;transform:translateY(-1px) rotate(-45deg)}
+.xi:disabled{opacity:.45}
+.xh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:6px}
+.xh h3{margin:0;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.xh button{border:0;background:none;color:var(--accent);font-weight:700;font-size:13px;padding:4px 0}
+:root[data-design="neon"] .xh button{color:var(--neon-cyan,#35c8ff)}
+.qx{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
 /* Patchfeld */
 .panel{background:linear-gradient(#2b3138,#1d2227);border-radius:14px;padding:12px 10px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),0 6px 18px rgba(0,0,0,.18)}
 .panel .ears{display:flex;justify-content:space-between;color:#8f99a4;font:700 11px/1 var(--f-body);letter-spacing:.06em;margin:0 2px 8px}
@@ -445,7 +499,43 @@ header.top{position:static!important;border-bottom:0!important}
     show(0, 1);
   }
   function tourReset(){ try{ Object.keys(localStorage).filter(k => k.indexOf("app.tour.") === 0).forEach(k => localStorage.removeItem(k)); }catch(e){} }
-  window.GT = {toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home, tour, tourDone, tourReset};
+
+  // ---------- Drag & Drop (Maus sofort, Touch nach kurzem Halten) ----------
+  function drag(root, opts){
+    if(!root) return; let st = null, suppress = false;
+    if(!document.getElementById("gtDragCss")){ const c = document.createElement("style"); c.id = "gtDragCss";
+      c.textContent = ".gt-dragsrc{opacity:.35!important}.gt-dropover{outline:3px solid #35c8ff!important;outline-offset:1px;border-radius:6px}"
+        + ".gt-ghost{position:fixed;z-index:300;pointer-events:none;opacity:.92;transform:scale(1.06);box-shadow:0 12px 28px rgba(0,0,0,.35);border-radius:6px;transition:none}"
+        + ".gt-ghost.chip{background:#003769;color:#fff;font:700 13px/1 var(--f-body,system-ui);padding:10px 14px;border-radius:99px;white-space:nowrap}"
+        + ".gt-dragging,.gt-dragging *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}";
+      document.head.appendChild(c); }
+    const P = e => e.touches ? (e.touches[0] || e.changedTouches[0]) : e;
+    const clear = () => { if(!st) return; clearTimeout(st.timer); if(st.gh) st.gh.remove(); st.it.classList.remove("gt-dragsrc"); if(st.tgt) st.tgt.classList.remove("gt-dropover"); document.documentElement.classList.remove("gt-dragging"); };
+    function start(e){ if(e.button > 0 || st) return; const it = e.target.closest(opts.item); if(!it || !root.contains(it)) return; if(opts.can && !opts.can(it)) return;
+      const p = P(e); st = {it, x0: p.clientX, y0: p.clientY, x: p.clientX, y: p.clientY, touch: !!e.touches, on: false, tgt: null};
+      if(st.touch){ document.documentElement.classList.add("gt-dragging"); st.timer = setTimeout(activate, opts.hold || 320); } }
+    function activate(){ if(!st || st.on) return; st.on = true; const it = st.it, r = it.getBoundingClientRect(); let gh;
+      if(it instanceof SVGElement || opts.chip){ gh = document.createElement("div"); gh.className = "gt-ghost chip"; gh.textContent = opts.label ? opts.label(it) : "verschieben"; st.ox = -14; st.oy = -46; }
+      else { gh = it.cloneNode(true); gh.classList.add("gt-ghost"); gh.style.width = r.width + "px"; gh.style.height = r.height + "px"; gh.style.margin = "0"; st.ox = r.left - st.x; st.oy = r.top - st.y; }
+      document.body.appendChild(gh); st.gh = gh; it.classList.add("gt-dragsrc"); document.documentElement.classList.add("gt-dragging"); place(); try{ navigator.vibrate && navigator.vibrate(12); }catch(e){} }
+    function place(){ st.gh.style.left = (st.x + st.ox) + "px"; st.gh.style.top = (st.y + st.oy) + "px"; }
+    function move(e){ if(!st) return; const p = P(e); st.x = p.clientX; st.y = p.clientY;
+      if(!st.on){ if(Math.hypot(st.x - st.x0, st.y - st.y0) > 8){ if(st.touch){ clear(); st = null; } else activate(); } return; }
+      if(e.cancelable) e.preventDefault(); place();
+      const el = document.elementFromPoint(st.x, st.y); let t = el && el.closest(opts.target); if(t && (!root.contains(t) || t === st.it || (opts.accept && !opts.accept(st.it, t)))) t = null;
+      if(t !== st.tgt){ if(st.tgt) st.tgt.classList.remove("gt-dropover"); st.tgt = t; if(t) t.classList.add("gt-dropover"); }
+      if(st.y < 70) window.scrollBy(0, -12); else if(st.y > innerHeight - 120) window.scrollBy(0, 12);
+      const sc = opts.scroller; if(sc){ const b = sc.getBoundingClientRect(); if(st.x < b.left + 30) sc.scrollLeft -= 10; else if(st.x > b.right - 30) sc.scrollLeft += 10; } }
+    function end(){ if(!st) return; const s = st; clear(); st = null; if(!s.on) return; suppress = true; setTimeout(() => suppress = false, 150);
+      if(s.tgt) opts.drop(s.it, s.tgt, {x: s.x, y: s.y}); }
+    root.addEventListener("touchstart", start, {passive: true}); root.addEventListener("mousedown", start);
+    document.addEventListener("touchmove", move, {passive: false}); document.addEventListener("mousemove", move);
+    document.addEventListener("touchend", end); document.addEventListener("touchcancel", () => { clear(); st = null; }); document.addEventListener("mouseup", end);
+    root.addEventListener("click", e => { if(suppress){ e.preventDefault(); e.stopPropagation(); suppress = false; } }, true);
+    root.addEventListener("contextmenu", e => { if(e.target.closest(opts.item)) e.preventDefault(); });
+    root.addEventListener("dragstart", e => e.preventDefault());
+  }
+  window.GT = {drag, toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home, tour, tourDone, tourReset};
   persist(); registerSW();
 })();
 
@@ -761,7 +851,7 @@ header.top{position:static!important;border-bottom:0!important}
     <div class="card">
       <div style="display:grid;gap:4px"><h2 id="fName"></h2><p class="note" id="fMeta"></p></div>
       <div class="panel"><div class="ears"><span id="fShort"></span><span id="fCount"></span></div><div class="ports" id="ports"></div></div>
-      <p class="note">Port antippen zum Benennen und Einfärben.</p>
+      <p class="note">Port antippen zum Benennen und Einfärben. Port gedrückt halten und auf einen anderen ziehen: Belegung wird getauscht – angeschlossene Geräte wandern mit.</p>
       <div class="legend" id="legend"></div>
     </div>
     <div class="card">
@@ -773,6 +863,54 @@ header.top{position:static!important;border-bottom:0!important}
   </section>
 
   <!-- ======== Anleitung RJ45 ======== -->
+  <!-- ======== Topologie ======== -->
+  <section id="vTopo" style="display:grid;gap:14px" hidden>
+    <div class="hint" id="tHint">Wähle zuerst unter <b>Kunden</b> einen Kunden aus. <button class="btn" type="button" id="tPick" style="margin-top:8px">Kunde wählen</button></div>
+    <div id="tBody" style="display:grid;gap:14px" hidden>
+      <div class="card"><div class="row" style="justify-content:space-between"><h2 id="tKunde"></h2><span class="note">Antippen = bearbeiten</span></div><p class="note" style="margin:6px 0 0">Gerät gedrückt halten und auf ein anderes Gerät oder Patchfeld ziehen – dann hängt es dort dran (freier Port wird automatisch belegt).</p>
+        <div style="overflow-x:auto;margin:0 -6px;padding:0 6px"><svg id="topo" style="display:block;height:auto;max-width:none" role="img" aria-label="Netzwerk-Topologie"></svg></div></div>
+      <button class="btn primary wide" type="button" id="newGer">+ Gerät hinzufügen</button>
+      <div class="card"><h2>Geräte</h2><div class="plist" id="glist"></div></div>
+      <p class="note">Tipp: Im Patchfeld beim Port „Gerät an diesem Port“ wählen – dann steht in der Grafik, über welchen Port das Gerät angeschlossen ist. Die PDF-Dokumentation stellst du unter <b>Export</b> zusammen.</p>
+    </div>
+  </section>
+
+  <!-- ======== Switches ======== -->
+  <section id="vSw" style="display:grid;gap:12px" hidden>
+    <div class="hint" id="swHint">Wähle zuerst unter <b>Kunden</b> einen Kunden aus. <button class="btn" type="button" id="swPick" style="margin-top:8px">Kunde wählen</button></div>
+    <div id="swBody" style="display:grid;gap:12px" hidden>
+      <button class="btn primary wide" type="button" id="swNew">+ Switch anlegen</button>
+      <div class="fl" id="swList"></div>
+    </div>
+  </section>
+  <section id="vSwD" style="display:grid;gap:14px" hidden>
+    <div class="row" style="justify-content:space-between">
+      <button class="btn" type="button" id="swBack">‹ Alle Switches</button>
+      <span class="row"><button class="btn" type="button" id="swPdf">PDF</button><button class="btn" type="button" id="swEdit">Bearbeiten</button></span>
+    </div>
+    <div class="card">
+      <div style="display:grid;gap:4px"><h2 id="swName"></h2><p class="note" id="swMeta"></p></div>
+      <button class="btn" type="button" id="swInfoBtn">Gerätedaten (Hersteller, Modell, IP, MAC …)</button>
+      <p class="hint" id="swNoPorts" hidden>Für diesen Switch ist noch keine Portanzahl eingetragen – unter <b>Bearbeiten</b> festlegen.</p>
+      <div id="swPanelBox" style="display:grid;gap:10px"><div class="swc"><div class="swtop"><div class="swbrand" id="swBrand"></div><span class="leds"><i></i><i></i><b id="swStat"></b></span></div><div class="swports" id="swPorts"></div></div>
+        <p class="note">Port antippen: Bezeichnung, angeschlossenes Gerät, VLAN, PoE, Geschwindigkeit, Status. Rahmenfarbe = VLAN (sonst Gerätefarbe), grüne LED = belegt, orange LED = PoE. Oben ungerade, unten gerade Ports – wie am echten Switch. Port gedrückt halten und auf einen anderen ziehen: Belegung samt Gerät wird getauscht.</p>
+        <div class="legend" id="swVl"></div></div>
+    </div>
+    <div class="card"><h2>Alle Ports</h2><div class="plist" id="swPl"></div></div>
+  </section>
+
+  <!-- ======== Export ======== -->
+  <section id="vExp" style="display:grid;gap:12px" hidden>
+    <div class="hint" id="xHint">Wähle zuerst unter <b>Kunden</b> einen Kunden aus. <button class="btn" type="button" id="xPick" style="margin-top:8px">Kunde wählen</button></div>
+    <div id="xBody" style="display:grid;gap:12px" hidden>
+      <div class="card" style="display:grid;gap:10px"><h2 id="xKunde"></h2><p class="note">Grob auswählen, was in die PDF-Dokumentation soll – darunter kannst du einzelne Teile an- oder abhaken.</p>
+        <div class="qx" id="xQuick"><button class="btn" type="button" data-q="all">Ganze Doku</button><button class="btn" type="button" data-q="net">Topologie + Geräte</button><button class="btn" type="button" data-q="sw">Nur Switches</button><button class="btn" type="button" data-q="pf">Nur Patchfelder</button></div></div>
+      <div class="card" style="display:grid;gap:8px"><div id="xList" class="xl"></div></div>
+      <div class="card" style="display:grid;gap:8px"><div class="xh"><h3>Optionen</h3></div><div class="xl" id="xOpt"></div></div>
+      <button class="btn primary wide" type="button" id="xPdf">PDF erstellen</button>
+    </div>
+  </section>
+
   <section id="vHow" style="display:grid;gap:14px" hidden>
     <div class="card">
       <h2>EasyLAN fixLink RJ45-Stecker auflegen</h2>
@@ -897,10 +1035,73 @@ header.top{position:static!important;border-bottom:0!important}
       <label class="field" id="psFbBox">Faser B<input id="psFb" inputmode="numeric" autocomplete="off"></label>
       <label class="field">Dämpfung dB<input id="psDb" inputmode="decimal" placeholder="z. B. 0,35" autocomplete="off"></label>
     </div>
+    <label class="field" id="psDevBox" hidden>Gerät an diesem Port<select id="psDev"></select></label>
     <label class="field">Notiz (optional)<input id="psNote" placeholder="z. B. Drucker, VLAN 20, gemessen OK" autocomplete="off"></label>
     <div class="navrow"><button class="btn" type="button" id="psPrev">‹ Port</button><button class="btn" type="button" id="psNext">Port ›</button></div>
     <button class="btn primary wide" type="button" id="psOk">Fertig</button>
     <button class="btn ghost" type="button" id="psClear">Port leeren</button>
+  </div>
+</div>
+<!-- Gerät -->
+<div class="sheet-bg" id="gSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="gsT">
+    <h2 id="gsT">Neues Gerät</h2>
+    <div class="field">Art<div class="opts" id="gsTyp" style="grid-template-columns:repeat(2,minmax(0,1fr))"></div></div>
+    <label class="field">Name<input id="gsName" placeholder="z. B. Switch EG, AP Büro, PC Empfang" autocomplete="off"></label>
+    <div class="frow" style="grid-template-columns:1fr 1fr"><label class="field">Standort<input id="gsOrt" placeholder="z. B. Rack 1" autocomplete="off"></label><label class="field">IP-Adresse (optional)<input id="gsIp" inputmode="decimal" placeholder="192.168.1.2" autocomplete="off"></label></div>
+    <div class="field" id="gsPortsBox" hidden>Anzahl Ports<div class="chips" id="gsPortsC"></div><input id="gsPortsN" inputmode="numeric" placeholder="andere Anzahl" style="margin-top:6px"></div>
+    <div class="field" id="gsGridBox" hidden><span>Port-Belegung <small style="font-weight:400">– freien Port antippen, um dort ein Gerät anzuschließen</small></span><div class="panel"><div class="ports" id="gsGrid"></div></div></div>
+    <label class="field">Verbunden mit (Uplink)<select id="gsUp"></select></label>
+    <label class="field" id="gsUpPortBox" hidden><span id="gsUpPortLbl">Port am Switch</span><select id="gsUpPort"></select></label>
+    <label class="field">Über Patchfeld<select id="gsField"></select></label>
+    <label class="field" id="gsPortBox" hidden>Port<select id="gsPort"></select></label>
+    <label class="field">Notiz (optional)<input id="gsNote" placeholder="z. B. VLAN 10, PoE, Modell" autocomplete="off"></label>
+    <button class="btn primary wide" type="button" id="gsOk">Anlegen</button>
+    <button class="btn danger" type="button" id="gsDel" hidden>Gerät löschen</button>
+    <button class="btn ghost" type="button" id="gsCancel">Abbrechen</button>
+  </div>
+</div>
+<!-- Switch-Gerätedaten -->
+<div class="sheet-bg" id="siSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="siT">
+    <h2 id="siT">Gerätedaten</h2>
+    <div class="frow" style="grid-template-columns:1fr 1fr"><label class="field">Hersteller<input id="si_hersteller" placeholder="z. B. HPE Aruba, Ubiquiti" autocomplete="off"></label><label class="field">Modell<input id="si_modell" placeholder="z. B. 1930 24G PoE" autocomplete="off"></label></div>
+    <div class="frow" style="grid-template-columns:1fr 1fr"><label class="field">Seriennummer<input id="si_sn" autocomplete="off"></label><label class="field">MAC-Adresse<input id="si_mac" autocomplete="off" placeholder="00:11:22:33:44:55"></label></div>
+    <div class="frow" style="grid-template-columns:1fr 1fr"><label class="field">IP-Adresse<input id="si_ip" inputmode="decimal" autocomplete="off"></label><label class="field">Subnetzmaske<input id="si_mask" inputmode="decimal" autocomplete="off" placeholder="255.255.255.0"></label></div>
+    <div class="frow" style="grid-template-columns:1fr 1fr"><label class="field">Gateway<input id="si_gw" inputmode="decimal" autocomplete="off"></label><label class="field">Firmware<input id="si_fw" autocomplete="off"></label></div>
+    <label class="field">davon SFP-/Glasfaser-Ports (die letzten Ports)<input id="si_sfp" type="number" inputmode="numeric" min="0" max="16" autocomplete="off" placeholder="leer = automatisch (z. B. 28 Ports → 4 SFP)"></label>
+    <label class="field">Standort / Rack / HE<input id="si_ort" autocomplete="off" placeholder="z. B. Rack 1, HE 14"></label>
+    <label class="field">Verwaltung (Adresse/Hinweis, keine Passwörter)<input id="si_mgmt" autocomplete="off" placeholder="z. B. https://192.168.1.2 · Zugang beim Kunden-IT"></label>
+    <button class="btn primary wide" type="button" id="siOk">Speichern</button>
+    <button class="btn ghost" type="button" id="siCancel">Abbrechen</button>
+  </div>
+</div>
+<!-- VLAN -->
+<div class="sheet-bg" id="vlSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="vlT">
+    <h2 id="vlT">Neues VLAN</h2>
+    <div class="frow"><label class="field">VLAN-ID<input id="vlId" inputmode="numeric" placeholder="10"></label><label class="field">Name<input id="vlName" placeholder="z. B. Daten, Kameras, Gäste" autocomplete="off"></label></div>
+    <div class="field">Farbe<div class="chips" id="vlCols"></div></div>
+    <button class="btn primary wide" type="button" id="vlOk">Speichern</button>
+    <button class="btn danger" type="button" id="vlDel" hidden>VLAN löschen</button>
+    <button class="btn ghost" type="button" id="vlCancel">Abbrechen</button>
+  </div>
+</div>
+<!-- Switch-Port -->
+<div class="sheet-bg" id="spSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="spT">
+    <h2 id="spT">Port</h2>
+    <label class="field">Bezeichnung<input id="spName" placeholder="z. B. Büro 1.04, Uplink Firewall" autocomplete="off"></label>
+    <label class="field">Angeschlossenes Gerät<select id="spDev"></select></label>
+    <label class="field">VLAN (untagged)<select id="spVlan"></select></label>
+    <div class="field">Tagged VLANs<div class="chips" id="spTagged"></div></div>
+    <div class="frow" style="grid-template-columns:1fr 1fr"><div class="field">PoE<div class="chips" id="spPoe"></div></div><div class="field">Status<div class="chips" id="spState"></div></div></div>
+    <div class="field">Geschwindigkeit<div class="chips" id="spSpeed"></div></div>
+    <button class="btn" type="button" id="spUplink" aria-pressed="false">Als Uplink-Port markieren</button>
+    <label class="field">Notiz (optional)<input id="spNote" autocomplete="off" placeholder="z. B. LACP mit Port 24, Spanning Tree"></label>
+    <div class="navrow"><button class="btn" type="button" id="spPrev">‹ Port</button><button class="btn" type="button" id="spNext">Port ›</button></div>
+    <button class="btn primary wide" type="button" id="spOk">Fertig</button>
+    <button class="btn ghost" type="button" id="spCancel">Abbrechen</button>
   </div>
 </div>
 <!-- Legende -->
@@ -915,8 +1116,11 @@ header.top{position:static!important;border-bottom:0!important}
 
 <nav class="appnav" id="nav" aria-label="Netzwerk"><div class="in" role="tablist">
   <button type="button" role="tab" data-view="kunden" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/></svg>Kunden</button>
-  <button type="button" role="tab" data-view="list" aria-selected="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="7" width="19" height="10" rx="2"/><path d="M6 11h2v2H6zM11 11h2v2h-2zM16 11h2v2h-2z"/></svg>Patchfelder</button>
-  <button type="button" role="tab" data-view="how" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M8 3h8v7l-2 2H10l-2-2z"/><path d="M10 6h1M13 6h1M12 12v9"/></svg>RJ45-Stecker</button>
+  <button type="button" role="tab" data-view="list" aria-selected="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="7" width="19" height="10" rx="2"/><path d="M6 11h2v2H6zM11 11h2v2h-2zM16 11h2v2h-2z"/></svg>Patchfeld</button>
+  <button type="button" role="tab" data-view="topo" aria-selected="false"><svg viewBox="0 0 24 24"><rect x="9" y="2.5" width="6" height="5" rx="1"/><rect x="2.5" y="16.5" width="6" height="5" rx="1"/><rect x="15.5" y="16.5" width="6" height="5" rx="1"/><path d="M12 7.5v4.5M5.5 16.5V12h13v4.5"/></svg>Topologie</button>
+  <button type="button" role="tab" data-view="sw" aria-selected="false"><svg viewBox="0 0 24 24"><rect x="2.5" y="8" width="19" height="8" rx="1.5"/><path d="M6 12h1M9 12h1M12 12h1M15 12h1"/><path d="M18 12h.5"/></svg>Switches</button>
+  <button type="button" role="tab" data-view="exp" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M14 2.5H6.5a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8z"/><path d="M14 2.5V8h5.5"/><path d="M12 11v6.5M9 14.5l3 3 3-3"/></svg>Export</button>
+  <button type="button" role="tab" data-view="how" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M8 3h8v7l-2 2H10l-2-2z"/><path d="M10 6h1M13 6h1M12 12v9"/></svg>RJ45</button>
 </div></nav>
 <script>
 (function(){
@@ -963,7 +1167,7 @@ function renderList(){
       + (adr ? '<p>'+esc(adr)+'</p>' : '') + (k.ansprech ? '<p>'+esc(k.ansprech)+'</p>' : '')
       + ((k.tel || k.mail) ? '<p>'+(k.tel ? '<a href="tel:'+esc(k.tel.replace(/[^0-9+]/g, ""))+'">'+esc(k.tel)+'</a>' : '')+(k.tel && k.mail ? ' · ' : '')+(k.mail ? '<a href="mailto:'+esc(k.mail)+'">'+esc(k.mail)+'</a>' : '')+'</p>' : '')
       + (k.notiz ? '<p class="note">'+esc(k.notiz)+'</p>' : '')
-      + '<div class="row"><button class="btn" type="button" id="kEdit">Kundendaten</button><button class="btn primary" type="button" id="kPdf">PDF: alle Patchfelder</button><button class="btn" type="button" id="kSwitch">Kunde wechseln</button><button class="btn ghost" type="button" id="kAll">Alle anzeigen</button></div>'; }
+      + '<div class="row"><button class="btn" type="button" id="kEdit">Kundendaten</button><button class="btn primary" type="button" id="kPdf">Doku exportieren</button><button class="btn" type="button" id="kSwitch">Kunde wechseln</button><button class="btn ghost" type="button" id="kAll">Alle anzeigen</button></div>'; }
   const all = Object.keys(store.felder);
   if(k){ const ids = all.filter(id => store.felder[id].kunde === store.sel).sort(byName);
     $("flist").innerHTML = ids.length ? ids.map(fItem).join("") : '<p class="empty">Für diesen Kunden gibt es noch kein Patchfeld.</p>'; return; }
@@ -973,7 +1177,7 @@ function renderList(){
   $("flist").innerHTML = keys.map(g => '<p class="grp">'+(g ? esc(store.kunden[g].name) : 'Ohne Kunde')+'</p>' + groups[g].sort(byName).map(fItem).join("")).join("");
 }
 $("kCard").addEventListener("click", e => { const b = e.target.closest("button"); if(!b) return;
-  if(b.id === "kPdf"){ const ids = Object.keys(store.felder).filter(id => store.felder[id].kunde === store.sel).sort(byName); if(!ids.length){ GT.toast("Für diesen Kunden gibt es noch kein Patchfeld."); return; } runPdf(ids, b); return; }
+  if(b.id === "kPdf"){ showView("exp"); window.scrollTo(0,0); return; }
   if(b.id === "kEdit") openKS(store.sel); else if(b.id === "kSwitch") showView("kunden"); else if(b.id === "kAll"){ store.sel = null; save(); renderList(); } });
 
 // ---------- Kunden ----------
@@ -1046,13 +1250,14 @@ function openPort(i){ const f = store.felder[cur]; curPort = i; const p = (f.p |
     $("psFa").placeholder = d === 12 ? def.join("–") : def[0]; $("psFb").placeholder = def[1] || ""; }
   renderColors(); $("psPrev").disabled = i <= 1; $("psNext").disabled = i >= f.ports;
   $("psPrev").textContent = "‹ Port " + Math.max(1, i - 1); $("psNext").textContent = "Port " + Math.min(f.ports, i + 1) + " ›";
-  $("pSheet").hidden = false; }
+  renderPortDev(); $("pSheet").hidden = false; }
 function renderColors(){ const f = store.felder[cur] || {legend:{}};
   $("psColors").innerHTML = COLORS.map(c => '<button type="button" data-c="'+c.k+'" aria-pressed="'+(c.k === pc)+'"><span class="dot" style="background:'+c.c+(c.k ? '' : ';box-shadow:inset 0 0 0 1.5px var(--line)')+'"></span>'+esc((f.legend && f.legend[c.k]) || c.n)+'</button>').join(""); }
 $("psColors").addEventListener("click", e => { const b = e.target.closest("[data-c]"); if(!b) return; pc = b.dataset.c; renderColors(); });
 function storePort(){ const f = store.felder[cur]; if(!f) return; const name = $("psName").value.trim(), note = $("psNote").value.trim();
   const L = isLwl(f), fa = L ? $("psFa").value.trim() : "", fb = L && stOf(f).d === 2 ? $("psFb").value.trim() : "", db = L ? $("psDb").value.trim().replace(".", ",") : "";
-  if(name || note || pc || fa || fb || db){ const o = {name, note, c: pc}; if(fa) o.fa = fa; if(fb) o.fb = fb; if(db) o.db = db; f.p[curPort] = o; } else delete f.p[curPort]; f.updated = Date.now(); save(); }
+  const prev = f.p[curPort] || {}, dv = devAtPort(cur, curPort);
+  if(name || note || pc || fa || fb || db){ const o = {name, note, c: pc}; if(fa) o.fa = fa; if(fb) o.fb = fb; if(db) o.db = db; if(prev.auto && dv && name === (store.geraete[dv].name || "")) o.auto = true; f.p[curPort] = o; } else delete f.p[curPort]; f.updated = Date.now(); save(); }
 $("psOk").addEventListener("click", () => { storePort(); $("pSheet").hidden = true; renderField(); });
 $("psPrev").addEventListener("click", () => { storePort(); renderField(); openPort(curPort - 1); $("psName").focus(); });
 $("psNext").addEventListener("click", () => { storePort(); renderField(); openPort(curPort + 1); $("psName").focus(); });
@@ -1260,13 +1465,70 @@ function NetPDF(){
 }
 const loadImg = src => new Promise(res => { if(!src) return res(null); const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
 const dDE = d => String(d.getDate()).padStart(2,"0") + "." + String(d.getMonth()+1).padStart(2,"0") + "." + d.getFullYear();
-async function makeReport(ids){
-  ids = ids.filter(id => store.felder[id]); if(!ids.length) return;
+const sfpOf = g => { const np = Number(g && g.ports) || 0; if(g && g.sfp !== undefined && g.sfp !== "") return Math.max(0, Math.min(np, Number(g.sfp) || 0));
+  if(np >= 26 && (np - 2) % 24 === 0) return 2; if(np >= 28 && (np - 4) % 24 === 0) return 4; if(np === 10 || np === 18) return 2; return 0; };
+const swLinked = (sg, sid, n) => { const P = (sg.pc || {})[n] || {}; return !P.off && !!(childAt(sid, n) || P.name || Number(sg.uplinkPort) === n); };
+const swOrder = kid => { const L = topoLayout(kid); const o = L.ids.filter(id => hasPorts(store.geraete[id])); devsOf(kid).forEach(id => { if(hasPorts(store.geraete[id]) && !o.includes(id)) o.push(id); }); return o; };
+// Switch als Geraet zeichnen (19-Zoll-Front). Gibt die Hoehe zurueck.
+function drawSwitchPDF(B, sg, sid, x0, y0, w){
+  const np = Number(sg.ports) || 0, sfp = sfpOf(sg), rj = np - sfp, st = gtOf(sg.typ);
+  const units = []; for(let s = 1; s <= rj; s += 48) units.push([s, Math.min(48, rj - s + 1)]); if(!units.length) units.push([1, 0]);
+  let yy = y0;
+  units.forEach(([start, cnt], ui) => { const last = ui === units.length - 1, sf = last ? sfp : 0;
+    const two = cnt > 12, cols = two ? Math.ceil(cnt / 2) : cnt, groups = Math.max(1, Math.ceil(cols / 6)), sfc = sf ? (two ? Math.ceil(sf / 2) : sf) : 0;
+    const EAR = 7, LBL = 27, g = 0.7, gg = 2.4, sw = 1.3;
+    const avail = w - 2*EAR - LBL - 6;
+    let pw = (avail - Math.max(0, cols - 1)*g - (groups - 1)*gg - (sfc ? 4 + (sfc - 1)*g : 0)) / Math.max(1, cols + sfc*sw); pw = Math.min(8.5, pw);
+    const ph = pw * 0.8, rowsN = two || (sf > 1 && !cnt) ? 2 : 1, numH = 3.2, pad = 2.2;
+    const H = pad + numH + rowsN*ph + (rowsN - 1)*1.4 + numH + pad;
+    // Gehaeuse
+    B.fill(x0, yy, w, H, "#2b3036"); B.fill(x0, yy, w, 1.1, "#454d56"); B.fill(x0, yy + H - 0.9, w, 0.9, "#1b1f23");
+    [x0, x0 + w - EAR].forEach(ex => { B.fill(ex, yy, EAR, H, "#c4cad0"); B.fill(ex, yy, EAR, 0.8, "#e1e5e9"); B.fill(ex + (ex === x0 ? EAR - 0.5 : 0), yy, 0.5, H, "#8f98a1");
+      [0.24, 0.76].forEach(f => { const hy = yy + H*f - 1.1; B.fill(ex + EAR/2 - 1.8, hy, 3.6, 2.2, "#4a525b"); B.fill(ex + EAR/2 - 1.8, hy, 3.6, 0.5, "#2a3036"); }); });
+    // Beschriftung + LEDs
+    const lx = x0 + EAR + 3; const brand = (sg.hersteller || st.n).toUpperCase(); B.font(true, 6.6); B.text(B.fit(brand, LBL - 2), lx, yy + 6.2, "#ffffff");
+    B.font(false, 5.2); B.text(B.fit(sg.modell || (np + "-Port"), LBL - 2), lx, yy + 9.6, "#aab3bc");
+    if(units.length > 1){ B.text("Einheit " + (ui + 1) + "/" + units.length, lx, yy + 12.6, "#8b98a5"); }
+    const ly = yy + H - pad - 2.2; [["PWR", "#2ecc71"], ["SYS", "#2ecc71"], ["PoE", Object.values(sg.pc || {}).some(P => P && P.poe) ? "#f5a623" : "#4a535d"]].forEach(([t, c], i) => { const ex = lx + i*7.6;
+      B.fill(ex, ly - 1.4, 1.6, 1.6, c); B.font(false, 4); B.text(t, ex + 2.2, ly, "#9aa4ae"); });
+    B.fill(x0 + EAR + LBL, yy + 2, 0.3, H - 4, "#454d56");
+    // Ports
+    const used = cols*pw + Math.max(0, cols - 1)*g + (groups - 1)*gg + (sfc ? 4 + sfc*pw*sw + (sfc - 1)*g : 0);
+    let px0 = x0 + EAR + LBL + 3 + Math.max(0, (avail - used) / 2);
+    const rowY = r => yy + pad + numH + r*(ph + 1.4);
+    const jack = (n, px, py, flip, sfpP) => { const P = (sg.pc || {})[n] || {}; const col = swPortCol(sg, sid, n); const pW = sfpP ? pw*sw : pw;
+      const fr = Math.max(0.45, pw*0.11);
+      if(sfpP){ B.fill(px, py + ph*0.12, pW, ph*0.76, col || "#9aa4ae"); B.fill(px + fr, py + ph*0.12 + fr, pW - 2*fr, ph*0.76 - 2*fr, P.off ? "#3a4048" : "#0d1013");
+        B.fill(px + pW*0.2, py + ph*0.5 - 0.25, pW*0.6, 0.5, "#3a4148"); }
+      else { B.fill(px, py, pW, ph, col || "#5f6873"); B.fill(px + fr, py + fr, pW - 2*fr, ph - 2*fr, P.off ? "#3a4048" : "#0d1013");
+        const nw = pW*0.34, nh = ph*0.2; B.fill(px + (pW - nw)/2, flip ? py + ph - fr - nh : py + fr, nw, nh, "#2f363e");
+        for(let k = 0; k < 4; k++) B.fill(px + pW*0.24 + k*pW*0.15, flip ? py + fr + ph*0.12 : py + ph - fr - ph*0.2, pW*0.06, ph*0.08, "#b08d3a");
+        const ls = Math.max(0.7, pw*0.15), ly2 = flip ? py + ph - fr - ls - 0.2 : py + fr + 0.2;
+        B.fill(px + fr + 0.2, ly2, ls, ls, swLinked(sg, sid, n) ? "#2ecc71" : "#3d454e"); B.fill(px + pW - fr - 0.2 - ls, ly2, ls, ls, P.poe && !P.off ? "#f5a623" : "#3d454e"); }
+      B.font(true, pw < 5 ? 4 : 4.8); const t = String(n), tw = B.width(t); B.text(t, px + (pW - tw)/2, flip ? py + ph + 2.6 : py - 0.9, "#c9d1d9");
+      if(Number(sg.uplinkPort) === n){ const oy = sfpP ? py + ph*0.12 : py, oh = sfpP ? ph*0.76 : ph; B.rect(px - 0.55, oy - 0.55, pW + 1.1, oh + 1.1, 0.4, "#ffffff"); } };
+    let cx = px0;
+    for(let c = 0; c < cols; c++){ if(c && c % 6 === 0) cx += gg - g;
+      if(two){ const a = start + c*2, b = a + 1; jack(a, cx, rowY(0), false); if(b < start + cnt) jack(b, cx, rowY(1), true); }
+      else jack(start + c, cx, rowY(0), false);
+      cx += pw + g; }
+    if(sfc){ cx += 4 - g; const s0 = rj + 1, sx = cx;
+      for(let c = 0; c < sfc; c++){ if(two){ const a = s0 + c*2, b = a + 1; jack(a, cx, rowY(0), false, true); if(b <= np) jack(b, cx, rowY(1), true, true); } else jack(s0 + c, cx, rowY(0), false, true); cx += pw*sw + g; }
+      B.font(true, 3.6); const tw = B.width("SFP"); B.fill(sx, yy + 1.6, cx - g - sx, 0.25, "#6b7580"); B.fill(sx + (cx - g - sx - tw)/2 - 0.8, yy + 0.9, tw + 1.6, 1.6, "#2b3036"); B.text("SFP", sx + (cx - g - sx - tw)/2, yy + 2.2, "#9aa4ae"); }
+    yy += H + (last ? 0 : 1.2); });
+  return yy - y0;
+}
+async function makeReport(opt){
+  opt = Object.assign({kid: "", cover: true, topo: false, devs: false, sw: [], felder: [], freePorts: true}, opt || {});
+  const ids = (opt.felder || []).filter(id => store.felder[id]); const sws = (opt.sw || []).filter(id => store.geraete[id] && hasPorts(store.geraete[id]));
+  const topoKid = opt.kid; const topoIds = (opt.topo || opt.devs) ? devsOf(topoKid) : [];
+  const doTopo = opt.topo && topoIds.length, doDevs = opt.devs && topoIds.length;
+  if(!ids.length && !sws.length && !doTopo && !doDevs && !(opt.cover && knd(topoKid))) return;
   const B = NetPDF(); const logo = await loadImg(LOGO_SRC);
   const ML = 18, MR = 192, W = MR - ML, BOT = 280;
   const who = (() => { try{ return (JSON.parse(localStorage.getItem("wb.settings.v1") || "{}").name || "").trim(); }catch(e){ return ""; } })();
   const today = dDE(new Date());
-  const first = store.felder[ids[0]]; const k = knd(first.kunde);
+  const first = store.felder[ids[0]] || {}; const k = knd(topoKid || first.kunde || (sws[0] && store.geraete[sws[0]].kunde));
   let y = 0;
   const header = (title, sub) => {
     B.page();
@@ -1275,11 +1537,16 @@ async function makeReport(ids){
     B.font(false, 9.5); B.text(B.fit(sub, MR - 44 - ML), ML, 26, "#5d6b7c");
     B.line(ML, 30, MR, 30, 0.4, "#003769"); y = 37;
   };
-  const need = (h, cont) => { if(y + h > BOT){ header("Netzwerk-Dokumentation", cont); return true; } return false; };
   const kline = k ? [k.name, k.nr ? "Kunden-Nr. " + k.nr : ""].filter(Boolean).join(" · ") : "";
-  header("Netzwerk-Dokumentation", [kline, "Stand " + today].filter(Boolean).join(" · "));
-  // Kundenblock
-  if(k){
+  const cont = [kline, "Stand " + today].filter(Boolean).join(" · ");
+  const need = (h) => { if(y + h > BOT){ header("Netzwerk-Dokumentation", cont); return true; } return false; };
+  const toc = []; const mark = t => toc.push({t, p: B.pageCount});
+  header("Netzwerk-Dokumentation", cont);
+  // Kundenblock + Inhalt
+  let tocY = null, tocRows = 0;
+  const tocTitles = [doTopo ? "Netzwerk-Topologie" : "", doDevs ? "Geräteliste" : ""].filter(Boolean)
+    .concat(sws.map(id => "Switch: " + (store.geraete[id].name || "Switch"))).concat(ids.map(id => (isLwl(store.felder[id]) ? "LWL-Feld: " : "Patchfeld: ") + store.felder[id].name));
+  if(opt.cover && k){
     const adr = [k.strasse, [k.plz, k.ort].filter(Boolean).join(" ")].filter(Boolean).join(", ");
     B.fill(ML, y - 4.5, W, 18, "#eef2f6");
     B.font(true, 11); B.text(B.fit(k.name, W - 6), ML + 3, y + 0.5);
@@ -1287,20 +1554,81 @@ async function makeReport(ids){
     B.text(B.fit([k.tel ? "Tel. " + k.tel : "", k.mail].filter(Boolean).join(" · "), W - 6), ML + 3, y + 10.5);
     y += 20;
   }
+  if(opt.cover && tocTitles.length >= 2){ tocRows = Math.ceil(tocTitles.length / 2); tocY = y; y += 7 + tocRows*5 + 5; }
+  const swSection = sid => { const sg = store.geraete[sid], st = gtOf(sg.typ), np = Number(sg.ports); sg.pc = sg.pc || {}; const VL = sg.vlans || [];
+    if(y + 60 > BOT) header("Netzwerk-Dokumentation", cont);
+    mark("Switch: " + (sg.name || "Switch"));
+    B.font(true, 12); B.text(B.fit((sg.name || st.n) + " – Port-Belegung", W), ML, y + 1);
+    B.font(false, 9); B.text(B.fit([st.n, [sg.hersteller, sg.modell].filter(Boolean).join(" "), np + " Ports" + (sfpOf(sg) ? " (davon " + sfpOf(sg) + " SFP)" : ""), sg.ort].filter(Boolean).join(" · "), W), ML, y + 6, "#5d6b7c");
+    const info = [sg.ip ? "IP " + sg.ip + (sg.mask ? " / " + sg.mask : "") : "", sg.gw ? "Gateway " + sg.gw : "", sg.mac ? "MAC " + sg.mac : "", sg.sn ? "S/N " + sg.sn : "", sg.fw ? "Firmware " + sg.fw : ""].filter(Boolean).join(" · ");
+    y += 9; if(info){ B.text(B.fit(info, W), ML, y + 1, "#5d6b7c"); y += 5; } if(sg.mgmt){ B.text(B.fit("Verwaltung: " + sg.mgmt, W), ML, y + 1, "#5d6b7c"); y += 5; }
+    y += 1; y += drawSwitchPDF(B, sg, sid, ML, y, W) + 5;
+    { let lx = ML; B.font(false, 8.5); const items = VL.map(v => ["VLAN " + v.id + (v.name ? " " + v.name : ""), v.c, false]).concat([["Link aktiv", "#2ecc71", true], ["PoE", "#f5a623", true]]).concat(sg.uplinkPort ? [["Uplink-Port", "#1b1f24", "u"]] : []);
+      items.forEach(([lab, c, led]) => { const w = B.width(lab) + 8; if(lx + w > MR){ lx = ML; y += 5; }
+        if(led === "u") B.rect(lx + 0.2, y - 2.6, 3.2, 3.2, 0.4, c); else if(led){ B.fill(lx, y - 3.3, 3.6, 3.6, "#0d1013"); B.fill(lx + 0.9, y - 2.4, 1.8, 1.8, c); } else B.fill(lx, y - 2.8, 3.6, 3.6, c);
+        B.text(lab, lx + 5, y, "#1b1f24"); lx += w + 3; }); y += 6; }
+    const rowsP = Array.from({length: np}, (_, i) => i + 1).filter(n => { const P = sg.pc[n] || {}; return childAt(sid, n) || P.name || P.vlan || P.poe || P.off || P.note || Number(sg.uplinkPort) === n; });
+    if(rowsP.length){ const tx = [ML, ML + 11, ML + 56, ML + 96, ML + 128, ML + 142, MR];
+      const th2 = () => { B.fill(ML, y - 4.2, W, 6, st.c); B.font(true, 8.5); [["Port",0],["Bezeichnung",1],["Gerät",2],["VLAN",3],["PoE",4],["Notiz",5]].forEach(([t,i]) => B.text(t, tx[i] + 1.3, y, "#ffffff")); y += 6.5; };
+      need(14); th2(); rowsP.forEach((n, i) => { if(y + 6 > BOT){ header("Netzwerk-Dokumentation", cont); th2(); } const P = sg.pc[n] || {}, o = childAt(sid, n), og = o && store.geraete[o];
+        if(i % 2) B.fill(ML, y - 4.1, W, 5.8, "#f3f5f8"); const pc = swPortCol(sg, sid, n); if(pc) B.fill(ML, y - 4.1, 1.2, 5.8, pc);
+        B.font(true, 9); B.text(String(n), tx[0] + 2, y, P.off ? "#8b98a5" : "#1b1f24");
+        B.font(!!P.name, 8.5); B.text(B.fit(P.name || (Number(sg.uplinkPort) === n ? "Uplink" : ""), tx[2] - tx[1] - 2), tx[1] + 1.3, y, "#1b1f24");
+        B.font(false, 8.5); B.text(B.fit(og ? (og.name || gtOf(og.typ).n) + (og.ip ? " · " + og.ip : "") : (Number(sg.uplinkPort) === n && sg.up && store.geraete[sg.up] ? "Uplink: " + store.geraete[sg.up].name : ""), tx[3] - tx[2] - 2), tx[2] + 1.3, y, "#1b1f24");
+        B.text(B.fit([P.vlan ? String(P.vlan) : "", (P.tagged || []).length ? "T:" + P.tagged.join(",") : ""].filter(Boolean).join(" "), tx[4] - tx[3] - 2), tx[3] + 1.3, y, "#1b1f24");
+        B.text(P.poe ? "ja" : "", tx[4] + 1.3, y, "#1b1f24");
+        B.text(B.fit([n > np - sfpOf(sg) ? "SFP" : "", P.off ? "deaktiviert" : "", P.speed && P.speed !== "Auto" ? P.speed : "", og && og.via && store.felder[og.via.f] ? "PF " + store.felder[og.via.f].name + " " + og.via.p : "", P.note].filter(Boolean).join(" · "), tx[6] - tx[5] - 2), tx[5] + 1.3, y, "#5d6b7c"); y += 5.8; }); }
+    else { B.font(false, 9); B.text("Noch keine Ports belegt.", ML, y, "#8b98a5"); y += 5; }
+    y += 8; };
+  // Topologie
+  if(doTopo || doDevs){
+    const L = topoLayout(topoKid);
+    if(doTopo){ const gx = 4, nw = Math.min(36, (W - 6 - (L.cols-1)*gx) / L.cols), nh = 13, gy = 11;
+      const gw = L.cols*nw + (L.cols-1)*gx, gh = L.rows*nh + (L.rows-1)*gy, ox = ML + (W - gw)/2;
+      if(y + 14 + gh + 8 > BOT) header("Netzwerk-Dokumentation", cont);
+      mark("Netzwerk-Topologie");
+      B.font(true, 13); B.text("Netzwerk-Topologie", ML, y + 2); y += 8;
+      B.fill(ML, y, W, gh + 8, "#f3f5f8"); const oy = y + 4;
+      const NX = id => ox + L.pos[id].x*(nw + gx), NY = id => oy + L.pos[id].d*(nh + gy);
+      L.nodes.forEach(id => { const p = L.par[id]; if(!p || !L.pos[p]) return; const x1 = NX(p) + nw/2, y1 = NY(p) + nh, x2 = NX(id) + nw/2, y2 = NY(id), ym = y1 + gy/2;
+        const lc = isPfNode(p) ? "#b4bdc6" : "#8b98a5"; B.line(x1, y1, x1, ym, 0.35, lc); B.line(x1, ym, x2, ym, 0.35, lc); B.line(x2, ym, x2, y2, 0.35, lc);
+        if(!isPfNode(id)){ const t = edgeLabel(id); if(t){ const up = store.geraete[store.geraete[id].up]; const col = up && hasPorts(up) && store.geraete[id].upPort ? gtOf(up.typ).c : "#5d6b7c";
+          B.font(true, 5); const tw = B.width(t) + 2; B.fill(x2 - tw/2, y2 - 3.6, tw, 3.2, col); B.text(t, x2 - tw/2 + 1, y2 - 1.2, "#ffffff"); } } });
+      L.nodes.forEach(id => { const x = NX(id), yy = NY(id);
+        if(isPfNode(id)){ const f = store.felder[id.split("|")[1]]; const L2 = isLwl(f); B.fill(x, yy, nw, nh, "#23292f");
+          const nj = 6, jw = (nw - 4) / nj - 0.8; for(let i = 0; i < nj; i++) B.fill(x + 2 + i*(jw + 0.8), yy + nh - 4.6, jw, 3, L2 ? couplerCol(f) : "#0d1013");
+          B.font(true, nw < 22 ? 5.2 : 6.4); B.text(B.fit(f.name, nw - 4), x + 2, yy + 4.6, "#e9edf1"); B.font(false, nw < 22 ? 4.4 : 5.2); B.text(B.fit((L2 ? "LWL · " : "Patchfeld · ") + f.ports + " Ports", nw - 4), x + 2, yy + 7.8, "#9aa4ae"); return; }
+        const g = store.geraete[id], t = gtOf(g.typ), bw = Math.min(9, nw*0.28);
+        B.fill(x, yy, nw, nh, t.c); B.fill(x + 0.4, yy + 0.4, nw - 0.8, nh - 0.8, "#ffffff"); B.fill(x + 1.2, yy + 1.2, bw, nh - 2.4, t.c);
+        B.font(true, t.s.length > 2 ? 4.8 : 6); B.text(t.s, x + 1.2 + (bw - B.width(t.s))/2, yy + nh/2 + 1.6, "#ffffff");
+        const tx = x + bw + 2.2, tw = nw - bw - 3; B.font(true, nw < 22 ? 5.5 : 6.8); B.text(B.fit(g.name || t.n, tw), tx, yy + 5.3, "#1b1f24");
+        B.font(false, nw < 22 ? 4.8 : 5.6); B.text(B.fit(g.ip || g.ort || t.n, tw), tx, yy + 9.6, "#5d6b7c"); });
+      y += gh + 14; }
+    if(doDevs){
+      const cx = [ML, ML + 46, ML + 76, ML + 102, ML + 140, MR];
+      const th = () => { B.fill(ML, y - 4.2, W, 6, "#003769"); B.font(true, 9); [["Gerät",0],["Art",1],["IP",2],["verbunden mit",3],["Patchfeld / Port",4]].forEach(([t,i]) => B.text(t, cx[i] + 1.5, y, "#ffffff")); y += 6.5; };
+      if(y + 24 > BOT) header("Netzwerk-Dokumentation", cont);
+      mark("Geräteliste"); B.font(true, 13); B.text("Geräteliste", ML, y + 2); y += 9; th();
+      L.ids.slice().sort((a,b) => (L.pos[a].d - L.pos[b].d) || (L.pos[a].x - L.pos[b].x)).forEach((id, i) => { if(y + 6 > BOT){ header("Netzwerk-Dokumentation", cont); th(); }
+        const g = store.geraete[id], t = gtOf(g.typ), up = g.up && store.geraete[g.up];
+        if(i % 2) B.fill(ML, y - 4.1, W, 5.8, "#f3f5f8"); B.fill(ML, y - 4.1, 1.2, 5.8, t.c);
+        B.font(true, 9); B.text(B.fit(g.name || t.n, cx[1] - cx[0] - 3), cx[0] + 2.5, y, "#1b1f24");
+        B.font(false, 8.5); B.text(B.fit(t.n, cx[2] - cx[1] - 2), cx[1] + 1.5, y, "#1b1f24"); B.text(B.fit(g.ip || "", cx[3] - cx[2] - 2), cx[2] + 1.5, y, "#1b1f24");
+        B.text(B.fit(up ? (up.name || gtOf(up.typ).n) + (g.upPort && hasPorts(up) ? " · Port " + g.upPort : "") : "–", cx[4] - cx[3] - 2), cx[3] + 1.5, y, "#1b1f24"); B.text(B.fit(viaText(g) || "–", cx[5] - cx[4] - 2), cx[4] + 1.5, y, "#5d6b7c"); y += 5.8; });
+      y += 8; }
+  }
+  sws.forEach(sid => swSection(sid));
   ids.forEach((id, n) => {
     const fd = store.felder[id]; fd.p = fd.p || {}; fd.legend = fd.legend || {};
-    const cont = [kline, "Stand " + today].filter(Boolean).join(" · ");
-    // Kopf Patchfeld
-    if(n > 0) need(70, cont) || (y += 4);
-    need(60, cont);
+    if(n > 0 || sws.length || doTopo || doDevs) need(70) || (y += 4);
+    need(60); mark((isLwl(fd) ? "LWL-Feld: " : "Patchfeld: ") + fd.name);
     B.font(true, 13); B.text(B.fit(fd.name, W), ML, y + 2);
     const named = Object.values(fd.p).filter(p => p && p.name).length;
     B.font(false, 9.5); B.text(B.fit([fd.ort, isLwl(fd) ? "Glasfaser · " + fd.ports + " × " + lwlDesc(fd) : fd.ports + " Ports", named + " benannt"].filter(Boolean).join(" · "), W), ML, y + 7.5, "#5d6b7c");
     y += 12;
-    // Panel-Grafik
     const cols = fd.ports <= 12 ? fd.ports : fd.ports > 24 ? 24 : 12; const rows = Math.ceil(fd.ports / cols);
     const gap = 1.2, pw = Math.min(12, (W - 8 - gap*(cols-1)) / cols), ph = pw * 1.05, panW = cols*pw + (cols-1)*gap + 8, panH = rows*(ph + 5) + 6;
-    need(panH + 6, cont);
+    need(panH + 6);
     B.fill(ML, y, panW, panH, "#23292f");
     for(let i = 1; i <= fd.ports; i++){
       const r = Math.floor((i-1)/cols), c = (i-1) % cols; const px = ML + 4 + c*(pw + gap), py = y + 3 + r*(ph + 5);
@@ -1312,59 +1640,365 @@ async function makeReport(ids){
       B.font(true, pw < 7 ? 5.5 : 6.5); const t = String(i); B.text(t, px + (pw - B.width(t))/2, py + ph + 3.4, "#c9d1d9");
     }
     y += panH + 5;
-    // Legende
     const used = COLORS.filter(c => c.k && Object.values(fd.p).some(p => p && p.c === c.k));
-    if(used.length){ need(8, cont); let lx = ML; B.font(false, 9);
-      used.forEach(c => { const lab = fd.legend[c.k] || c.n; const w = B.width(lab) + 9; if(lx + w > MR){ lx = ML; y += 6; need(8, cont); B.font(false, 9); }
+    if(used.length){ need(8); let lx = ML; B.font(false, 9);
+      used.forEach(c => { const lab = fd.legend[c.k] || c.n; const w = B.width(lab) + 9; if(lx + w > MR){ lx = ML; y += 6; need(8); B.font(false, 9); }
         B.fill(lx, y - 3, 4, 4, c.c); B.rect(lx, y - 3, 4, 4, 0.15, "#8b98a5"); B.text(lab, lx + 5.5, y, "#1b1f24"); lx += w + 4; });
       y += 7; }
-    // Tabelle
     const LW = isLwl(fd);
     const cx = LW ? [ML, ML + 12, ML + 22, ML + 82, ML + 104, ML + 120, MR] : [ML, ML + 12, ML + 22, ML + 100, MR];
     const heads = LW ? [["Port",0],["Farbe",1],["Bezeichnung",2],["Fasern",3],["dB",4],["Notiz",5]] : [["Port",0],["Farbe",1],["Bezeichnung",2],["Notiz",3]];
     const th = () => { B.fill(ML, y - 4.2, W, 6, "#003769"); B.font(true, 9); heads.forEach(([t,i]) => B.text(t, cx[i] + 1.5, y, "#ffffff")); y += 6.5; };
-    need(14, cont); th();
+    need(14); th(); let rn = 0;
     for(let i = 1; i <= fd.ports; i++){
-      if(need(6, cont)) th();
-      const p = fd.p[i] || {};
-      if(i % 2 === 0) B.fill(ML, y - 4.1, W, 5.8, "#f3f5f8");
+      const p = fd.p[i] || {}; const pdv = devAtPort(id, i);
+      if(!opt.freePorts && !p.name && !p.c && !p.note && !p.db && !pdv) continue;
+      if(need(6)) th();
+      if(rn++ % 2 === 1) B.fill(ML, y - 4.1, W, 5.8, "#f3f5f8");
       B.font(true, 9); B.text(String(i), cx[0] + 1.5, y, "#1b1f24");
       if(p.c){ const c = colOf(p.c); B.fill(cx[1] + 1.5, y - 3.2, 6.5, 3.6, c.c); B.rect(cx[1] + 1.5, y - 3.2, 6.5, 3.6, 0.15, "#8b98a5"); }
       B.font(!!p.name, 9); B.text(B.fit(p.name || "frei", cx[3] - cx[2] - 3), cx[2] + 1.5, y, p.name ? "#1b1f24" : "#8b98a5");
-      const note = [p.c && fd.legend[p.c] ? fd.legend[p.c] : "", p.note].filter(Boolean).join(" · ");
+      const note = [pdv ? "an " + (store.geraete[pdv].name || gtOf(store.geraete[pdv].typ).n) : "", p.c && fd.legend[p.c] ? fd.legend[p.c] : "", p.note].filter(Boolean).join(" · ");
       const nc = LW ? 5 : 3;
       if(LW){ B.font(false, 9); B.text(B.fit(fibersOf(fd, i, p), cx[4] - cx[3] - 3), cx[3] + 1.5, y, "#1b1f24"); if(p.db) B.text(p.db, cx[4] + 1.5, y, "#1b1f24"); }
       B.font(false, 8.5); if(note) B.text(B.fit(note, cx[nc + 1] - cx[nc] - 3), cx[nc] + 1.5, y, "#5d6b7c");
       y += 5.8;
     }
+    if(!rn){ B.font(false, 9); B.text("Keine belegten Ports.", ML + 1.5, y, "#8b98a5"); y += 5.8; }
     B.line(ML, y - 3.8, MR, y - 3.8, 0.2, "#d6dee8"); y += 4;
   });
+  if(tocY != null){ B.eachPage((i) => { if(i !== 0) return; let yy = tocY; B.font(true, 11); B.text("Inhalt", ML, yy + 1, "#003769"); yy += 7;
+    const cw = (W - 6) / 2; toc.forEach((e, j) => { const col = j < tocRows ? 0 : 1, row = j < tocRows ? j : j - tocRows; const x = ML + col*(cw + 6), ty = yy + row*5;
+      const pg = String(e.p); B.font(false, 9); B.text(B.fit(e.t, cw - 12), x, ty, "#1b1f24"); B.text(pg, x + cw - B.width(pg), ty, "#5d6b7c");
+      B.line(x, ty + 1.3, x + cw, ty + 1.3, 0.1, "#d6dee8"); }); }); }
   B.eachPage((i, n) => { B.line(ML, 287, MR, 287, 0.2, "#d6dee8"); B.font(false, 8);
     B.text("Erstellt am " + today + (who ? " von " + who : "") + " mit Oh-MyGosch", ML, 291.5, "#8b98a5");
     const t = "Seite " + (i + 1) + " von " + n; B.text(t, MR - B.width(t), 291.5, "#8b98a5"); });
   return {B, first, k};
 }
-async function exportReport(ids){
-  const r = await makeReport(ids); if(!r) return;
-  const {B, first, k} = r; const safe = t => String(t || "").replace(/[^A-Za-z0-9ÄÖÜäöüß_-]+/g, "_").replace(/^_+|_+$/g, "");
-  const name = (k ? k.name : first.name) || "Netzwerk";
-  const fn = "Netzwerk-Doku_" + safe(name) + (ids.length === 1 && k ? "_" + safe(first.name) : "") + ".pdf";
-  await GT.deliver(B.output("Netzwerk-Dokumentation " + name), fn, "PDF teilen");
+const safeFn = t => String(t || "").replace(/[^A-Za-z0-9ÄÖÜäöüß_-]+/g, "_").replace(/^_+|_+$/g, "");
+async function exportReport(opt, fname, title){
+  const r = await makeReport(opt); if(!r){ GT.toast("Nichts ausgewählt – bitte mindestens einen Teil wählen."); return; }
+  const {B, first, k} = r; const name = (k ? k.name : first.name) || "Netzwerk";
+  await GT.deliver(B.output(title || ("Netzwerk-Dokumentation " + name)), fname || ("Netzwerk-Doku_" + safeFn(name) + ".pdf"), "PDF teilen");
 }
-
-async function runPdf(ids, btn){ const t = btn.textContent; btn.disabled = true; btn.textContent = "PDF wird erstellt …";
-  try{ await exportReport(ids); }catch(e){ GT.toast("PDF konnte nicht erstellt werden."); }
+async function runPdf(btn, opt, fname, title){ const t = btn.textContent; btn.disabled = true; btn.textContent = "PDF wird erstellt …";
+  try{ await exportReport(opt, fname, title); }catch(e){ console.error(e); GT.toast("PDF konnte nicht erstellt werden."); }
   finally{ btn.disabled = false; btn.textContent = t; } }
-$("pdfField").addEventListener("click", () => { if(cur) runPdf([cur], $("pdfField")); });
-$("pdfTop").addEventListener("click", () => { if(cur) runPdf([cur], $("pdfTop")); });
+const fieldPdf = btn => { if(!cur) return; const f = store.felder[cur], k = knd(f.kunde); runPdf(btn, {kid: f.kunde || "", cover: true, felder: [cur]}, "Netzwerk-Doku_" + safeFn(k ? k.name : f.name) + (k ? "_" + safeFn(f.name) : "") + ".pdf"); };
+$("pdfField").addEventListener("click", () => fieldPdf($("pdfField")));
+$("pdfTop").addEventListener("click", () => fieldPdf($("pdfTop")));
+
+// ---------- Topologie ----------
+store.geraete = store.geraete || {};
+const GT_TYPES = [
+  {k:"fw", n:"Router / Firewall", s:"FW", c:"#e5484d"}, {k:"sw", n:"Switch", s:"SW", c:"#2f80ed"}, {k:"hub", n:"Hub", s:"HUB", c:"#8b98a5"},
+  {k:"ap", n:"Access Point", s:"AP", c:"#30a46c"}, {k:"srv", n:"Server / NAS", s:"SRV", c:"#8e4ec6"}, {k:"pc", n:"Client / PC", s:"PC", c:"#0f9fb5"},
+  {k:"dr", n:"Drucker", s:"DR", c:"#f2811d"}, {k:"cam", n:"Kamera", s:"CAM", c:"#b08900"}, {k:"tel", n:"Telefon", s:"TEL", c:"#d6409f"}, {k:"son", n:"Sonstiges", s:"?", c:"#5d6b7c"}];
+const gtOf = k => GT_TYPES.find(t => t.k === k) || GT_TYPES[GT_TYPES.length - 1];
+const devsOf = kid => Object.keys(store.geraete).filter(id => (store.geraete[id].kunde || "") === (kid || ""));
+const HASP = ["sw","hub","fw"];
+const hasPorts = g => g && HASP.includes(g.typ) && Number(g.ports) > 0;
+const childAt = (pid, n) => Object.keys(store.geraete).find(id => store.geraete[id].up === pid && Number(store.geraete[id].upPort) === Number(n));
+const upPortText = g => { const u = g && g.up && store.geraete[g.up]; return u && hasPorts(u) && g.upPort ? (u.name || gtOf(u.typ).n) + " · Port " + g.upPort : ""; };
+const viaText = g => { if(!g || !g.via || !store.felder[g.via.f]) return ""; return store.felder[g.via.f].name + " · Port " + g.via.p; };
+const devAtPort = (fid, p) => Object.keys(store.geraete).find(id => { const g = store.geraete[id]; return g.via && g.via.f === fid && Number(g.via.p) === Number(p); });
+// Baum-Layout: x nach Blattreihenfolge, Eltern mittig über ihren Kindern
+function topoLayout(kid){
+  const ids = devsOf(kid); const kids = {}, par = {}; const roots = [];
+  const add = (p, c) => { (kids[p] = kids[p] || []); if(!kids[p].includes(c)) kids[p].push(c); par[c] = p; };
+  const pfVirt = [];
+  ids.forEach(id => { const g = store.geraete[id]; const u = g.up && ids.includes(g.up) && g.up !== id ? g.up : "";
+    const pf = g.via && store.felder[g.via.f] ? "pf|" + g.via.f + "|" + u : "";
+    if(pf){ if(!pfVirt.includes(pf)) pfVirt.push(pf); if(u) add(u, pf); else if(!roots.includes(pf)) roots.push(pf); add(pf, id); }
+    else if(u) add(u, id); else roots.push(id); });
+  const nm = n => n.startsWith("pf|") ? (store.felder[n.split("|")[1]].name || "") : (store.geraete[n].name || "");
+  const byN = (a,b) => (a.startsWith("pf|") - b.startsWith("pf|")) || nm(a).localeCompare(nm(b), "de", {numeric:true});
+  roots.sort(byN); Object.values(kids).forEach(l => l.sort(byN));
+  const pos = {}; let leaf = 0, maxD = 0; const seen = new Set();
+  const walk = (id, d) => { if(seen.has(id)) return; seen.add(id); maxD = Math.max(maxD, d); const ch = (kids[id] || []).filter(c => !seen.has(c));
+    if(!ch.length){ pos[id] = {x: leaf++, d}; return; } ch.forEach(c => walk(c, d + 1)); const xs = ch.map(c => pos[c].x); pos[id] = {x: (Math.min(...xs) + Math.max(...xs)) / 2, d}; };
+  roots.forEach(r => walk(r, 0));
+  const nodes = Object.keys(pos);
+  return {ids, nodes, pos, par, cols: Math.max(1, leaf), rows: maxD + 1, kids};
+}
+const isPfNode = n => typeof n === "string" && n.startsWith("pf|");
+const edgeLabel = id => { const g = store.geraete[id]; if(!g) return ""; const u = g.up && store.geraete[g.up];
+  return [g.upPort && hasPorts(u) ? "Port " + g.upPort : "", g.via && store.felder[g.via.f] ? "PF " + g.via.p : ""].filter(Boolean).join(" · "); };
+function renderTopo(){
+  const k = knd(store.sel); $("tHint").hidden = !!k; $("tBody").hidden = !k; if(!k) return;
+  $("tKunde").textContent = k.name;
+  const L = topoLayout(store.sel); const NW = 120, NH = 50, GX = 18, GY = 46, PAD = 12;
+  const W = PAD*2 + L.cols*NW + (L.cols-1)*GX, H = PAD*2 + L.rows*NH + (L.rows-1)*GY;
+  const X = id => PAD + L.pos[id].x*(NW + GX), Y = id => PAD + L.pos[id].d*(NH + GY);
+  let s = "";
+  L.nodes.forEach(id => { const p = L.par[id]; if(!p || !L.pos[p]) return; const x1 = X(p) + NW/2, y1 = Y(p) + NH, x2 = X(id) + NW/2, y2 = Y(id), ym = y1 + GY/2;
+    s += '<path d="M'+x1+' '+y1+' V'+ym+' H'+x2+' V'+y2+'" fill="none" stroke="var(--muted)" stroke-width="1.6"'+(isPfNode(p) ? ' stroke-dasharray="5 4"' : '')+'/>';
+    if(!isPfNode(id)){ const t = edgeLabel(id); if(t){ const up = store.geraete[store.geraete[id].up]; const col = up && hasPorts(up) && store.geraete[id].upPort ? gtOf(up.typ).c : "#5d6b7c"; const w = t.length*5.6+10;
+      s += '<rect x="'+(x2-w/2)+'" y="'+(y2-17)+'" width="'+w+'" height="14" rx="7" fill="'+col+'"/><text x="'+x2+'" y="'+(y2-7)+'" text-anchor="middle" font-size="9" font-weight="800" fill="#fff">'+esc(t)+'</text>'; } } });
+  L.nodes.forEach(id => { const x = X(id), y = Y(id);
+    if(isPfNode(id)){ const f = store.felder[id.split("|")[1]]; const L2 = isLwl(f);
+      s += '<g class="tn" data-pf="'+id.split("|")[1]+'" data-par="'+(id.split("|")[2] || "")+'" style="cursor:pointer"><rect x="'+x+'" y="'+y+'" width="'+NW+'" height="'+NH+'" rx="10" fill="#23292f"/>';
+      for(let i = 0; i < 8; i++) s += '<rect x="'+(x+8+i*13.2)+'" y="'+(y+30)+'" width="10" height="9" rx="2" fill="'+(L2 ? couplerCol(f) : "#0d1013")+'" stroke="#4a535d"/>';
+      s += '<text x="'+(x+8)+'" y="'+(y+16)+'" font-size="10.5" font-weight="800" fill="#e9edf1">'+esc(trunc(f.name, 17))+'</text><text x="'+(x+8)+'" y="'+(y+26)+'" font-size="8.5" fill="#9aa4ae">'+(L2 ? "LWL · " : "Patchfeld · ")+f.ports+' Ports</text></g>'; return; }
+    const g = store.geraete[id], t = gtOf(g.typ);
+    s += '<g class="tn" data-g="'+id+'" style="cursor:pointer"><rect x="'+x+'" y="'+y+'" width="'+NW+'" height="'+NH+'" rx="12" fill="var(--surface)" stroke="'+t.c+'" stroke-width="2"/>'
+      + '<rect x="'+(x+7)+'" y="'+(y+9)+'" width="32" height="32" rx="9" fill="'+t.c+'"/><text x="'+(x+23)+'" y="'+(y+29)+'" text-anchor="middle" font-size="'+(t.s.length > 2 ? 9 : 11)+'" font-weight="800" fill="#fff">'+t.s+'</text>'
+      + '<text x="'+(x+46)+'" y="'+(y+22)+'" font-size="11.5" font-weight="700" fill="var(--ink)">'+esc(trunc(g.name || t.n, 11))+'</text>'
+      + '<text x="'+(x+46)+'" y="'+(y+37)+'" font-size="9.5" fill="var(--muted)">'+esc(trunc(g.ip || g.ort || t.n, 13))+'</text></g>'; });
+  $("topo").setAttribute("viewBox", "0 0 " + W + " " + H);
+  const box = $("topo").parentElement, cw = (box.clientWidth || 340) - 12, sc = Math.max(0.62, Math.min(1, cw / W)); $("topo").style.width = Math.round(W * sc) + "px";
+  const root = L.nodes.find(id => L.pos[id].d === 0); requestAnimationFrame(() => { box.scrollLeft = root ? Math.max(0, (X(root) + NW/2) * sc - cw/2) : 0; }); $("topo").innerHTML = L.ids.length ? s : '<text x="12" y="30" font-size="13" fill="var(--muted)">Noch keine Geräte – unten anlegen.</text>';
+  if(!L.ids.length){ $("topo").setAttribute("viewBox", "0 0 300 50"); $("topo").style.width = "300px"; }
+  const byN = (a,b) => (store.geraete[a].name || "").localeCompare(store.geraete[b].name || "", "de", {numeric:true});
+  $("glist").innerHTML = L.ids.slice().sort(byN).map(id => { const g = store.geraete[id], t = gtOf(g.typ), up = g.up && store.geraete[g.up];
+    return '<button class="prow" type="button" data-g="'+id+'"><span class="n" style="color:'+t.c+';font-size:11px">'+t.s+'</span><span class="dot" style="background:'+t.c+'"></span><span class="t">'+esc(g.name || t.n)+'<small>'+esc([t.n, g.ip, up ? "↑ " + (up.name || gtOf(up.typ).n) + (g.upPort && hasPorts(up) ? " Port " + g.upPort : "") : "", hasPorts(g) ? Object.values(store.geraete).filter(o => o.up === id && o.upPort).length + "/" + g.ports + " Ports belegt" : "", viaText(g) ? "PF: " + viaText(g) : ""].filter(Boolean).join(" · "))+'</small></span><span class="e">'+esc(g.ort || "")+'</span></button>'; }).join("") || '<p class="empty">Noch keine Geräte.</p>';
+}
+const trunc = (t, n) => { t = String(t || ""); return t.length > n ? t.slice(0, n - 1) + "…" : t; };
+$("topo").addEventListener("click", e => { const f = e.target.closest("[data-pf]"); if(f){ openField(f.dataset.pf); return; } const g = e.target.closest("[data-g]"); if(g) openGS(g.dataset.g); });
+$("glist").addEventListener("click", e => { const g = e.target.closest("[data-g]"); if(g) openGS(g.dataset.g); });
+$("newGer").addEventListener("click", () => openGS(null));
+$("tPick").addEventListener("click", () => showView("kunden"));
+let gsId = null, gsTyp = "sw";
+const isDesc = (id, anc) => { let c = store.geraete[id]; let n = 0; while(c && c.up && n++ < 200){ if(c.up === anc) return true; c = store.geraete[c.up]; } return false; };
+function openGS(id, preset){ gsId = id || null; const g = id ? store.geraete[id] : Object.assign({typ: "sw"}, preset || {});
+  gsTyp = g.typ || "sw"; $("gsT").textContent = id ? "Gerät bearbeiten" : "Neues Gerät";
+  $("gsOk").textContent = id ? "Fertig" : "Anlegen"; $("gsName").value = g.name || ""; $("gsOrt").value = g.ort || ""; $("gsIp").value = g.ip || ""; $("gsNote").value = g.note || "";
+  const others = devsOf(store.sel).filter(o => o !== id && !(id && isDesc(o, id)));
+  $("gsUp").innerHTML = '<option value="">– oberstes Gerät (z. B. Router) –</option>' + others.map(o => '<option value="'+o+'">'+esc((store.geraete[o].name || gtOf(store.geraete[o].typ).n) + " (" + gtOf(store.geraete[o].typ).s + ")")+'</option>').join("");
+  $("gsUp").value = g.up && others.includes(g.up) ? g.up : "";
+  gsPorts = Number(g.ports) || 0; $("gsPortsN").value = gsPorts && ![5,8,16,24,28,48,52].includes(gsPorts) ? gsPorts : "";
+  fillUpPorts(g.upPort); renderGrid();
+  const fids = Object.keys(store.felder).filter(f => store.felder[f].kunde === store.sel);
+  $("gsField").innerHTML = '<option value="">– kein Patchfeld –</option>' + fids.map(f => '<option value="'+f+'">'+esc(store.felder[f].name)+'</option>').join("");
+  $("gsField").value = g.via && fids.includes(g.via.f) ? g.via.f : ""; fillPorts(g.via && g.via.p);
+  $("gsDel").hidden = !id; $("gsDel").dataset.armed = ""; $("gsDel").textContent = "Gerät löschen";
+  renderGTyp(); $("gSheet").hidden = false; setTimeout(() => { if(!id) $("gsName").focus(); }, 80); }
+function fillPorts(sel){ const f = store.felder[$("gsField").value]; $("gsPortBox").hidden = !f; if(!f) return;
+  $("gsPort").innerHTML = Array.from({length: f.ports}, (_, i) => { const p = i + 1, o = devAtPort($("gsField").value, p), nm = (f.p[p] || {}).name;
+    return '<option value="'+p+'">Port '+p+(nm ? ' – ' + esc(nm) : '')+(o && o !== gsId ? ' (belegt: ' + esc(store.geraete[o].name || "") + ')' : '')+'</option>'; }).join("");
+  $("gsPort").value = sel ? String(sel) : "1"; }
+$("gsField").addEventListener("change", () => fillPorts());
+let gsPorts = 0;
+function renderPortsChips(){ $("gsPortsBox").hidden = !HASP.includes(gsTyp);
+  $("gsPortsC").innerHTML = [5,8,16,24,28,48,52].map(n => '<button type="button" data-n="'+n+'" aria-pressed="'+(n === gsPorts)+'">'+n+'</button>').join(""); }
+$("gsPortsC").addEventListener("click", e => { const b = e.target.closest("[data-n]"); if(!b) return; gsPorts = Number(b.dataset.n); $("gsPortsN").value = ""; renderPortsChips(); renderGrid(); });
+$("gsPortsN").addEventListener("input", () => { const n = parseInt($("gsPortsN").value, 10); gsPorts = n > 0 && n <= 96 ? n : 0; renderPortsChips(); renderGrid(); });
+function fillUpPorts(sel){ const u = store.geraete[$("gsUp").value]; const ok = u && hasPorts(u); $("gsUpPortBox").hidden = !ok; if(!ok) return;
+  $("gsUpPortLbl").textContent = "Port am " + (u.name || gtOf(u.typ).n);
+  $("gsUpPort").innerHTML = '<option value="">– Port wählen –</option>' + Array.from({length: Number(u.ports)}, (_, i) => { const n = i + 1, o = childAt($("gsUp").value, n);
+    return '<option value="'+n+'">Port '+n+(o && o !== gsId ? ' – belegt: ' + esc(store.geraete[o].name || "") : '')+'</option>'; }).join("");
+  let v = sel ? String(sel) : ""; if(!v){ for(let n = 1; n <= Number(u.ports); n++){ if(!childAt($("gsUp").value, n)){ v = String(n); break; } } } $("gsUpPort").value = v; }
+$("gsUp").addEventListener("change", () => fillUpPorts());
+function renderGrid(){ const show = gsId && HASP.includes(gsTyp) && gsPorts > 0; $("gsGridBox").hidden = !show; if(!show) return;
+  const cols = gsPorts <= 8 ? gsPorts : 12; $("gsGrid").style.setProperty("--cols", cols); const col = gtOf(gsTyp).c;
+  let h = ""; for(let n = 1; n <= gsPorts; n++){ const o = childAt(gsId, n), g = o && store.geraete[o];
+    h += '<button class="port" type="button" data-sp="'+n+'" style="--pc:'+(g ? gtOf(g.typ).c : "#4a535d")+'"><span class="jack"><i></i></span><span class="no">'+n+'</span><span class="lb">'+esc(g ? (g.name || gtOf(g.typ).s) : "")+'</span></button>'; }
+  // eigener Uplink-Port des Geräts selbst wird oben im Feld „Verbunden mit“ gewählt
+  $("gsGrid").innerHTML = h; }
+$("gsGrid").addEventListener("click", e => { const b = e.target.closest("[data-sp]"); if(!b || !gsId) return; const n = Number(b.dataset.sp), o = childAt(gsId, n); const parent = gsId;
+  saveGS(true); if(o) openGS(o); else openGS(null, {typ: "pc", up: parent, upPort: n}); });
+function renderGTyp(){ renderPortsChips(); renderGrid(); $("gsTyp").innerHTML = GT_TYPES.map(t => '<button type="button" data-t="'+t.k+'" aria-pressed="'+(t.k === gsTyp)+'"><span class="cdot" style="background:'+t.c+'"></span>'+t.n+'</button>').join(""); }
+$("gsTyp").addEventListener("click", e => { const b = e.target.closest("[data-t]"); if(b){ gsTyp = b.dataset.t; renderGTyp(); } });
+$("gsCancel").addEventListener("click", () => { $("gSheet").hidden = true; gsAfter = null; });
+$("gsOk").addEventListener("click", () => saveGS(false));
+function saveGS(keepOpen){
+  const g = gsId ? store.geraete[gsId] : {kunde: store.sel, created: Date.now()};
+  const oldVia = g.via ? Object.assign({}, g.via) : null;
+  g.typ = gsTyp; g.name = $("gsName").value.trim(); g.ort = $("gsOrt").value.trim(); g.ip = $("gsIp").value.trim(); g.note = $("gsNote").value.trim();
+  g.up = $("gsUp").value || undefined; const fid = $("gsField").value;
+  if(HASP.includes(g.typ) && gsPorts > 0){ g.ports = gsPorts; Object.values(store.geraete).forEach(o => { if(gsId && o.up === gsId && Number(o.upPort) > gsPorts) delete o.upPort; }); } else delete g.ports;
+  const u = g.up && store.geraete[g.up]; const up = u && hasPorts(u) ? Number($("gsUpPort").value) || 0 : 0;
+  if(up){ const o = childAt(g.up, up); if(o && o !== gsId){ delete store.geraete[o].upPort; GT.toast("Port " + up + " war mit „" + (store.geraete[o].name || "") + "“ belegt – dort jetzt ohne Port."); } g.upPort = up; } else delete g.upPort;
+  if(fid){ const p = Number($("gsPort").value); const o = devAtPort(fid, p); if(o && o !== gsId) delete store.geraete[o].via; g.via = {f: fid, p}; } else delete g.via;
+  if(!g.name) g.name = gtOf(g.typ).n + " " + (devsOf(store.sel).filter(id => store.geraete[id].typ === g.typ).length + (gsId ? 0 : 1));
+  const id = gsId || uid(); store.geraete[id] = g; g.updated = Date.now();
+  if(oldVia && (!g.via || oldVia.f !== g.via.f || Number(oldVia.p) !== Number(g.via.p))) clearAuto(oldVia);
+  if(g.via) syncPort(id);
+  save(); gsId = id;
+  if(keepOpen) return;
+  $("gSheet").hidden = true;
+  if(gsFromPort){ const back = gsFromPort; gsFromPort = null; renderField(); openPort(back); return; }
+  if(gsAfter){ const a = gsAfter; gsAfter = null; if(a === "swd" && HASP.includes(g.typ) && view !== "swd"){ swCur = id; } showView(a === "swd" && view === "sw" && HASP.includes(g.typ) ? "swd" : view); return; }
+  renderTopo(); }
+$("gsDel").addEventListener("click", () => { const b = $("gsDel"); if(b.dataset.armed !== "1"){ b.dataset.armed = "1"; b.textContent = "Wirklich löschen?"; return; }
+  const g = store.geraete[gsId]; if(g.via) clearAuto(g.via); Object.values(store.geraete).forEach(o => { if(o.up === gsId){ o.up = g.up; delete o.upPort; } }); delete store.geraete[gsId]; save(); $("gSheet").hidden = true; renderTopo(); });
+// Patchfeld-Port automatisch aus dem angeschlossenen Gerät füllen
+const DEV_COL = {pc:["blau","Daten"], srv:["lila","Server"], ap:["gruen","WLAN"], cam:["rot","Kamera"], dr:["gelb","Drucker"], tel:["orange","Telefon"], sw:["schwarz","Netzwerk"], fw:["schwarz","Netzwerk"], hub:["grau","Netzwerk"], son:["weiss","Sonstiges"]};
+function syncPort(devId){ const g = store.geraete[devId]; if(!g || !g.via) return; const f = store.felder[g.via.f]; if(!f) return; f.p = f.p || {}; f.legend = f.legend || {};
+  const P = f.p[g.via.p] || {}; const [ck, lab] = DEV_COL[g.typ] || DEV_COL.son; const wasAuto = !(P.name || P.c || P.note) || !!P.auto;
+  if(!P.name || P.auto) P.name = g.name || gtOf(g.typ).n;
+  if(!P.c || P.auto){ P.c = ck; if(!f.legend[ck] && !Object.values(f.p).some(o => o && o.c === ck && o !== P)) f.legend[ck] = lab; }
+  const info = [g.ip, g.ort].filter(Boolean).join(" · "); if(!P.note || P.auto) P.note = info;
+  if(wasAuto) P.auto = true; else delete P.auto; f.p[g.via.p] = P; f.updated = Date.now(); }
+function clearAuto(via){ const f = via && store.felder[via.f]; if(!f || !f.p) return; const P = f.p[via.p]; if(P && P.auto){ delete f.p[via.p]; } }
+// Gerät am Port (aus dem Port-Fenster)
+let gsFromPort = null;
+function renderPortDev(){ const f = store.felder[cur]; const kid = f.kunde || ""; const ids = devsOf(kid); const at = devAtPort(cur, curPort);
+  $("psDevBox").hidden = !kid; if(!kid) return;
+  $("psDev").innerHTML = '<option value="">– kein Gerät –</option>' + ids.map(id => '<option value="'+id+'">'+esc((store.geraete[id].name || "") + " (" + gtOf(store.geraete[id].typ).s + ")")+'</option>').join("") + '<option value="__new">+ Neues Gerät anlegen …</option>';
+  $("psDev").value = at || ""; }
+$("psDev").addEventListener("change", () => { const v = $("psDev").value; const f = store.felder[cur];
+  const old = devAtPort(cur, curPort); if(old && old !== v) delete store.geraete[old].via;
+  if(v === "__new"){ storePort(); $("pSheet").hidden = true; gsFromPort = curPort; store.sel = f.kunde; save(); openGS(null, {typ: "pc", via: {f: cur, p: curPort}, name: ((f.p || {})[curPort] || {}).name || ""}); return; }
+  if(old && old !== v){ const P = (f.p || {})[curPort]; if(P && P.auto) delete f.p[curPort]; }
+  if(v){ const d = store.geraete[v]; if(d.via && (d.via.f !== cur || Number(d.via.p) !== curPort)) clearAuto(d.via); d.via = {f: cur, p: curPort}; syncPort(v); }
+  save(); const P = (f.p || {})[curPort] || {}; $("psName").value = P.name || ""; $("psNote").value = P.note || ""; pc = P.c || ""; renderColors(); renderField(); });
+
+// ---------- Switches (Port-Dokumentation) ----------
+const VCOLS = ["#2f80ed","#30a46c","#f2811d","#8e4ec6","#e5484d","#0f9fb5","#b08900","#d6409f","#5d6b7c","#1b1f24"];
+const SPEEDS = ["Auto","100M","1G","2.5G","10G","SFP"];
+function swPortCol(sg, sid, n){ const P = (sg.pc || {})[n] || {}; if(P.off) return "#6b7785"; const v = P.vlan && (sg.vlans || []).find(x => String(x.id) === String(P.vlan)); if(v) return v.c;
+  const o = childAt(sid, n); if(o) return gtOf(store.geraete[o].typ).c; if(Number(sg.uplinkPort) === n) return "#e5484d"; return ""; }
+let swCur = null, swPort = 1;
+function renderSwList(){ const k = knd(store.sel); $("swHint").hidden = !!k; $("swBody").hidden = !k; if(!k) return;
+  const ids = devsOf(store.sel).filter(id => HASP.includes(store.geraete[id].typ)).sort((a,b) => (store.geraete[a].name || "").localeCompare(store.geraete[b].name || "", "de", {numeric:true}));
+  $("swList").innerHTML = ids.map(id => { const g = store.geraete[id], t = gtOf(g.typ), used = hasPorts(g) ? Array.from({length: g.ports}, (_, i) => childAt(id, i+1)).filter(Boolean).length : 0;
+    return '<button class="fitem" type="button" data-s="'+id+'"><span class="tic" style="background:'+t.c+';color:#fff;font:800 13px/1 var(--f-body)">'+t.s+'</span><span><b>'+esc(g.name || t.n)+'</b><span>'+esc([[g.hersteller, g.modell].filter(Boolean).join(" ") || t.n, hasPorts(g) ? used + "/" + g.ports + " Ports belegt" : "Ports noch festlegen", g.ip].filter(Boolean).join(" · "))+'</span></span><i class="go"></i></button>'; }).join("") || '<p class="empty">Noch kein Switch. Leg oben einen an – oder in der Topologie.</p>'; }
+$("swList").addEventListener("click", e => { const b = e.target.closest("[data-s]"); if(b){ swCur = b.dataset.s; showView("swd"); } });
+$("swNew").addEventListener("click", () => { gsAfter = "swd"; openGS(null, {typ: "sw", ports: 24}); });
+$("swPick").addEventListener("click", () => showView("kunden"));
+let gsAfter = null;
+function renderSwD(){ const g = store.geraete[swCur]; if(!g){ showView("sw"); return; } g.pc = g.pc || {}; g.vlans = g.vlans || []; const t = gtOf(g.typ), np = Number(g.ports) || 0;
+  $("swName").textContent = g.name || t.n;
+  $("swMeta").textContent = [t.n, [g.hersteller, g.modell].filter(Boolean).join(" "), g.ip ? "IP " + g.ip : "", g.ort, g.up && store.geraete[g.up] ? "Uplink: " + store.geraete[g.up].name + (g.upPort ? " Port " + g.upPort : "") : ""].filter(Boolean).join(" · ");
+  $("swNoPorts").hidden = np > 0; $("swPanelBox").hidden = !np;
+  $("swBrand").innerHTML = esc(g.hersteller || t.n) + '<span class="mdl">' + esc([g.modell, np ? np + " Ports" : ""].filter(Boolean).join(" · ")) + '</span>';
+  const sfp = sfpOf(g), rj = np - sfp;
+  const pb = (n, bot, isSfp) => { const P = g.pc[n] || {}, col = swPortCol(g, swCur, n);
+    return '<button class="port sp'+(bot ? ' bot' : '')+(isSfp ? ' sfp' : '')+(P.off ? ' off' : '')+(Number(g.uplinkPort) === n ? ' up' : '')+'" type="button" data-sp="'+n+'" style="--pc:'+(col || (isSfp ? "#9aa4ae" : "#5f6873"))+'" aria-label="Port '+n+'"><span class="no">'+n+'</span><span class="jack"><i></i><u class="l1'+(swLinked(g, swCur, n) ? ' on' : '')+'"></u><u class="l2'+(P.poe && !P.off ? ' on' : '')+'"></u></span></button>'; };
+  const blk = (start, cnt, isSfp) => { if(cnt <= 0) return ""; const two = isSfp ? cnt > 2 : cnt > 12, cols = two ? Math.ceil(cnt / 2) : cnt; let top = "", bot = "";
+    for(let c = 0; c < cols; c++){ if(two){ const a = start + c*2; top += pb(a, false, isSfp); bot += a + 1 < start + cnt ? pb(a + 1, true, isSfp) : '<span></span>'; } else top += pb(start + c, false, isSfp); }
+    return '<div class="swblk'+(isSfp ? ' sfpb' : '')+'" style="--cols:'+cols+'">'+top+bot+'</div>'; };
+  let h = ""; if(rj <= 12) h += blk(1, rj); else for(let s0 = 1; s0 <= rj; s0 += 24) h += blk(s0, Math.min(24, rj - s0 + 1));
+  h += blk(rj + 1, sfp, true);
+  $("swPorts").innerHTML = h;
+  $("swVl").innerHTML = g.vlans.map((v, i) => '<button type="button" data-v="'+i+'"><span class="dot" style="background:'+v.c+'"></span>VLAN '+esc(v.id)+(v.name ? ' · ' + esc(v.name) : '')+'</button>').join("") + '<button type="button" data-v="new">+ VLAN</button>';
+  $("swPl").innerHTML = Array.from({length: np}, (_, i) => { const n = i + 1, P = g.pc[n] || {}, o = childAt(swCur, n), og = o && store.geraete[o], col = swPortCol(g, swCur, n);
+    const sub = [og ? "→ " + (og.name || gtOf(og.typ).n) : "", Number(g.uplinkPort) === n ? "Uplink" : "", P.vlan ? "VLAN " + P.vlan : "", (P.tagged || []).length ? "tagged " + P.tagged.join(",") : "", P.poe ? "PoE" : "", P.speed && P.speed !== "Auto" ? P.speed : "", P.off ? "deaktiviert" : "", P.note].filter(Boolean).join(" · ");
+    return '<button class="prow'+(P.name || og ? '' : ' free')+'" type="button" data-sp="'+n+'"><span class="n">'+n+'</span><span class="dot" style="background:'+(col || 'transparent')+(col ? '' : ';box-shadow:inset 0 0 0 1.5px var(--line)')+'"></span><span class="t">'+esc(P.name || (og ? og.name : "frei"))+(sub ? '<small>'+esc(sub)+'</small>' : '')+'</span><span class="e"></span></button>'; }).join("");
+  const used = Array.from({length: np}, (_, i) => childAt(swCur, i+1) || (g.pc[i+1] || {}).name).filter(Boolean).length; $("swStat").textContent = used + " / " + np + " belegt";
+}
+$("swBack").addEventListener("click", () => showView("sw"));
+$("swEdit").addEventListener("click", () => { gsAfter = "swd"; openGS(swCur); });
+$("swInfoBtn").addEventListener("click", () => { const g = store.geraete[swCur]; ["hersteller","modell","sn","mac","fw","ip","mask","gw","mgmt","ort","sfp"].forEach(k => $("si_" + k).value = g[k] || ""); $("si_sfp").value = g.sfp === undefined ? "" : g.sfp; $("siSheet").hidden = false; });
+$("siOk").addEventListener("click", () => { const g = store.geraete[swCur]; ["hersteller","modell","sn","mac","fw","ip","mask","gw","mgmt","ort","sfp"].forEach(k => { const v = $("si_" + k).value.trim(); if(v) g[k] = v; else delete g[k]; }); save(); $("siSheet").hidden = true; renderSwD(); });
+$("siCancel").addEventListener("click", () => { $("siSheet").hidden = true; });
+$("swPorts").addEventListener("click", e => { const b = e.target.closest("[data-sp]"); if(b) openSP(Number(b.dataset.sp)); });
+$("swPl").addEventListener("click", e => { const b = e.target.closest("[data-sp]"); if(b) openSP(Number(b.dataset.sp)); });
+$("swPdf").addEventListener("click", async () => { const b = $("swPdf"), t = b.textContent; b.disabled = true; b.textContent = "PDF …";
+  const g = store.geraete[swCur], k = knd(g.kunde || store.sel); try{ await exportReport({kid: g.kunde || store.sel, cover: true, sw: [swCur]}, "Switch_" + safeFn(k ? k.name : "") + "_" + safeFn(g.name) + ".pdf", "Switch " + g.name); }
+  catch(e){ GT.toast("PDF konnte nicht erstellt werden."); } finally{ b.disabled = false; b.textContent = t; } });
+// VLAN
+let vlIdx = null, vlCol = VCOLS[0];
+$("swVl").addEventListener("click", e => { const b = e.target.closest("[data-v]"); if(!b) return; const g = store.geraete[swCur]; vlIdx = b.dataset.v === "new" ? null : Number(b.dataset.v); const v = vlIdx == null ? {} : g.vlans[vlIdx];
+  $("vlT").textContent = vlIdx == null ? "Neues VLAN" : "VLAN bearbeiten"; $("vlId").value = v.id || ""; $("vlName").value = v.name || ""; vlCol = v.c || VCOLS[g.vlans.length % VCOLS.length]; $("vlDel").hidden = vlIdx == null; $("vlDel").dataset.armed = "";
+  renderVlCols(); $("vlSheet").hidden = false; setTimeout(() => $("vlId").focus(), 60); });
+function renderVlCols(){ $("vlCols").innerHTML = VCOLS.map(c => '<button type="button" data-c="'+c+'" aria-pressed="'+(c === vlCol)+'"><span class="dot" style="background:'+c+'"></span></button>').join(""); }
+$("vlCols").addEventListener("click", e => { const b = e.target.closest("[data-c]"); if(b){ vlCol = b.dataset.c; renderVlCols(); } });
+$("vlOk").addEventListener("click", () => { const g = store.geraete[swCur]; const id = parseInt($("vlId").value, 10); if(!(id >= 1 && id <= 4094)){ GT.toast("VLAN-ID bitte zwischen 1 und 4094."); return; }
+  if(g.vlans.some((v, i) => i !== vlIdx && Number(v.id) === id)){ GT.toast("VLAN " + id + " gibt es schon."); return; }
+  const v = {id, name: $("vlName").value.trim(), c: vlCol}; if(vlIdx == null) g.vlans.push(v); else { const old = g.vlans[vlIdx].id; g.vlans[vlIdx] = v; Object.values(g.pc).forEach(P => { if(String(P.vlan) === String(old)) P.vlan = id; }); }
+  g.vlans.sort((a,b) => a.id - b.id); save(); $("vlSheet").hidden = true; renderSwD(); });
+$("vlDel").addEventListener("click", () => { const b = $("vlDel"); if(b.dataset.armed !== "1"){ b.dataset.armed = "1"; b.textContent = "Wirklich löschen?"; return; }
+  const g = store.geraete[swCur]; const id = g.vlans[vlIdx].id; g.vlans.splice(vlIdx, 1); Object.values(g.pc).forEach(P => { if(String(P.vlan) === String(id)) delete P.vlan; if(P.tagged) P.tagged = P.tagged.filter(t => String(t) !== String(id)); }); save(); $("vlSheet").hidden = true; renderSwD(); });
+$("vlCancel").addEventListener("click", () => { $("vlSheet").hidden = true; });
+// Port eines Switches
+let spTag = [], spPoe = false, spSpeed = "Auto", spOff = false;
+function openSP(n){ const g = store.geraete[swCur]; swPort = n; const P = (g.pc || {})[n] || {};
+  $("spT").textContent = "Port " + n + " von " + g.ports + " – " + (g.name || ""); $("spName").value = P.name || ""; $("spNote").value = P.note || "";
+  spTag = (P.tagged || []).map(String); spPoe = !!P.poe; spSpeed = P.speed || "Auto"; spOff = !!P.off;
+  $("spVlan").innerHTML = '<option value="">– kein / Standard –</option>' + (g.vlans || []).map(v => '<option value="'+v.id+'">VLAN '+v.id+(v.name ? ' · ' + esc(v.name) : '')+'</option>').join(""); $("spVlan").value = P.vlan ? String(P.vlan) : "";
+  const others = devsOf(g.kunde || store.sel).filter(id => id !== swCur && !isDesc(swCur, id));
+  $("spDev").innerHTML = '<option value="">– kein Gerät –</option>' + others.map(id => '<option value="'+id+'">'+esc((store.geraete[id].name || "") + " (" + gtOf(store.geraete[id].typ).s + ")")+'</option>').join("") + '<option value="__new">+ Neues Gerät anlegen …</option>';
+  $("spDev").value = childAt(swCur, n) || ""; $("spUplink").setAttribute("aria-pressed", String(Number(g.uplinkPort) === n));
+  $("spUplink").textContent = Number(g.uplinkPort) === n ? "✓ Uplink-Port" + (g.up && store.geraete[g.up] ? " zu " + store.geraete[g.up].name : "") : "Als Uplink-Port markieren";
+  $("spPrev").disabled = n <= 1; $("spNext").disabled = n >= g.ports; renderSpChips(); $("spSheet").hidden = false; }
+function renderSpChips(){ const g = store.geraete[swCur];
+  $("spTagged").innerHTML = (g.vlans || []).map(v => '<button type="button" data-t="'+v.id+'" aria-pressed="'+spTag.includes(String(v.id))+'">'+v.id+(v.name ? ' ' + esc(v.name) : '')+'</button>').join("") || '<span class="note">Erst VLANs anlegen (in der Switch-Ansicht „+ VLAN“).</span>';
+  $("spPoe").innerHTML = '<button type="button" data-p="0" aria-pressed="'+!spPoe+'">aus</button><button type="button" data-p="1" aria-pressed="'+spPoe+'">PoE an</button>';
+  $("spSpeed").innerHTML = SPEEDS.map(x => '<button type="button" data-x="'+x+'" aria-pressed="'+(x === spSpeed)+'">'+x+'</button>').join("");
+  $("spState").innerHTML = '<button type="button" data-o="0" aria-pressed="'+!spOff+'">aktiv</button><button type="button" data-o="1" aria-pressed="'+spOff+'">deaktiviert</button>'; }
+$("spTagged").addEventListener("click", e => { const b = e.target.closest("[data-t]"); if(!b) return; const v = b.dataset.t; spTag = spTag.includes(v) ? spTag.filter(x => x !== v) : spTag.concat(v); renderSpChips(); });
+$("spPoe").addEventListener("click", e => { const b = e.target.closest("[data-p]"); if(b){ spPoe = b.dataset.p === "1"; renderSpChips(); } });
+$("spSpeed").addEventListener("click", e => { const b = e.target.closest("[data-x]"); if(b){ spSpeed = b.dataset.x; renderSpChips(); } });
+$("spState").addEventListener("click", e => { const b = e.target.closest("[data-o]"); if(b){ spOff = b.dataset.o === "1"; renderSpChips(); } });
+$("spUplink").addEventListener("click", () => { storeSP(); const g = store.geraete[swCur]; if(Number(g.uplinkPort) === swPort) delete g.uplinkPort; else g.uplinkPort = swPort; save(); openSP(swPort); });
+function storeSP(){ const g = store.geraete[swCur]; g.pc = g.pc || {}; const P = {};
+  const name = $("spName").value.trim(), note = $("spNote").value.trim(), vl = $("spVlan").value;
+  if(name) P.name = name; if(note) P.note = note; if(vl) P.vlan = Number(vl); if(spTag.length) P.tagged = spTag.map(Number).sort((a,b) => a-b); if(spPoe) P.poe = true; if(spSpeed !== "Auto") P.speed = spSpeed; if(spOff) P.off = true;
+  if(Object.keys(P).length) g.pc[swPort] = P; else delete g.pc[swPort];
+  const dv = $("spDev").value, old = childAt(swCur, swPort);
+  if(dv !== "__new"){ if(old && old !== dv) delete store.geraete[old].upPort; if(dv){ const d = store.geraete[dv]; d.up = swCur; d.upPort = swPort; } }
+  g.updated = Date.now(); save(); }
+$("spOk").addEventListener("click", () => { storeSP(); $("spSheet").hidden = true; renderSwD(); });
+$("spPrev").addEventListener("click", () => { storeSP(); renderSwD(); openSP(swPort - 1); });
+$("spNext").addEventListener("click", () => { storeSP(); renderSwD(); openSP(swPort + 1); });
+$("spCancel").addEventListener("click", () => { $("spSheet").hidden = true; });
+$("spDev").addEventListener("change", () => { if($("spDev").value !== "__new") return; storeSP(); $("spSheet").hidden = true; gsAfter = "swd"; openGS(null, {typ: "pc", up: swCur, upPort: swPort, name: $("spName").value.trim()}); });
+
+// ---------- Export ----------
+let xKid = null, xSel = new Set(), xFree = true;
+const xParts = kid => { const pf = Object.keys(store.felder).filter(id => store.felder[id].kunde === kid).sort(byName); const sw = swOrder(kid); const dv = devsOf(kid);
+  return {pf, sw, dv, all: ["cover"].concat(dv.length ? ["topo", "devs"] : []).concat(sw.map(id => "sw:" + id)).concat(pf.map(id => "pf:" + id))}; };
+function renderExp(){ const k = knd(store.sel); $("xHint").hidden = !!k; $("xBody").hidden = !k; if(!k) return;
+  const X = xParts(store.sel); if(xKid !== store.sel){ xKid = store.sel; xSel = new Set(X.all); }
+  xSel.forEach(v => { if(!X.all.includes(v)) xSel.delete(v); });
+  $("xKunde").textContent = k.name;
+  const it = (key, t, sub, dis) => '<button class="xi" type="button" data-x="'+key+'" aria-pressed="'+(!dis && xSel.has(key))+'"'+(dis ? ' disabled' : '')+'><span class="ck"></span><span><b>'+esc(t)+'</b>'+(sub ? '<small>'+esc(sub)+'</small>' : '')+'</span></button>';
+  const grp = (t, keys) => '<div class="xh"><h3>'+t+'</h3>'+(keys.length ? '<button type="button" data-g="'+keys.join(",")+'">'+(keys.every(x => xSel.has(x)) ? 'keine' : 'alle')+'</button>' : '')+'</div>';
+  let h = grp("Allgemein", []) + it("cover", "Kundendaten & Inhaltsverzeichnis", "Adresse, Ansprechpartner, Seitenübersicht")
+    + it("topo", "Topologie-Grafik", X.dv.length ? "Wer ist mit wem verbunden" : "Noch keine Geräte angelegt", !X.dv.length) + it("devs", "Geräteliste", X.dv.length ? X.dv.length + " Geräte mit IP und Anschluss" : "Noch keine Geräte angelegt", !X.dv.length);
+  const swK = X.sw.map(id => "sw:" + id), pfK = X.pf.map(id => "pf:" + id);
+  h += grp("Switches (" + X.sw.length + ")", swK) + (X.sw.length ? X.sw.map(id => { const g = store.geraete[id]; return it("sw:" + id, g.name || "Switch", [gtOf(g.typ).n, [g.hersteller, g.modell].filter(Boolean).join(" "), g.ports + " Ports", g.ort].filter(Boolean).join(" · ")); }).join("") : '<p class="note">Noch keine Switches mit Portanzahl.</p>');
+  h += grp("Patchfelder (" + X.pf.length + ")", pfK) + (X.pf.length ? X.pf.map(id => { const f = store.felder[id]; return it("pf:" + id, f.name, [isLwl(f) ? "Glasfaser · " + f.ports + " × " + lwlDesc(f) : f.ports + " Ports Kupfer", f.ort].filter(Boolean).join(" · ")); }).join("") : '<p class="note">Noch keine Patchfelder.</p>');
+  $("xList").innerHTML = h;
+  $("xOpt").innerHTML = '<button class="xi" type="button" data-o="free" aria-pressed="'+xFree+'"><span class="ck"></span><span><b>Freie Patchfeld-Ports mitlisten</b><small>Aus: in den Tabellen nur belegte Ports</small></span></button>';
+  const n = xSel.size; $("xPdf").textContent = n ? "PDF erstellen (" + n + (n === 1 ? " Teil" : " Teile") + ")" : "Bitte etwas auswählen"; $("xPdf").disabled = !n;
+}
+$("xPick").addEventListener("click", () => showView("kunden"));
+$("xList").addEventListener("click", e => { const b = e.target.closest("[data-x]"), g = e.target.closest("[data-g]");
+  if(b && !b.disabled){ const k = b.dataset.x; if(xSel.has(k)) xSel.delete(k); else xSel.add(k); renderExp(); }
+  if(g){ const ks = g.dataset.g.split(","); const all = ks.every(x => xSel.has(x)); ks.forEach(x => all ? xSel.delete(x) : xSel.add(x)); renderExp(); } });
+$("xOpt").addEventListener("click", e => { if(e.target.closest("[data-o]")){ xFree = !xFree; renderExp(); } });
+$("xQuick").addEventListener("click", e => { const b = e.target.closest("[data-q]"); if(!b) return; const X = xParts(store.sel), q = b.dataset.q;
+  xSel = new Set(q === "all" ? X.all : q === "net" ? ["cover"].concat(X.dv.length ? ["topo", "devs"] : []) : q === "sw" ? ["cover"].concat(X.sw.map(id => "sw:" + id)) : ["cover"].concat(X.pf.map(id => "pf:" + id)));
+  renderExp(); GT.toast(b.textContent + " ausgewählt"); });
+$("xPdf").addEventListener("click", () => { const X = xParts(store.sel), k = knd(store.sel);
+  const opt = {kid: store.sel, cover: xSel.has("cover"), topo: xSel.has("topo"), devs: xSel.has("devs"), sw: X.sw.filter(id => xSel.has("sw:" + id)), felder: X.pf.filter(id => xSel.has("pf:" + id)), freePorts: xFree};
+  const full = X.all.every(x => xSel.has(x));
+  runPdf($("xPdf"), opt, "Netzwerk-Doku_" + safeFn(k ? k.name : "") + (full ? "" : "_Auszug") + ".pdf"); });
+
+// ---------- Drag & Drop ----------
+const freeSwPort = (pid, skip) => { const g = store.geraete[pid]; for(let n = 1; n <= Number(g.ports); n++){ if(n === Number(g.uplinkPort)) continue; const c = childAt(pid, n); if(!c || c === skip) return n; } return null; };
+const freeFieldPort = (fid, skip) => { const f = store.felder[fid]; for(let n = 1; n <= f.ports; n++){ const P = (f.p || {})[n] || {}; const d = devAtPort(fid, n); if(d === skip) return n; if(!d && !(P.name && !P.auto)) return n; } return null; };
+GT.drag($("topo"), {item: ".tn[data-g]", target: ".tn", scroller: $("topo").parentElement, label: it => "↳ " + ((store.geraete[it.dataset.g] || {}).name || "Gerät"),
+  accept: (it, t) => { const id = it.dataset.g, tg = t.dataset.g || t.dataset.par; return !t.dataset.g || (tg !== id && !isDesc(tg, id)); },
+  drop: (it, t) => { const id = it.dataset.g, g = store.geraete[id]; if(!g) return; const nm = g.name || gtOf(g.typ).n;
+    if(t.dataset.g){ const tid = t.dataset.g, tg = store.geraete[tid]; if(tid === id || isDesc(tid, id)){ GT.toast("Nicht möglich – das wäre eine Schleife."); return; }
+      const same = g.up === tid; g.up = tid; if(hasPorts(tg)){ const n = same && Number(g.upPort) ? g.upPort : freeSwPort(tid, id); if(n) g.upPort = n; else delete g.upPort; } else delete g.upPort;
+      g.updated = Date.now(); save(); renderTopo(); GT.toast(nm + " → " + (tg.name || gtOf(tg.typ).n) + (g.upPort && hasPorts(tg) ? " Port " + g.upPort : "")); return; }
+    const fid = t.dataset.pf, par = t.dataset.par; const f = store.felder[fid]; if(!f) return;
+    if(par && (par === id || isDesc(par, id))){ GT.toast("Nicht möglich – das wäre eine Schleife."); return; }
+    const pn = g.via && g.via.f === fid ? g.via.p : freeFieldPort(fid, id); if(!pn){ GT.toast("Im Patchfeld " + f.name + " ist kein Port mehr frei."); return; }
+    if(g.via && (g.via.f !== fid || g.via.p !== pn)) clearAuto(g.via);
+    if(par && store.geraete[par]){ const same = g.up === par; g.up = par; const pg = store.geraete[par]; if(hasPorts(pg) && !(same && g.upPort)){ const n = freeSwPort(par, id); if(n) g.upPort = n; else delete g.upPort; } }
+    g.via = {f: fid, p: pn}; syncPort(id); g.updated = Date.now(); save(); renderTopo(); GT.toast(nm + " → " + f.name + " Port " + pn); }});
+function swapFieldPorts(fid, a, b){ const f = store.felder[fid]; f.p = f.p || {}; const A = f.p[a], Bp = f.p[b]; if(Bp) f.p[a] = Bp; else delete f.p[a]; if(A) f.p[b] = A; else delete f.p[b];
+  const da = devAtPort(fid, a), db = devAtPort(fid, b); if(da) store.geraete[da].via.p = b; if(db) store.geraete[db].via.p = a; f.updated = Date.now(); save(); }
+GT.drag($("ports"), {item: ".port", target: ".port", drop: (it, t) => { const a = Number(it.dataset.p), b = Number(t.dataset.p); if(!cur || a === b) return; swapFieldPorts(cur, a, b); renderField(); GT.toast("Port " + a + " ↔ " + b + " getauscht"); }});
+function swapSwPorts(sid, a, b){ const g = store.geraete[sid]; g.pc = g.pc || {}; const A = g.pc[a], Bp = g.pc[b]; if(Bp) g.pc[a] = Bp; else delete g.pc[a]; if(A) g.pc[b] = A; else delete g.pc[b];
+  const ca = childAt(sid, a), cb = childAt(sid, b); if(ca) store.geraete[ca].upPort = b; if(cb) store.geraete[cb].upPort = a;
+  if(Number(g.uplinkPort) === a) g.uplinkPort = b; else if(Number(g.uplinkPort) === b) g.uplinkPort = a; g.updated = Date.now(); save(); }
+GT.drag($("swPorts"), {item: ".port", target: ".port", drop: (it, t) => { const a = Number(it.dataset.sp), b = Number(t.dataset.sp); if(!swCur || a === b) return; swapSwPorts(swCur, a, b); renderSwD(); GT.toast("Port " + a + " ↔ " + b + " getauscht"); }});
 
 // ---------- Ansichten ----------
-const TITLES = {kunden:"Kunden", list:"Patchfelder", field:"Patchfeld", how:"RJ45-Stecker"};
-const LEADS = {kunden:"Kunden anlegen und auswählen – danach siehst du nur ihre Patchfelder.", list:"Patchfelder anlegen, Ports benennen und mit Farben kennzeichnen.", field:"Ports benennen und mit Farben kennzeichnen.", how:"EasyLAN-Stecker richtig auflegen – Schritt für Schritt."};
-function showView(v){ view = v; $("vKunden").hidden = v !== "kunden"; $("vList").hidden = v !== "list"; $("vField").hidden = v !== "field"; $("vHow").hidden = v !== "how";
+const TITLES = {exp:"Doku exportieren", sw:"Switches", swd:"Switch", topo:"Topologie", kunden:"Kunden", list:"Patchfelder", field:"Patchfeld", how:"RJ45-Stecker"};
+const LEADS = {exp:"Ganze Dokumentation oder nur Teile davon als PDF für den Kunden.", sw:"Switches dokumentieren: Ports, VLANs, PoE und angeschlossene Geräte.", swd:"Ports benennen, VLAN und PoE festlegen, Geräte zuordnen.", topo:"Wer ist mit wem verbunden? Geräte anlegen und den Uplink wählen.", kunden:"Kunden anlegen und auswählen – danach siehst du nur ihre Patchfelder.", list:"Patchfelder anlegen, Ports benennen und mit Farben kennzeichnen.", field:"Ports benennen und mit Farben kennzeichnen.", how:"EasyLAN-Stecker richtig auflegen – Schritt für Schritt."};
+function showView(v){ view = v; $("vKunden").hidden = v !== "kunden"; $("vList").hidden = v !== "list"; $("vField").hidden = v !== "field"; $("vHow").hidden = v !== "how"; $("vTopo").hidden = v !== "topo"; $("vSw").hidden = v !== "sw"; $("vSwD").hidden = v !== "swd"; $("vExp").hidden = v !== "exp";
   $("pageTitle").textContent = TITLES[v]; $("lead").textContent = LEADS[v];
-  document.querySelectorAll("#nav [data-view]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === (v === "field" ? "list" : v))));
-  if(v === "list") renderList(); if(v === "kunden") renderKunden(); }
+  document.querySelectorAll("#nav [data-view]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === (v === "field" ? "list" : v === "swd" ? "sw" : v))));
+  if(v === "list") renderList(); if(v === "kunden") renderKunden(); if(v === "topo") renderTopo(); if(v === "sw") renderSwList(); if(v === "swd") renderSwD(); if(v === "exp") renderExp(); }
 $("nav").addEventListener("click", e => { const b = e.target.closest("[data-view]"); if(!b) return; if(b.dataset.view === "list" && cur && view !== "field"){ showView("field"); renderField(); } else showView(b.dataset.view); window.scrollTo(0,0); });
 
 showView(Object.keys(store.kunden).length || Object.keys(store.felder).length ? "list" : "kunden"); renderPins();
@@ -1372,6 +2006,8 @@ setTimeout(() => GT.tour("net", [
   {sel:'#nav [data-view="kunden"]', fixed:true, title:"Kunden", text:"Lege zuerst einen Kunden an und wähle ihn aus – wie bei den Brandmeldeanlagen. Kunden von dort kannst du direkt übernehmen."},
   {sel:"#newBtn", title:"Patchfeld anlegen", text:"Name, Standort und Anzahl der Ports (8, 12, 16, 24, 48 oder eigene Zahl) eingeben."},
   {sel:"#flist", title:"Deine Patchfelder", text:"Antippen öffnet das Patchfeld. Dort tippst du einen Port an, gibst ihm eine Bezeichnung und eine Farbe."},
+  {sel:'#nav [data-view="topo"]', fixed:true, title:"Topologie", text:"Geräte wie Router, Switch, Access Point oder PC anlegen und festlegen, wer mit wem verbunden ist – auch über welchen Patchfeld-Port. Erscheint als Grafik im PDF."},
+  {sel:'#nav [data-view="exp"]', fixed:true, title:"Doku exportieren", text:"Hier stellst du die PDF-Dokumentation zusammen: ganze Doku oder nur Teile – z. B. nur ein Switch oder einzelne Patchfelder."},
   {sel:'#nav [data-view="how"]', fixed:true, title:"RJ45-Stecker", text:"Bebilderte Anleitung für den EasyLAN-Stecker mit Farbbelegung T568A/B und worauf du achten musst."}
 ]), 700);
 })();
