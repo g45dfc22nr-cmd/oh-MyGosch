@@ -74,6 +74,11 @@ h1{margin:4px 2px 0;font:800 30px/1.1 var(--f-display);letter-spacing:-.02em}
 .kitem .tic{background:var(--accent-soft);color:var(--accent)}
 .kitem.on{box-shadow:inset 0 0 0 2px var(--accent),var(--shadow)}
 .kcard{display:grid;gap:6px}
+.kdadd{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.kdadd button{border:0;border-radius:16px;background:var(--surface);box-shadow:var(--shadow),inset 0 0 0 1px var(--line);min-height:64px;display:grid;place-items:center;gap:2px;font:700 14px/1.1 var(--f-body);color:var(--ink);padding:8px 4px}
+.kdadd button b{font:800 22px/1 var(--f-body);color:var(--accent)}
+:root[data-design="neon"] .kdadd button b{color:var(--neon-cyan,#35c8ff)}
+.btn.sm{min-height:34px;padding:0 12px;font-size:13px}
 .kcard .kn{display:flex;gap:10px;align-items:baseline;justify-content:space-between}
 .kcard .kn b{font:800 20px/1.2 var(--f-display)}
 .kcard .kn small{color:var(--muted);font-weight:700}
@@ -834,6 +839,17 @@ header.top{position:static!important;border-bottom:0!important}
     <div class="fl" id="klist"></div>
   </section>
 
+  <!-- ======== Kundenmappe ======== -->
+  <section id="vKd" style="display:grid;gap:12px" hidden>
+    <div class="row" style="justify-content:space-between"><button class="btn" type="button" id="kdBack">‹ Alle Kunden</button><button class="btn" type="button" id="kdEdit">Kundendaten</button></div>
+    <div class="card kcard" id="kdCard"></div>
+    <div class="kdadd"><button type="button" data-add="sw"><b>+</b>Switch</button><button type="button" data-add="pf"><b>+</b>Patchfeld</button><button type="button" data-add="dev"><b>+</b>Gerät</button></div>
+    <div class="card" style="display:grid;gap:8px"><div class="row" style="justify-content:space-between"><h2 id="kdSwH">Switches</h2><button class="btn ghost sm" type="button" data-go="sw">alle ›</button></div><div class="fl" id="kdSw"></div></div>
+    <div class="card" style="display:grid;gap:8px"><div class="row" style="justify-content:space-between"><h2 id="kdPfH">Patchfelder</h2><button class="btn ghost sm" type="button" data-go="list">alle ›</button></div><div class="fl" id="kdPf"></div></div>
+    <div class="card" style="display:grid;gap:8px"><div class="row" style="justify-content:space-between"><h2 id="kdDvH">Geräte</h2><button class="btn ghost sm" type="button" data-go="topo">Topologie ›</button></div><div class="plist" id="kdDv"></div></div>
+    <button class="btn primary wide" type="button" id="kdExp">Doku exportieren</button>
+  </section>
+
   <!-- ======== Patchfelder ======== -->
   <section id="vList" style="display:grid;gap:12px">
     <div class="card kcard" id="kCard" hidden></div>
@@ -1180,6 +1196,33 @@ $("kCard").addEventListener("click", e => { const b = e.target.closest("button")
   if(b.id === "kPdf"){ showView("exp"); window.scrollTo(0,0); return; }
   if(b.id === "kEdit") openKS(store.sel); else if(b.id === "kSwitch") showView("kunden"); else if(b.id === "kAll"){ store.sel = null; save(); renderList(); } });
 
+// ---------- Kundenmappe ----------
+const kdCounts = kid => { const d = devsOf(kid); const sw = d.filter(id => HASP.includes(store.geraete[id].typ)).length; return {sw, pf: Object.values(store.felder).filter(f => f.kunde === kid).length, dv: d.length - sw}; };
+function renderKd(){ const k = knd(store.sel); if(!k){ showView("kunden"); return; }
+  const adr = [k.strasse, [k.plz, k.ort].filter(Boolean).join(" ")].filter(Boolean).join(", ");
+  $("kdCard").innerHTML = '<div class="kn"><b>'+esc(k.name)+'</b><small>'+(k.nr ? 'Nr. '+esc(k.nr) : '')+'</small></div>' + (adr ? '<p>'+esc(adr)+'</p>' : '') + (k.ansprech ? '<p>'+esc(k.ansprech)+'</p>' : '')
+    + ((k.tel || k.mail) ? '<p>'+(k.tel ? '<a href="tel:'+esc(k.tel.replace(/[^0-9+]/g, ""))+'">'+esc(k.tel)+'</a>' : '')+(k.tel && k.mail ? ' · ' : '')+(k.mail ? '<a href="mailto:'+esc(k.mail)+'">'+esc(k.mail)+'</a>' : '')+'</p>' : '') + (k.notiz ? '<p class="note">'+esc(k.notiz)+'</p>' : '');
+  const byN = (a,b) => (store.geraete[a].name || "").localeCompare(store.geraete[b].name || "", "de", {numeric:true});
+  const sws = devsOf(store.sel).filter(id => HASP.includes(store.geraete[id].typ)).sort(byN);
+  $("kdSwH").textContent = "Switches & Router (" + sws.length + ")";
+  $("kdSw").innerHTML = sws.map(id => { const g = store.geraete[id], t = gtOf(g.typ), used = hasPorts(g) ? Array.from({length: g.ports}, (_, i) => childAt(id, i+1)).filter(Boolean).length : 0;
+    return '<button class="fitem" type="button" data-s="'+id+'"><span class="tic" style="background:'+t.c+';color:#fff;font:800 13px/1 var(--f-body)">'+t.s+'</span><span><b>'+esc(g.name || t.n)+'</b><span>'+esc([[g.hersteller, g.modell].filter(Boolean).join(" ") || t.n, hasPorts(g) ? used + "/" + g.ports + " Ports belegt" : "Ports noch festlegen", g.ip].filter(Boolean).join(" · "))+'</span></span><i class="go"></i></button>'; }).join("") || '<p class="empty">Kein Switch – wird keiner gebraucht, einfach leer lassen.</p>';
+  const pfs = Object.keys(store.felder).filter(id => store.felder[id].kunde === store.sel).sort(byName);
+  $("kdPfH").textContent = "Patchfelder (" + pfs.length + ")"; $("kdPf").innerHTML = pfs.map(fItem).join("") || '<p class="empty">Kein Patchfeld – wird keins gebraucht, einfach leer lassen.</p>';
+  const dvs = devsOf(store.sel).filter(id => !HASP.includes(store.geraete[id].typ)).sort(byN);
+  $("kdDvH").textContent = "Geräte (" + dvs.length + ")";
+  $("kdDv").innerHTML = dvs.map(id => { const g = store.geraete[id], t = gtOf(g.typ), up = g.up && store.geraete[g.up];
+    return '<button class="prow" type="button" data-g="'+id+'"><span class="n" style="color:'+t.c+';font-size:11px">'+t.s+'</span><span class="dot" style="background:'+t.c+'"></span><span class="t">'+esc(g.name || t.n)+'<small>'+esc([t.n, g.ip, up ? "an " + (up.name || gtOf(up.typ).n) + (g.upPort && hasPorts(up) ? " Port " + g.upPort : "") : "", viaText(g) ? "PF " + viaText(g) : ""].filter(Boolean).join(" · "))+'</small></span><span class="e">'+esc(g.ort || "")+'</span></button>'; }).join("") || '<p class="empty">Noch keine Geräte (PC, Access Point, Kamera …).</p>'; }
+$("kdBack").addEventListener("click", () => showView("kunden"));
+$("kdEdit").addEventListener("click", () => openKS(store.sel));
+$("kdExp").addEventListener("click", () => { showView("exp"); window.scrollTo(0, 0); });
+$("kdSw").addEventListener("click", e => { const b = e.target.closest("[data-s]"); if(b){ swCur = b.dataset.s; showView("swd"); window.scrollTo(0, 0); } });
+$("kdPf").addEventListener("click", e => { const b = e.target.closest("[data-id]"); if(b) openField(b.dataset.id); });
+$("kdDv").addEventListener("click", e => { const b = e.target.closest("[data-g]"); if(b) openGS(b.dataset.g); });
+document.querySelectorAll("#vKd [data-go]").forEach(b => b.addEventListener("click", () => { showView(b.dataset.go); window.scrollTo(0, 0); }));
+$("vKd").querySelector(".kdadd").addEventListener("click", e => { const b = e.target.closest("[data-add]"); if(!b) return; const a = b.dataset.add;
+  if(a === "sw"){ gsAfter = "swd"; openGS(null, {typ: "sw", ports: 24}); } else if(a === "pf") openFS(null); else openGS(null, {typ: "pc"}); });
+
 // ---------- Kunden ----------
 function nextNr(){ const n = Object.values(store.kunden).map(k => parseInt(k.nr, 10)).filter(x => x > 0); return String(n.length ? Math.max(...n) + 1 : 1001); }
 function renderKunden(){
@@ -1188,11 +1231,12 @@ function renderKunden(){
     .sort((a,b) => (store.kunden[a].name || "").localeCompare(store.kunden[b].name || "", "de"));
   if(!Object.keys(store.kunden).length){ $("klist").innerHTML = '<p class="empty">Noch kein Kunde. Leg oben den ersten an.</p>'; return; }
   if(!ids.length){ $("klist").innerHTML = '<p class="empty">Kein Kunde gefunden.</p>'; return; }
-  $("klist").innerHTML = ids.map(id => { const k = store.kunden[id]; const n = Object.values(store.felder).filter(f => f.kunde === id).length;
-    return '<button class="fitem kitem'+(id === store.sel ? ' on' : '')+'" type="button" data-k="'+id+'"><span class="tic"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></span><span><b>'+esc(k.name)+'</b><span>'+[k.nr ? 'Nr. '+esc(k.nr) : '', esc(k.ort || ''), n + (n === 1 ? ' Patchfeld' : ' Patchfelder')].filter(Boolean).join(' · ')+'</span></span><i class="go"></i></button>'; }).join("");
+  $("klist").innerHTML = ids.map(id => { const k = store.kunden[id]; const c = kdCounts(id); const pl = (n, a, b) => n ? n + " " + (n === 1 ? a : b) : "";
+    const cnt = [pl(c.sw, "Switch", "Switches"), pl(c.pf, "Patchfeld", "Patchfelder"), pl(c.dv, "Gerät", "Geräte")].filter(Boolean).join(" · ") || "noch leer";
+    return '<button class="fitem kitem'+(id === store.sel ? ' on' : '')+'" type="button" data-k="'+id+'"><span class="tic"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></span><span><b>'+esc(k.name)+'</b><span>'+[k.nr ? 'Nr. '+esc(k.nr) : '', esc(k.ort || ''), cnt].filter(Boolean).join(' · ')+'</span></span><i class="go"></i></button>'; }).join("");
 }
 $("kq").addEventListener("input", renderKunden);
-$("klist").addEventListener("click", e => { const b = e.target.closest("[data-k]"); if(!b) return; store.sel = b.dataset.k; save(); cur = null; showView("list"); window.scrollTo(0,0); });
+$("klist").addEventListener("click", e => { const b = e.target.closest("[data-k]"); if(!b) return; store.sel = b.dataset.k; save(); cur = null; showView("kd"); window.scrollTo(0,0); });
 const KF = ["nr","name","ansprech","strasse","plz","ort","tel","mail","notiz"], KID = {nr:"ksNr",name:"ksName",ansprech:"ksAnsprech",strasse:"ksStrasse",plz:"ksPlz",ort:"ksOrt",tel:"ksTel",mail:"ksMail",notiz:"ksNotiz"};
 let ksId = null;
 function bmaKunden(){ try{ const b = JSON.parse(localStorage.getItem("bma.local") || "null"); const m = (b && b.kunden) || {}; return Object.values(m).filter(k => k && k.name); }catch(e){ return []; } }
@@ -1208,11 +1252,11 @@ $("newKunde").addEventListener("click", () => openKS(null));
 $("ksCancel").addEventListener("click", () => { $("kSheet").hidden = true; });
 $("ksOk").addEventListener("click", () => { const name = $("ksName").value.trim(); if(!name){ GT.toast("Bitte Firma bzw. Namen eintragen."); $("ksName").focus(); return; }
   const k = ksId ? store.kunden[ksId] : {created: Date.now()}; KF.forEach(f => k[f] = $(KID[f]).value.trim()); k.updated = Date.now();
-  if(!ksId){ ksId = uid(); store.kunden[ksId] = k; store.sel = ksId; save(); $("kSheet").hidden = true; cur = null; showView("list"); GT.toast("Kunde angelegt – jetzt Patchfelder anlegen."); return; }
-  save(); $("kSheet").hidden = true; renderList(); renderKunden(); GT.toast("Gespeichert."); });
-$("ksDel").addEventListener("click", () => { const b = $("ksDel"); const n = Object.values(store.felder).filter(f => f.kunde === ksId).length;
-  if(b.dataset.armed !== "1"){ b.dataset.armed = "1"; b.textContent = n ? "Wirklich löschen? (" + n + " Patchfeld" + (n === 1 ? " bleibt" : "er bleiben") + " ohne Kunde)" : "Wirklich löschen?"; return; }
-  Object.values(store.felder).forEach(f => { if(f.kunde === ksId) delete f.kunde; }); delete store.kunden[ksId]; if(store.sel === ksId) store.sel = null; save(); $("kSheet").hidden = true; showView("kunden"); GT.toast("Kunde gelöscht."); });
+  if(!ksId){ ksId = uid(); store.kunden[ksId] = k; store.sel = ksId; save(); $("kSheet").hidden = true; cur = null; showView("kd"); GT.toast("Kunde angelegt – jetzt Switch, Patchfeld oder Geräte anlegen."); return; }
+  save(); $("kSheet").hidden = true; renderList(); renderKunden(); if(view === "kd") renderKd(); GT.toast("Gespeichert."); });
+$("ksDel").addEventListener("click", () => { const b = $("ksDel"); const c = kdCounts(ksId), n = c.pf + c.sw + c.dv;
+  if(b.dataset.armed !== "1"){ b.dataset.armed = "1"; b.textContent = n ? "Wirklich löschen? (" + n + " Einträge bleiben ohne Kunde)" : "Wirklich löschen?"; return; }
+  Object.values(store.felder).forEach(f => { if(f.kunde === ksId) delete f.kunde; }); Object.values(store.geraete).forEach(g => { if(g.kunde === ksId) g.kunde = ""; }); delete store.kunden[ksId]; if(store.sel === ksId) store.sel = null; save(); $("kSheet").hidden = true; showView("kunden"); GT.toast("Kunde gelöscht."); });
 
 $("flist").addEventListener("click", e => { const b = e.target.closest("[data-id]"); if(b) openField(b.dataset.id); });
 
@@ -1819,10 +1863,10 @@ function saveGS(keepOpen){
   if(keepOpen) return;
   $("gSheet").hidden = true;
   if(gsFromPort){ const back = gsFromPort; gsFromPort = null; renderField(); openPort(back); return; }
-  if(gsAfter){ const a = gsAfter; gsAfter = null; if(a === "swd" && HASP.includes(g.typ) && view !== "swd"){ swCur = id; } showView(a === "swd" && view === "sw" && HASP.includes(g.typ) ? "swd" : view); return; }
-  renderTopo(); }
+  if(gsAfter){ const a = gsAfter; gsAfter = null; if(a === "swd" && HASP.includes(g.typ) && view !== "swd"){ swCur = id; } showView(a === "swd" && (view === "sw" || view === "kd") && HASP.includes(g.typ) ? "swd" : view); return; }
+  renderTopo(); if(view === "kd") renderKd(); }
 $("gsDel").addEventListener("click", () => { const b = $("gsDel"); if(b.dataset.armed !== "1"){ b.dataset.armed = "1"; b.textContent = "Wirklich löschen?"; return; }
-  const g = store.geraete[gsId]; if(g.via) clearAuto(g.via); Object.values(store.geraete).forEach(o => { if(o.up === gsId){ o.up = g.up; delete o.upPort; } }); delete store.geraete[gsId]; save(); $("gSheet").hidden = true; renderTopo(); });
+  const g = store.geraete[gsId]; if(g.via) clearAuto(g.via); Object.values(store.geraete).forEach(o => { if(o.up === gsId){ o.up = g.up; delete o.upPort; } }); delete store.geraete[gsId]; save(); $("gSheet").hidden = true; renderTopo(); if(view === "kd") renderKd(); else if(view === "swd") showView("sw"); });
 // Patchfeld-Port automatisch aus dem angeschlossenen Gerät füllen
 const DEV_COL = {pc:["blau","Daten"], srv:["lila","Server"], ap:["gruen","WLAN"], cam:["rot","Kamera"], dr:["gelb","Drucker"], tel:["orange","Telefon"], sw:["schwarz","Netzwerk"], fw:["schwarz","Netzwerk"], hub:["grau","Netzwerk"], son:["weiss","Sonstiges"]};
 function syncPort(devId){ const g = store.geraete[devId]; if(!g || !g.via) return; const f = store.felder[g.via.f]; if(!f) return; f.p = f.p || {}; f.legend = f.legend || {};
@@ -1993,17 +2037,17 @@ function swapSwPorts(sid, a, b){ const g = store.geraete[sid]; g.pc = g.pc || {}
 GT.drag($("swPorts"), {item: ".port", target: ".port", drop: (it, t) => { const a = Number(it.dataset.sp), b = Number(t.dataset.sp); if(!swCur || a === b) return; swapSwPorts(swCur, a, b); renderSwD(); GT.toast("Port " + a + " ↔ " + b + " getauscht"); }});
 
 // ---------- Ansichten ----------
-const TITLES = {exp:"Doku exportieren", sw:"Switches", swd:"Switch", topo:"Topologie", kunden:"Kunden", list:"Patchfelder", field:"Patchfeld", how:"RJ45-Stecker"};
-const LEADS = {exp:"Ganze Dokumentation oder nur Teile davon als PDF für den Kunden.", sw:"Switches dokumentieren: Ports, VLANs, PoE und angeschlossene Geräte.", swd:"Ports benennen, VLAN und PoE festlegen, Geräte zuordnen.", topo:"Wer ist mit wem verbunden? Geräte anlegen und den Uplink wählen.", kunden:"Kunden anlegen und auswählen – danach siehst du nur ihre Patchfelder.", list:"Patchfelder anlegen, Ports benennen und mit Farben kennzeichnen.", field:"Ports benennen und mit Farben kennzeichnen.", how:"EasyLAN-Stecker richtig auflegen – Schritt für Schritt."};
-function showView(v){ view = v; $("vKunden").hidden = v !== "kunden"; $("vList").hidden = v !== "list"; $("vField").hidden = v !== "field"; $("vHow").hidden = v !== "how"; $("vTopo").hidden = v !== "topo"; $("vSw").hidden = v !== "sw"; $("vSwD").hidden = v !== "swd"; $("vExp").hidden = v !== "exp";
+const TITLES = {kd:"Kunde", exp:"Doku exportieren", sw:"Switches", swd:"Switch", topo:"Topologie", kunden:"Kunden", list:"Patchfelder", field:"Patchfeld", how:"RJ45-Stecker"};
+const LEADS = {kd:"Alles zu diesem Kunden: Switches, Patchfelder und Geräte – jeweils nur das, was gebraucht wird.", exp:"Ganze Dokumentation oder nur Teile davon als PDF für den Kunden.", sw:"Switches dokumentieren: Ports, VLANs, PoE und angeschlossene Geräte.", swd:"Ports benennen, VLAN und PoE festlegen, Geräte zuordnen.", topo:"Wer ist mit wem verbunden? Geräte anlegen und den Uplink wählen.", kunden:"Kunden anlegen und auswählen – danach siehst du nur ihre Patchfelder.", list:"Patchfelder anlegen, Ports benennen und mit Farben kennzeichnen.", field:"Ports benennen und mit Farben kennzeichnen.", how:"EasyLAN-Stecker richtig auflegen – Schritt für Schritt."};
+function showView(v){ view = v; $("vKunden").hidden = v !== "kunden"; $("vKd").hidden = v !== "kd"; $("vList").hidden = v !== "list"; $("vField").hidden = v !== "field"; $("vHow").hidden = v !== "how"; $("vTopo").hidden = v !== "topo"; $("vSw").hidden = v !== "sw"; $("vSwD").hidden = v !== "swd"; $("vExp").hidden = v !== "exp";
   $("pageTitle").textContent = TITLES[v]; $("lead").textContent = LEADS[v];
-  document.querySelectorAll("#nav [data-view]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === (v === "field" ? "list" : v === "swd" ? "sw" : v))));
-  if(v === "list") renderList(); if(v === "kunden") renderKunden(); if(v === "topo") renderTopo(); if(v === "sw") renderSwList(); if(v === "swd") renderSwD(); if(v === "exp") renderExp(); }
-$("nav").addEventListener("click", e => { const b = e.target.closest("[data-view]"); if(!b) return; if(b.dataset.view === "list" && cur && view !== "field"){ showView("field"); renderField(); } else showView(b.dataset.view); window.scrollTo(0,0); });
+  document.querySelectorAll("#nav [data-view]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === (v === "field" ? "list" : v === "swd" ? "sw" : v === "kd" ? "kunden" : v))));
+  if(v === "list") renderList(); if(v === "kunden") renderKunden(); if(v === "kd") renderKd(); if(v === "topo") renderTopo(); if(v === "sw") renderSwList(); if(v === "swd") renderSwD(); if(v === "exp") renderExp(); }
+$("nav").addEventListener("click", e => { const b = e.target.closest("[data-view]"); if(!b) return; if(b.dataset.view === "list" && cur && view !== "field"){ showView("field"); renderField(); } else if(b.dataset.view === "kunden" && knd(store.sel) && view !== "kd") showView("kd"); else showView(b.dataset.view); window.scrollTo(0,0); });
 
-showView(Object.keys(store.kunden).length || Object.keys(store.felder).length ? "list" : "kunden"); renderPins();
+showView(knd(store.sel) ? "kd" : Object.keys(store.kunden).length || Object.keys(store.felder).length ? "list" : "kunden"); renderPins();
 setTimeout(() => GT.tour("net", [
-  {sel:'#nav [data-view="kunden"]', fixed:true, title:"Kunden", text:"Lege zuerst einen Kunden an und wähle ihn aus – wie bei den Brandmeldeanlagen. Kunden von dort kannst du direkt übernehmen."},
+  {sel:'#nav [data-view="kunden"]', fixed:true, title:"Kunden", text:"Lege zuerst einen Kunden an und wähle ihn aus – wie bei den Brandmeldeanlagen. In der Kundenmappe legst du dann nur an, was gebraucht wird: Switch, Patchfeld oder Geräte. Kunden von dort kannst du direkt übernehmen."},
   {sel:"#newBtn", title:"Patchfeld anlegen", text:"Name, Standort und Anzahl der Ports (8, 12, 16, 24, 48 oder eigene Zahl) eingeben."},
   {sel:"#flist", title:"Deine Patchfelder", text:"Antippen öffnet das Patchfeld. Dort tippst du einen Port an, gibst ihm eine Bezeichnung und eine Farbe."},
   {sel:'#nav [data-view="topo"]', fixed:true, title:"Topologie", text:"Geräte wie Router, Switch, Access Point oder PC anlegen und festlegen, wer mit wem verbunden ist – auch über welchen Patchfeld-Port. Erscheint als Grafik im PDF."},

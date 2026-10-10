@@ -75,6 +75,11 @@ h1{margin:4px 2px 0;font:800 30px/1.1 var(--f-display);letter-spacing:-.02em}
 .kitem .tic{background:var(--accent-soft);color:var(--accent)}
 .kitem.on{box-shadow:inset 0 0 0 2px var(--accent),var(--shadow)}
 .kcard{display:grid;gap:6px}
+.kdadd{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.kdadd button{border:0;border-radius:16px;background:var(--surface);box-shadow:var(--shadow),inset 0 0 0 1px var(--line);min-height:64px;display:grid;place-items:center;gap:2px;font:700 14px/1.1 var(--f-body);color:var(--ink);padding:8px 4px}
+.kdadd button b{font:800 22px/1 var(--f-body);color:var(--accent)}
+:root[data-design="neon"] .kdadd button b{color:var(--neon-cyan,#35c8ff)}
+.btn.sm{min-height:34px;padding:0 12px;font-size:13px}
 .kcard .kn{display:flex;gap:10px;align-items:baseline;justify-content:space-between}
 .kcard .kn b{font:800 20px/1.2 var(--f-display)}
 .kcard .kn small{color:var(--muted);font-weight:700}
@@ -255,6 +260,33 @@ h1{margin:4px 2px 0;font:800 30px/1.1 var(--f-display);letter-spacing:-.02em}
 .dev.res .rt{color:#8b98a5;font-weight:700}
 .dev.son .wn{background:#2fb36b}
 .dev .fg{position:absolute;left:0;right:0;top:0;height:3px;z-index:2}
+/* Prüfprotokoll */
+.prsum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.prsum div{background:var(--surface);border-radius:14px;padding:10px 8px;text-align:center;box-shadow:inset 0 0 0 1px var(--line)}
+.prsum b{display:block;font-size:22px;line-height:1.1}.prsum span{font-size:12px;color:var(--muted)}
+.prsum .ok b{color:#1f9d55}.prsum .bad b{color:var(--danger)}
+.pk{display:grid}
+.pk .pi{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.pk .pi:first-child{border-top:0}
+.pk .pi span{font-size:14px;line-height:1.3;-webkit-hyphens:auto;hyphens:auto;overflow-wrap:anywhere;min-width:0}
+.tri{display:grid;grid-template-columns:repeat(3,auto);gap:3px;background:var(--sunk);border-radius:99px;padding:3px}
+.tri button{border:0;background:none;border-radius:99px;font:700 12px/1 var(--f-body);padding:8px 9px;color:var(--muted)}
+.tri button[aria-pressed="true"][data-s="ok"]{background:#1f9d55;color:#fff}
+.tri button[aria-pressed="true"][data-s="m"]{background:var(--danger);color:#fff}
+.tri button[aria-pressed="true"][data-s="na"]{background:#8b98a5;color:#fff}
+.ml{display:grid}
+.mrow{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:8px;align-items:center;padding:10px 2px;border:0;border-top:1px solid var(--line);background:none;text-align:left;width:100%;color:var(--ink);font:inherit}
+.mrow:first-child{border-top:0}
+.mrow .k{font-weight:800}.mrow .t{font-size:15px;font-weight:650;min-width:0}.mrow .t small{display:block;font-weight:500;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.badge{font:800 11px/1 var(--f-body);padding:6px 8px;border-radius:99px;background:var(--sunk);color:var(--muted);white-space:nowrap}
+.badge.ok{background:#1f9d55;color:#fff}.badge.bad{background:var(--danger);color:#fff}.badge.part{background:#f2b705;color:#2b2200}
+.meval{display:grid;gap:4px;font-size:13.5px}
+.meval div{display:flex;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:10px;background:var(--sunk)}
+.meval .ok{background:rgba(31,157,85,.14)}.meval .bad{background:var(--danger-soft);color:var(--danger);font-weight:700}
+.sigbox{position:relative;background:#fff;border-radius:12px;box-shadow:inset 0 0 0 1.5px var(--line)}
+.sigbox canvas{display:block;width:100%;height:120px;touch-action:none;border-radius:12px}
+.sigbox button{position:absolute;right:6px;top:6px}
+.btn.sm{min-height:34px;padding:0 12px;font-size:13px}
 .addslot{position:relative;z-index:1;height:132px;border:2px dashed #8b98a5;border-radius:4px;background:rgba(255,255,255,.55);color:#5d6b7c;font:800 18px/1 var(--f-body);display:grid;place-items:center;cursor:pointer}
 .railinfo{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin:-6px 2px 0}
 .railinfo.over{color:var(--danger);font-weight:700}
@@ -922,7 +954,46 @@ header.top{position:static!important;border-bottom:0!important}
       <div class="ctab" id="ctab"></div>
     </div>
     <button class="btn primary wide" type="button" id="pdfField">Belegungsplan für die Tür (PDF)</button>
+    <button class="btn wide" type="button" id="prOpen">Prüfprotokoll VDE 0100-600</button>
   </section>
+  <!-- Prüfprotokoll VDE 0100-600 -->
+  <section id="vPr" style="display:grid;gap:14px" hidden>
+    <div class="row" style="justify-content:space-between">
+      <button class="btn" type="button" id="prBack">‹ Verteilung</button>
+      <button class="btn" type="button" id="prPdfTop">PDF</button>
+    </div>
+    <div class="warnbox" id="prDemoWarn" hidden><b>Beispielwerte eingetragen.</b> Das Protokoll ist nur zum Vorführen und wird im PDF deutlich als „Beispiel“ markiert. Für eine echte Prüfung unten „Protokoll zurücksetzen“.</div>
+    <div class="prsum" id="prSum"></div>
+    <div class="card" style="display:grid;gap:10px">
+      <h2>1 · Allgemeines</h2>
+      <div class="field">Prüfanlass<div class="chips" id="prArt"></div></div>
+      <div class="frow"><label class="field">Prüfdatum<input id="prDatum" type="date"></label><label class="field">Prüfer<input id="prPruefer" autocomplete="name"></label></div>
+      <div class="field">Netzform<div class="chips" id="prNetz"></div></div>
+      <div class="frow"><label class="field">Nennspannung<input id="prUn" placeholder="230/400 V" autocomplete="off"></label><label class="field">Vorsicherung / Zuleitung<input id="prZul" autocomplete="off"></label></div>
+      <div class="frow"><label class="field">Messgerät<input id="prGeraet" placeholder="z. B. Installationstester" autocomplete="off"></label><label class="field">Serien-Nr. / Kalibr.<input id="prSn" autocomplete="off" placeholder="SN · 03/2027"></label></div>
+    </div>
+    <div class="card" style="display:grid;gap:6px"><div class="row" style="justify-content:space-between"><h2>2 · Besichtigen</h2><button class="btn ghost sm" type="button" data-allok="bes">alle i.O.</button></div><div class="pk" id="prBes"></div></div>
+    <div class="card" style="display:grid;gap:6px"><div class="row" style="justify-content:space-between"><h2>3 · Erproben</h2><button class="btn ghost sm" type="button" data-allok="erp">alle i.O.</button></div><div class="pk" id="prErp"></div></div>
+    <div class="card" style="display:grid;gap:10px">
+      <h2>4 · Messen – Anlage</h2>
+      <div class="frow"><label class="field">PA-Schiene (Ω)<input id="prRpa" inputmode="decimal" placeholder="z. B. 0,12"></label><label class="field">Erdung RA (Ω)<input id="prRa" inputmode="decimal" placeholder="bei TT"></label></div>
+      <div class="field">Prüfspannung Isolationsmessung<div class="chips" id="prIso"></div></div>
+      <p class="note">Grenzwerte in der App (vereinfacht): R<sub>iso</sub> ≥ 1 MΩ · Z<sub>s</sub> ≤ U<sub>0</sub>/I<sub>a</sub> (B = 5·I<sub>n</sub>, C = 10·I<sub>n</sub>, D = 20·I<sub>n</sub>) · RCD t<sub>A</sub> ≤ 300 ms bei I<sub>Δn</sub> · U<sub>B</sub> ≤ 50 V. Die Bewertung trifft immer die Prüfperson.</p>
+    </div>
+    <div class="card" style="display:grid;gap:6px"><div class="row" style="justify-content:space-between"><h2>5 · Stromkreise</h2><span class="chip" id="prKrStat"></span></div><p class="note">Kommen automatisch aus der Verteilung. Antippen zum Messwerte eintragen.</p><div class="ml" id="prKr"></div></div>
+    <div class="card" style="display:grid;gap:6px" id="prRcdCard"><h2>6 · Fehlerstrom-Schutzeinrichtungen (RCD)</h2><div class="ml" id="prRcd"></div></div>
+    <div class="card" style="display:grid;gap:10px">
+      <h2>7 · Ergebnis</h2>
+      <div class="field">Gesamtergebnis<div class="chips" id="prErg"></div></div>
+      <label class="field">Festgestellte Mängel / Bemerkungen<textarea id="prMaengel" rows="3" placeholder="z. B. Stromkreis F7 Isolationswert zu niedrig – Leitung prüfen"></textarea></label>
+      <label class="field">Nächster Prüftermin (empfohlen)<input id="prNext" type="date"></label>
+      <div class="field">Unterschrift Prüfer<div class="sigbox"><canvas id="prSig" width="600" height="180"></canvas><button class="btn ghost sm" type="button" id="prSigClr">löschen</button></div></div>
+    </div>
+    <button class="btn primary wide" type="button" id="prPdf">Prüfprotokoll als PDF</button>
+    <p class="note" style="text-align:center">Grenzwerte vereinfacht – die Bewertung trifft immer die Prüfperson.</p>
+    <div class="row" style="justify-content:center"><button class="btn ghost sm" type="button" id="prDemo">Beispielwerte zum Vorführen</button><button class="btn ghost sm" type="button" id="prReset">Protokoll zurücksetzen</button></div>
+  </section>
+
 
   <!-- Export -->
   <section id="vExp" style="display:grid;gap:12px" hidden>
@@ -979,6 +1050,29 @@ header.top{position:static!important;border-bottom:0!important}
     <button class="btn primary wide" type="button" id="dsOk">Fertig</button>
     <button class="btn danger" type="button" id="dsDel" hidden>Gerät entfernen</button>
     <button class="btn ghost" type="button" id="dsCancel">Abbrechen</button>
+  </div>
+</div>
+<!-- Messwerte Stromkreis -->
+<div class="sheet-bg" id="mSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="msT">
+    <h2 id="msT">Stromkreis</h2>
+    <p class="note" id="msSub"></p>
+    <label class="field">Leitung (Typ, Adern × Querschnitt)<input id="msLtg" autocomplete="off" list="ltgList"></label>
+    <div class="three">
+      <label class="field">Riso (MΩ)<input id="msRiso" inputmode="decimal" placeholder="> 500"></label>
+      <label class="field">RLO (Ω)<input id="msRlo" inputmode="decimal" placeholder="0,35"></label>
+      <label class="field">Zs (Ω)<input id="msZs" inputmode="decimal" placeholder="0,62"></label>
+    </div>
+    <div class="three" id="msRcdBox">
+      <label class="field">IΔn (mA)<input id="msIdn" inputmode="numeric" readonly></label>
+      <label class="field">tA (ms)<input id="msTa" inputmode="decimal" placeholder="24"></label>
+      <label class="field">UB (V)<input id="msUb" inputmode="decimal" placeholder="1,2"></label>
+    </div>
+    <div class="field" id="msTbBox">Prüftaste „T“<div class="chips" id="msTb"></div></div>
+    <div class="meval" id="msEval"></div>
+    <label class="field">Bemerkung<input id="msNote" autocomplete="off"></label>
+    <div class="move"><button class="btn" type="button" id="msPrev">‹ zurück</button><button class="btn primary" type="button" id="msOk">Fertig</button><button class="btn" type="button" id="msNext">weiter ›</button></div>
+    <button class="btn ghost" type="button" id="msCancel">Abbrechen</button>
   </div>
 </div>
 <!-- Kunde -->
@@ -1063,7 +1157,7 @@ let cur = null, view = "list";
 // ---------- Liste ----------
 const tic = '<span class="tic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9.5h18M3 15h18"/><path d="M7 6.2v1M10 6.2v1M13 6.2v1M7 11.7v1M10 11.7v1"/></svg></span>';
 const vItem = id => { const v = store.vt[id]; const n = (v.devs || []).filter(d => d.t !== "res").length;
-  return '<button class="fitem" type="button" data-id="'+id+'">'+tic+'<span><b>'+esc(v.name)+'</b><span>'+v.rows+' × '+v.te+' TE · '+n+' Geräte'+(v.ort ? ' · '+esc(v.ort) : '')+'</span></span><i class="go"></i></button>'; };
+  return '<button class="fitem" type="button" data-id="'+id+'">'+tic+'<span><b>'+esc(v.name)+'</b><span>'+v.rows+' × '+v.te+' TE · '+n+' Geräte'+(v.ort ? ' · '+esc(v.ort) : '')+(v.pr && v.pr.datum && !v.pr.demo ? ' · geprüft '+esc(dDEs(v.pr.datum)) : '')+'</span></span><i class="go"></i></button>'; };
 const byName = (a,b) => (store.vt[a].name || "").localeCompare(store.vt[b].name || "", "de", {numeric:true});
 function renderList(){
   kunden = kGet();
@@ -1125,7 +1219,7 @@ function rowsOf(v){ const R = Array.from({length: v.rows}, () => []); (v.devs ||
 function fiGroups(v){ const fis = (v.devs || []).filter(d => d.t === "fi"); const m = {}; fis.forEach((d, i) => m[d.id] = GCOL[i % GCOL.length]); return m; }
 function renderField(){
   const v = store.vt[cur]; if(!v){ showView("list"); return; } v.devs = v.devs || [];
-  $("fName").textContent = v.name;
+  $("fName").textContent = v.name; $("prOpen").textContent = "Prüfprotokoll VDE 0100-600" + (v.pr && v.pr.datum ? (v.pr.demo ? " · Beispiel" : " · " + dDEs(v.pr.datum)) : "");
   $("fMeta").textContent = [knd(v.kunde) ? knd(v.kunde).name : "", v.ort, v.rows + " Reihen × " + v.te + " TE", v.zul ? "Zuleitung " + v.zul : "", v.vor ? "Vorsicherung " + v.vor : "", v.netz].filter(Boolean).join(" · ");
   const G = fiGroups(v); const R = rowsOf(v);
   let h = '<div class="hd"><span>'+esc((v.name || "").toUpperCase())+'</span><span>'+v.rows+' × '+v.te+' TE</span></div>';
@@ -1168,7 +1262,7 @@ GT.drag($("cab"), {item: ".dev", target: ".dev, .addslot, .rail", drop: (it, t, 
 
 // ---------- Export ----------
 let xKid = null, xSel = new Set();
-const xParts = kid => { const vt = Object.keys(store.vt).filter(id => store.vt[id].kunde === kid).sort(byName); return {vt, all: ["cover", "plan", "table", "hint"].concat(vt.map(id => "vt:" + id))}; };
+const xParts = kid => { const vt = Object.keys(store.vt).filter(id => store.vt[id].kunde === kid).sort(byName); return {vt, all: ["cover", "plan", "table", "hint", "pruef"].concat(vt.map(id => "vt:" + id))}; };
 function renderExp(){ kunden = kGet(); const k = knd(store.sel); $("xHint").hidden = !!k; $("xBody").hidden = !k; if(!k) return;
   const X = xParts(store.sel); if(xKid !== store.sel){ xKid = store.sel; xSel = new Set(X.all); } xSel.forEach(x => { if(!X.all.includes(x)) xSel.delete(x); });
   $("xKunde").textContent = k.name;
@@ -1176,7 +1270,7 @@ function renderExp(){ kunden = kGet(); const k = knd(store.sel); $("xHint").hidd
   const vk = X.vt.map(id => "vt:" + id);
   let h = '<div class="xh"><h3>Verteilungen ('+X.vt.length+')</h3>'+(vk.length ? '<button type="button" data-g="'+vk.join(",")+'">'+(vk.every(x => xSel.has(x)) ? 'keine' : 'alle')+'</button>' : '')+'</div>';
   h += X.vt.length ? X.vt.map(id => { const v = store.vt[id], n = (v.devs || []).filter(d => d.t !== "res" && d.t !== "kl").length; return it("vt:" + id, v.name, [v.ort, v.rows + " × " + v.te + " TE", n + " Geräte"].filter(Boolean).join(" · ")); }).join("") : '<p class="note">Für diesen Kunden gibt es noch keine Verteilung.</p>';
-  h += '<div class="xh"><h3>Inhalt je Verteilung</h3></div>' + it("plan", "Verteilungsplan (Grafik)", "Reihen mit allen Geräten und Beschriftungsstreifen") + it("table", "Stromkreis-Tabelle", "Nach FI gruppiert, mit Raum und Leitung") + it("hint", "FI-Prüfhinweis", "Gelber Hinweis: Prüftaste regelmäßig drücken");
+  h += '<div class="xh"><h3>Inhalt je Verteilung</h3></div>' + it("plan", "Verteilungsplan (Grafik)", "Reihen mit allen Geräten und Beschriftungsstreifen") + it("table", "Stromkreis-Tabelle", "Nach FI gruppiert, mit Raum und Leitung") + it("hint", "FI-Prüfhinweis", "Gelber Hinweis: Prüftaste regelmäßig drücken") + it("pruef", "Prüfprotokoll VDE 0100-600", X.vt.some(id => store.vt[id].pr) ? "Wird angehängt, wo eins angelegt ist" : "Noch für keine Verteilung angelegt");
   h += '<div class="xh"><h3>Allgemein</h3></div>' + it("cover", "Deckblatt mit Kundendaten & Inhalt", "Eigene erste Seite mit Seitenübersicht");
   $("xList").innerHTML = h;
   const nv = X.vt.filter(id => xSel.has("vt:" + id)).length, ok = nv && (xSel.has("plan") || xSel.has("table"));
@@ -1189,7 +1283,7 @@ $("xQuick").addEventListener("click", e => { const b = e.target.closest("[data-q
   xSel = new Set(q === "all" ? X.all : q === "door" ? ["plan", "table", "hint"].concat(vt) : q === "plan" ? ["plan"].concat(vt) : ["table"].concat(vt)); renderExp(); GT.toast(b.textContent + " ausgewählt"); });
 $("xPdf").addEventListener("click", async () => { const X = xParts(store.sel), k = knd(store.sel), b = $("xPdf"), t = b.textContent; const ids = X.vt.filter(id => xSel.has("vt:" + id));
   const full = X.all.every(x => xSel.has(x)); b.disabled = true; b.textContent = "PDF wird erstellt …";
-  try{ const r = await elPdf(ids, {cover: xSel.has("cover"), plan: xSel.has("plan"), table: xSel.has("table"), hint: xSel.has("hint")});
+  try{ const r = await elPdf(ids, {cover: xSel.has("cover"), plan: xSel.has("plan"), table: xSel.has("table"), hint: xSel.has("hint"), pruef: xSel.has("pruef")});
     if(r) await GT.deliver(r.B.output("Elektro-Dokumentation " + (k ? k.name : "")), "Elektro-Doku_" + safeFn(k ? k.name : "") + (ids.length === 1 ? "_" + safeFn(store.vt[ids[0]].name) : "") + (full ? "" : "_Auszug") + ".pdf", "PDF teilen"); }
   catch(err){ console.error(err); GT.toast("PDF konnte nicht erstellt werden."); } finally{ b.disabled = false; renderExp(); } });
 
@@ -1429,7 +1523,7 @@ function drawSwitchPDF(B, sg, sid, x0, y0, w){
 }
 
 async function elPdf(ids, opt){
-  opt = Object.assign({cover: false, plan: true, table: true, hint: true}, opt || {});
+  opt = Object.assign({cover: false, plan: true, table: true, hint: true, pruef: false}, opt || {});
   ids = ids.filter(id => store.vt[id]); if(!ids.length) return null;
   const B = NetPDF(); const logo = await loadImg(LOGO_SRC); const k = knd(store.vt[ids[0]].kunde);
   const ML = 14, MR = 196, W = MR - ML, BOT = 280; const today = dDE(new Date());
@@ -1516,6 +1610,7 @@ async function elPdf(ids, opt){
   // Hinweis
   if(opt.hint && v.devs.some(d => d.t === "fi" || d.t === "fils")){ need(16); y += 4; B.fill(ML, y - 4.5, W, 11, "#fff6d6"); B.font(true, 9.5); B.text("FI-Schutzschalter regelmäßig prüfen", ML + 3, y, "#7a5a00");
     B.font(false, 8.8); B.text("Prüftaste „T“ etwa alle 6 Monate drücken (Herstellerangabe beachten). Löst der Schalter nicht aus: Elektrofachbetrieb rufen.", ML + 3, y + 4.6, "#5d4500"); y += 12; }
+  if(opt.pruef && v.pr){ const p0 = B.pageCount + 1; await protoPages(B, v, k, logo, today, who); toc.push({t: v.name + " – Prüfprotokoll", o: "VDE 0100-600 · " + dDEs(v.pr.datum), p: p0}); }
   }
   if(tocY != null) B.eachPage(i => { if(i !== 0) return; let yy = tocY; B.font(true, 11); B.text("Inhalt", ML, yy, "#003769"); yy += 7;
     toc.forEach(e => { if(yy > BOT) return; B.font(true, 10); B.text(B.fit(e.t, W - 60), ML, yy, "#1b1f24"); B.font(false, 9); B.text(B.fit(e.o, 50), ML + W - 62, yy, "#5d6b7c");
@@ -1534,12 +1629,191 @@ $("pdfField").addEventListener("click", () => runPdf($("pdfField")));
 $("pdfTop").addEventListener("click", () => runPdf($("pdfTop")));
 
 // ---------- Ansichten ----------
-const TITLES = {exp:"Doku exportieren", kunden:"Kunden", list:"Verteilungen", field:"Verteilung"};
-const LEADS = {exp:"Alle Verteilungen eines Kunden oder nur Teile davon als ein PDF.", kunden:"Kunden anlegen und auswählen – danach siehst du nur ihre Verteilungen.", list:"Stromkreisverteiler dokumentieren und den Belegungsplan für die Tür erstellen.", field:"Geräte eintragen, Stromkreise beschriften, PDF für die Tür."};
-function showView(v){ view = v; $("vKunden").hidden = v !== "kunden"; $("vList").hidden = v !== "list"; $("vField").hidden = v !== "field"; $("vExp").hidden = v !== "exp";
+// ---------- Prüfprotokoll DIN VDE 0100-600 ----------
+const PR_ART = [["neu","Neuanlage"],["erw","Erweiterung"],["aend","Änderung"],["wied","Wiederholungsprüfung"]];
+const PR_NETZ = ["TN-C-S","TN-S","TN-C","TT","IT"];
+const PR_ISO = ["250 V","500 V","1000 V"];
+const PR_ERG = [["ok","Keine Mängel"],["m","Mängel festgestellt"],["no","Nicht in Ordnung"]];
+const PR_BES = [["betr","Betriebsmittel richtig ausgewählt und nach Herstellerangaben errichtet"],["basis","Basisschutz (Schutz gegen direktes Berühren) vorhanden"],["ltg","Leitungen richtig ausgewählt, verlegt und befestigt"],["kenn","Kennzeichnung N (blau) und PE (grün-gelb) korrekt"],["sk","Stromkreise und Schutzorgane eindeutig gekennzeichnet"],["sorg","Schutz- und Überwachungseinrichtungen richtig ausgewählt"],["rcd","Zusätzlicher Schutz durch RCD bis 30 mA, wo gefordert"],["pa","Schutzpotentialausgleich / Haupterdungsschiene vorhanden"],["trenn","Trenn- und Schaltgeräte vorhanden und zugänglich"],["brand","Brandabschottungen / Schutz gegen thermische Einflüsse"],["uess","Überspannungsschutz, wo gefordert"],["doku","Dokumentation und Belegungsplan vorhanden"]];
+const PR_ERP = [["rcdt","RCD-Prüftaste: Auslösung erfolgt"],["sfun","Funktion der Schutz- und Überwachungseinrichtungen"],["drehf","Rechtsdrehfeld an Drehstrom-Steckdosen"],["schalt","Schalt-, Steuer- und Verriegelungseinrichtungen"],["anl","Funktion der Anlage"]];
+const prNum = s => { s = String(s ?? "").trim().replace(",", "."); if(!s) return null; const gt = /^[>≥]/.test(s); const n = parseFloat(s.replace(/^[>≥<≤]\s*/, "")); return isNaN(n) ? null : {n, gt}; };
+const deNum = (n, d) => (Math.round(n * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d).replace(".", ",");
+const prKreise = v => (v.devs || []).filter(d => d.t === "ls" || d.t === "fils" || (d.t === "son" && d.in));
+const prFis = v => (v.devs || []).filter(d => d.t === "fi");
+const IA_F = {B:5, C:10, D:20, K:12, Z:3};
+function prInit(v){ if(v.pr) return v.pr; const who = (() => { try{ return (JSON.parse(localStorage.getItem("wb.settings.v1") || "{}").name || "").trim(); }catch(e){ return ""; } })();
+  v.pr = {art: "neu", datum: new Date().toISOString().slice(0, 10), pruefer: who, netz: v.netz || "TN-C-S", un: "230/400 V", zul: [v.vor, v.zul].filter(Boolean).join(" · "), iso: "500 V", bes: {}, erp: {}, kr: {}, rcd: {}, erg: ""}; return v.pr; }
+function prEval(v, d){ const P = v.pr, out = [];
+  if(d.t === "fi"){ const m = P.rcd[d.id] || {}; const ta = prNum(m.ta), ub = prNum(m.ub);
+    if(ta) out.push({l: "Auslösezeit tA", val: deNum(ta.n, 0) + " ms", lim: "≤ 300 ms", ok: ta.n <= 300});
+    if(ub) out.push({l: "Berührungsspannung UB", val: deNum(ub.n, 1) + " V", lim: "≤ 50 V", ok: ub.n <= 50});
+    if(m.tb) out.push({l: "Prüftaste", val: m.tb === "ok" ? "löst aus" : "löst nicht aus", lim: "", ok: m.tb === "ok"});
+    return {out, st: !out.length ? "open" : out.some(x => x.ok === false) ? "bad" : (ta && ub ? "ok" : "part")}; }
+  const m = P.kr[d.id] || {}; const ri = prNum(m.riso), zs = prNum(m.zs), rl = prNum(m.rlo);
+  if(ri) out.push({l: "Isolationswiderstand", val: (ri.gt ? "> " : "") + deNum(ri.n, ri.n < 10 ? 2 : 0) + " MΩ", lim: "≥ 1 MΩ", ok: ri.gt || ri.n >= 1});
+  if(rl) out.push({l: "Durchgängigkeit PE (RLO)", val: deNum(rl.n, 2) + " Ω", lim: "", ok: null});
+  const In = parseFloat(String(d.in || "").replace(",", ".")); const ia = (IA_F[d.ch || "B"] || 5) * In;
+  if(zs){ const zmax = In ? 230 / ia : null; out.push({l: "Schleifenimpedanz Zs", val: deNum(zs.n, 2) + " Ω · Ik " + Math.round(230 / zs.n) + " A", lim: zmax ? "≤ " + deNum(zmax, 2) + " Ω" : "", ok: zmax ? zs.n <= zmax : null}); }
+  if(d.t === "fils"){ const ta = prNum(m.ta), ub = prNum(m.ub);
+    if(ta) out.push({l: "RCD Auslösezeit tA", val: deNum(ta.n, 0) + " ms", lim: "≤ 300 ms", ok: ta.n <= 300});
+    if(ub) out.push({l: "Berührungsspannung UB", val: deNum(ub.n, 1) + " V", lim: "≤ 50 V", ok: ub.n <= 50}); }
+  const done = ri && zs && (d.t !== "fils" || (prNum(m.ta) && prNum(m.ub)));
+  return {out, st: !out.length ? "open" : out.some(x => x.ok === false) ? "bad" : done ? "ok" : "part"}; }
+const BADGE = {ok: ["ok", "i.O."], bad: ["bad", "n.i.O."], part: ["part", "teilweise"], open: ["", "offen"]};
+function prCounts(v){ const P = v.pr; const kr = prKreise(v).map(d => prEval(v, d).st), rc = prFis(v).map(d => prEval(v, d).st);
+  const m = Object.values(P.bes).filter(x => x === "m").length + Object.values(P.erp).filter(x => x === "m").length + kr.filter(x => x === "bad").length + rc.filter(x => x === "bad").length;
+  return {krOk: kr.filter(x => x === "ok").length, krN: kr.length, maengel: m, offen: kr.filter(x => x === "open" || x === "part").length + rc.filter(x => x === "open" || x === "part").length + PR_BES.filter(([k]) => !P.bes[k]).length + PR_ERP.filter(([k]) => !P.erp[k]).length}; }
+const triHTML = (val, key) => '<div class="tri" data-k="'+key+'">' + [["ok","i.O."],["m","Mangel"],["na","entf."]].map(([s, l]) => '<button type="button" data-s="'+s+'" aria-pressed="'+(val === s)+'">'+l+'</button>').join("") + '</div>';
+function renderPr(){ const v = store.vt[cur]; if(!v){ showView("list"); return; } const P = prInit(v);
+  $("prArt").innerHTML = chipsHTML(PR_ART, P.art, "a"); $("prNetz").innerHTML = chipsHTML(PR_NETZ.map(x => [x, x]), P.netz, "n"); $("prIso").innerHTML = chipsHTML(PR_ISO.map(x => [x, x]), P.iso, "i"); $("prErg").innerHTML = chipsHTML(PR_ERG, P.erg, "e");
+  [["prDatum","datum"],["prPruefer","pruefer"],["prUn","un"],["prZul","zul"],["prGeraet","geraet"],["prSn","sn"],["prRpa","rpa"],["prRa","ra"],["prMaengel","maengel"],["prNext","next"]].forEach(([id, k]) => { if(document.activeElement !== $(id)) $(id).value = P[k] || ""; });
+  $("prBes").innerHTML = PR_BES.map(([k, l]) => '<div class="pi"><span>'+esc(l)+'</span>'+triHTML(P.bes[k], "bes:" + k)+'</div>').join("");
+  $("prErp").innerHTML = PR_ERP.map(([k, l]) => '<div class="pi"><span>'+esc(l)+'</span>'+triHTML(P.erp[k], "erp:" + k)+'</div>').join("");
+  const G = fiGroups(v);
+  $("prKr").innerHTML = prKreise(v).map(d => { const e = prEval(v, d), m = P.kr[d.id] || {}, b = BADGE[e.st];
+    const sub = [short(d), m.ltg || d.ltg, m.riso ? "Riso " + m.riso + " MΩ" : "", m.zs ? "Zs " + m.zs + " Ω" : ""].filter(Boolean).join(" · ");
+    return '<button class="mrow" type="button" data-m="'+d.id+'"><span class="k" style="color:'+((d.fi && G[d.fi]) || "inherit")+'">'+esc(d.kz || "–")+'</span><span class="t">'+esc(d.kreis || "ohne Bezeichnung")+'<small>'+esc(sub)+'</small></span><span class="badge '+b[0]+'">'+b[1]+'</span></button>'; }).join("") || '<p class="empty">Noch keine LS in der Verteilung.</p>';
+  const fis = prFis(v); $("prRcdCard").hidden = !fis.length;
+  $("prRcd").innerHTML = fis.map(d => { const e = prEval(v, d), m = P.rcd[d.id] || {}, b = BADGE[e.st];
+    return '<button class="mrow" type="button" data-m="'+d.id+'"><span class="k" style="color:'+G[d.id]+'">'+esc(d.kz || "–")+'</span><span class="t">'+esc(longName(d))+'<small>'+esc([m.ta ? "tA " + m.ta + " ms" : "", m.ub ? "UB " + m.ub + " V" : "", m.tb === "ok" ? "Prüftaste ok" : ""].filter(Boolean).join(" · ") || "noch nicht gemessen")+'</small></span><span class="badge '+b[0]+'">'+b[1]+'</span></button>'; }).join("");
+  const c = prCounts(v); $("prKrStat").textContent = c.krOk + " / " + c.krN + " i.O.";
+  $("prSum").innerHTML = '<div class="'+(c.krN && c.krOk === c.krN ? 'ok' : '')+'"><b>'+c.krOk+'/'+c.krN+'</b><span>Stromkreise i.O.</span></div><div class="'+(c.maengel ? 'bad' : 'ok')+'"><b>'+c.maengel+'</b><span>Mängel</span></div><div><b>'+c.offen+'</b><span>noch offen</span></div>';
+  $("prDemoWarn").hidden = !P.demo; sigLoad(); }
+function prSet(k, val){ const v = store.vt[cur]; v.pr[k] = val; v.updated = Date.now(); save(); }
+[["prDatum","datum"],["prPruefer","pruefer"],["prUn","un"],["prZul","zul"],["prGeraet","geraet"],["prSn","sn"],["prRpa","rpa"],["prRa","ra"],["prMaengel","maengel"],["prNext","next"]].forEach(([id, k]) => $(id).addEventListener("input", () => prSet(k, $(id).value.trim())));
+[["prArt","a","art"],["prNetz","n","netz"],["prIso","i","iso"],["prErg","e","erg"]].forEach(([id, a, k]) => $(id).addEventListener("click", e => { const b = e.target.closest("[data-"+a+"]"); if(!b) return; prSet(k, b.dataset[a]);
+  if(k === "art" && !store.vt[cur].pr.next){ /* Vorschlag nächste Prüfung */ } renderPr(); }));
+["prBes","prErp"].forEach(id => $(id).addEventListener("click", e => { const b = e.target.closest("[data-s]"); if(!b) return; const [g, k] = b.parentElement.dataset.k.split(":"); const P = store.vt[cur].pr; P[g][k] = P[g][k] === b.dataset.s ? undefined : b.dataset.s; if(!P[g][k]) delete P[g][k]; save(); renderPr(); }));
+document.querySelectorAll("[data-allok]").forEach(b => b.addEventListener("click", () => { const g = b.dataset.allok, P = store.vt[cur].pr; (g === "bes" ? PR_BES : PR_ERP).forEach(([k]) => { if(!P[g][k]) P[g][k] = "ok"; }); save(); renderPr(); GT.toast("Offene Punkte auf i.O. gesetzt"); }));
+// Unterschrift
+let sigDraw = false, sigLast = null;
+const sigCtx = () => { const c = $("prSig"), g = c.getContext("2d"); g.lineWidth = 3.2; g.lineCap = "round"; g.lineJoin = "round"; g.strokeStyle = "#0b2a55"; return g; };
+const sigPos = e => { const c = $("prSig"), r = c.getBoundingClientRect(); return {x: (e.clientX - r.left) * c.width / r.width, y: (e.clientY - r.top) * c.height / r.height}; };
+$("prSig").addEventListener("pointerdown", e => { sigDraw = true; sigLast = sigPos(e); $("prSig").setPointerCapture(e.pointerId); });
+$("prSig").addEventListener("pointermove", e => { if(!sigDraw) return; const p = sigPos(e), g = sigCtx(); g.beginPath(); g.moveTo(sigLast.x, sigLast.y); g.lineTo(p.x, p.y); g.stroke(); sigLast = p; });
+const sigEnd = () => { if(!sigDraw) return; sigDraw = false; prSet("sig", $("prSig").toDataURL("image/png")); };
+$("prSig").addEventListener("pointerup", sigEnd); $("prSig").addEventListener("pointercancel", sigEnd);
+$("prSigClr").addEventListener("click", () => { const c = $("prSig"); c.getContext("2d").clearRect(0, 0, c.width, c.height); prSet("sig", ""); });
+function sigLoad(){ const c = $("prSig"), g = c.getContext("2d"); g.clearRect(0, 0, c.width, c.height); const s = store.vt[cur].pr.sig; if(s){ const i = new Image(); i.onload = () => g.drawImage(i, 0, 0); i.src = s; } }
+// Messwerte-Fenster
+let msId = null;
+const msOrder = () => { const v = store.vt[cur]; return prKreise(v).concat(prFis(v)).map(d => d.id); };
+function openMs(id){ const v = store.vt[cur], d = v.devs.find(x => x.id === id); if(!d) return; msId = id; const P = v.pr, fi = d.t === "fi";
+  const m = (fi ? P.rcd : P.kr)[id] || {}; const fiD = d.fi && v.devs.find(x => x.id === d.fi);
+  $("msT").textContent = (d.kz ? d.kz + " · " : "") + (fi ? "Fehlerstrom-Schutzschalter" : (d.kreis || "Stromkreis"));
+  $("msSub").textContent = longName(d) + (fiD ? " · hinter " + (fiD.kz || "FI") + " (" + (fiD.idn || 30) + " mA)" : "");
+  ["msLtg","msRiso","msRlo","msZs"].forEach(x => $(x).closest(".field").hidden = fi); $("msRiso").closest(".three").hidden = fi;
+  $("msRcdBox").hidden = !(fi || d.t === "fils"); $("msIdn").value = fi || d.t === "fils" ? (d.idn || 30) : "";
+  $("msLtg").value = m.ltg || d.ltg || ""; $("msRiso").value = m.riso || ""; $("msRlo").value = m.rlo || ""; $("msZs").value = m.zs || ""; $("msTa").value = m.ta || ""; $("msUb").value = m.ub || ""; $("msNote").value = m.note || "";
+  $("msTbBox").hidden = !fi; renderTb(m.tb || "");
+  const o = msOrder(), i = o.indexOf(id); $("msPrev").disabled = i <= 0; $("msNext").disabled = i >= o.length - 1;
+  msEval(); $("mSheet").hidden = false; }
+let msTb = "";
+function renderTb(t){ msTb = t; $("msTb").innerHTML = chipsHTML([["ok","löst aus"],["no","löst nicht aus"]], t, "tb"); }
+$("msTb").addEventListener("click", e => { const b = e.target.closest("[data-tb]"); if(b){ renderTb(msTb === b.dataset.tb ? "" : b.dataset.tb); storeMs(); msEval(); } });
+function storeMs(){ const v = store.vt[cur], d = v.devs.find(x => x.id === msId); if(!d) return; const fi = d.t === "fi"; const tgt = fi ? v.pr.rcd : v.pr.kr; const m = {};
+  const put = (k, id) => { const x = $(id).value.trim(); if(x) m[k] = x; };
+  if(!fi){ put("ltg", "msLtg"); put("riso", "msRiso"); put("rlo", "msRlo"); put("zs", "msZs"); }
+  if(fi || d.t === "fils"){ put("ta", "msTa"); put("ub", "msUb"); } if(fi && msTb) m.tb = msTb; put("note", "msNote");
+  if(Object.keys(m).length) tgt[msId] = m; else delete tgt[msId]; v.updated = Date.now(); save(); }
+function msEval(){ storeMs(); const v = store.vt[cur], d = v.devs.find(x => x.id === msId); const e = prEval(v, d);
+  $("msEval").innerHTML = e.out.map(x => '<div class="'+(x.ok === true ? 'ok' : x.ok === false ? 'bad' : '')+'"><span>'+esc(x.l)+'</span><span>'+esc(x.val)+(x.lim ? ' <small>(' + esc(x.lim) + ')</small>' : '')+(x.ok === true ? ' ✓' : x.ok === false ? ' ✗' : '')+'</span></div>').join("") || '<div><span class="note">Werte eintragen – die Bewertung erscheint hier sofort.</span></div>'; }
+["msLtg","msRiso","msRlo","msZs","msTa","msUb","msNote"].forEach(id => $(id).addEventListener("input", msEval));
+$("msOk").addEventListener("click", () => { storeMs(); $("mSheet").hidden = true; renderPr(); });
+$("msCancel").addEventListener("click", () => { $("mSheet").hidden = true; renderPr(); });
+$("msPrev").addEventListener("click", () => { storeMs(); const o = msOrder(); openMs(o[o.indexOf(msId) - 1]); });
+$("msNext").addEventListener("click", () => { storeMs(); const o = msOrder(); openMs(o[o.indexOf(msId) + 1]); });
+["msRiso","msRlo","msZs","msTa","msUb"].forEach(id => $(id).addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); const f = [...$("mSheet").querySelectorAll("input:not([readonly])")].filter(x => !x.closest("[hidden]")); const i = f.indexOf(e.target); if(f[i + 1]) f[i + 1].focus(); else if(!$("msNext").disabled) $("msNext").click(); } }));
+$("prKr").addEventListener("click", e => { const b = e.target.closest("[data-m]"); if(b) openMs(b.dataset.m); });
+$("prRcd").addEventListener("click", e => { const b = e.target.closest("[data-m]"); if(b) openMs(b.dataset.m); });
+$("prOpen").addEventListener("click", () => { showView("pr"); window.scrollTo(0, 0); });
+$("prBack").addEventListener("click", () => { showView("field"); renderField(); window.scrollTo(0, 0); });
+$("prDemo").addEventListener("click", () => { const v = store.vt[cur], P = prInit(v); const r = (a, b) => a + Math.random() * (b - a);
+  PR_BES.forEach(([k]) => P.bes[k] = k === "uess" && !v.devs.some(d => d.t === "uess") ? "na" : "ok"); PR_ERP.forEach(([k]) => P.erp[k] = k === "drehf" && !v.devs.some(d => d.pol === 3 || d.pol === 4) ? "na" : "ok");
+  P.demo = true; P.geraet = P.geraet || "Installationstester (Beispiel)"; P.sn = P.sn || "SN 0815-4711 · kal. bis 06/2027"; P.rpa = P.rpa || "0,08"; if(P.netz === "TT" && !P.ra) P.ra = "18";
+  prKreise(v).forEach(d => { const In = parseFloat(d.in) || 16, zmax = 230 / ((IA_F[d.ch || "B"] || 5) * In); const m = P.kr[d.id] = P.kr[d.id] || {};
+    m.ltg = m.ltg || d.ltg || (In >= 20 ? "NYM-J 5×2,5" : In >= 16 ? "NYM-J 3×2,5" : "NYM-J 3×1,5"); m.riso = m.riso || (Math.random() < 0.6 ? ">500" : deNum(r(120, 480), 0)); m.rlo = m.rlo || deNum(r(0.15, 0.8), 2); m.zs = m.zs || deNum(zmax * r(0.25, 0.6), 2);
+    if(d.t === "fils"){ m.ta = m.ta || deNum(r(14, 32), 0); m.ub = m.ub || deNum(r(0.4, 2.4), 1); } });
+  prFis(v).forEach(d => { const m = P.rcd[d.id] = P.rcd[d.id] || {}; m.ta = m.ta || deNum(r(14, 32), 0); m.ub = m.ub || deNum(r(0.4, 2.4), 1); m.tb = m.tb || "ok"; });
+  if(!P.erg) P.erg = "ok"; if(!P.next){ const n = new Date(P.datum || Date.now()); n.setFullYear(n.getFullYear() + 4); P.next = n.toISOString().slice(0, 10); }
+  save(); renderPr(); GT.toast("Beispielwerte eingetragen – nur zum Vorführen"); });
+$("prReset").addEventListener("click", () => { const b = $("prReset"); if(b.dataset.armed !== "1"){ b.dataset.armed = "1"; b.textContent = "Wirklich alles löschen?"; setTimeout(() => { b.dataset.armed = ""; b.textContent = "Protokoll zurücksetzen"; }, 3500); return; }
+  b.dataset.armed = ""; b.textContent = "Protokoll zurücksetzen"; const v = store.vt[cur]; delete v.pr; prInit(v); save(); renderPr(); window.scrollTo(0, 0); GT.toast("Neues, leeres Protokoll"); });
+// ---------- Prüfprotokoll als PDF ----------
+const pdfSafe = t => String(t ?? "").replace(/Ω/g, "Ohm").replace(/≥/g, ">=").replace(/≤/g, "<=").replace(/Δ/g, "d").replace(/✓/g, "ok").replace(/→/g, "-");
+const dDEs = s => { if(!s) return ""; const [a, b, c] = s.split("-"); return c + "." + b + "." + a; };
+async function protoPages(B, v, k, logo, today, who){ const P = v.pr; if(!P) return; const ML = 14, MR = 196, W = MR - ML, BOT = 280; let y = 0;
+  const T = (t, x, yy, c) => B.text(pdfSafe(t), x, yy, c); const F = (t, w) => B.fit(pdfSafe(t), w);
+  const wied = P.art === "wied";
+  const head = cont => { B.page(); if(logo) B.image(logo, MR - 38, 9, 38, 38 * logo.naturalHeight / logo.naturalWidth);
+    B.font(true, 17); T("Prüfprotokoll" + (cont ? " (Fortsetzung)" : ""), ML, 18, "#003769"); B.font(true, 10.5); T(wied ? "Wiederholungsprüfung nach DIN VDE 0105-100" : "Erstprüfung nach DIN VDE 0100-600", ML, 24.5, "#1b1f24");
+    B.font(false, 9); T(B.fit([k ? k.name : "", v.name, "Prüfdatum " + dDEs(P.datum)].filter(Boolean).join(" · "), MR - 44 - ML), ML, 29.5, "#5d6b7c"); B.line(ML, 32.5, MR, 32.5, 0.4, "#003769"); y = 39; };
+  const need = h => { if(y + h > BOT){ head(true); return true; } return false; };
+  const sec = t => { need(14); B.fill(ML, y - 4.6, W, 6.4, "#003769"); B.font(true, 9.5); T(t, ML + 2, y, "#ffffff"); y += 6.5; };
+  head(false);
+  if(P.demo){ B.fill(ML, y - 4.6, W, 8, "#d93a3a"); B.font(true, 10); T("BEISPIEL – keine echte Messung, nur zum Vorführen", ML + 3, y + 0.8, "#ffffff"); y += 9; }
+  // Kopfdaten
+  const L = [["Auftraggeber", k ? k.name : ""], ["Anschrift", k ? [k.strasse, [k.plz, k.ort].filter(Boolean).join(" ")].filter(Boolean).join(", ") : ""], ["Anlage", [v.name, v.ort].filter(Boolean).join(" · ")], ["Prüfanlass", (PR_ART.find(a => a[0] === P.art) || ["", ""])[1]]];
+  const R = [["Netzform / Spannung", [P.netz, P.un].filter(Boolean).join(" · ")], ["Vorsicherung / Zuleitung", P.zul], ["Messgerät", P.geraet], ["Serien-Nr. / Kalibr.", P.sn]];
+  const hb = 4 + 4 * 5.2; B.fill(ML, y - 4.4, W, hb, "#eef2f6"); const cw = W / 2;
+  [L, R].forEach((col, ci) => col.forEach(([a, b], i) => { const x = ML + 2.5 + ci * cw, yy = y + i * 5.2; B.font(true, 8); T(a, x, yy, "#5d6b7c"); B.font(false, 9); T(F(b || "–", cw - 38), x + 34, yy, "#1b1f24"); }));
+  y += hb + 3;
+  // Besichtigen / Erproben
+  const st = s => s === "ok" ? ["i.O.", "#1f9d55"] : s === "m" ? ["Mangel", "#d93a3a"] : s === "na" ? ["entfällt", "#8b98a5"] : ["–", "#b4bdc6"];
+  const list = (title, arr, obj) => { sec(title); arr.forEach(([kk, l], i) => { need(5.4); if(i % 2) B.fill(ML, y - 3.9, W, 5.2, "#f6f8fa"); B.font(false, 8.8); T(F(l, W - 26), ML + 2, y, "#1b1f24");
+    const [t, c] = st(obj[kk]); B.font(true, 8.5); const tw = B.width(t); B.fill(MR - tw - 5, y - 3.4, tw + 3.5, 4.4, c); T(t, MR - tw - 3.2, y, "#ffffff"); y += 5.2; }); y += 3; };
+  list("1. Besichtigen", PR_BES, P.bes); list("2. Erproben", PR_ERP, P.erp);
+  sec("3. Messen – Anlage"); B.font(false, 9); T("Schutzpotentialausgleich (Haupterdungsschiene): " + (P.rpa ? P.rpa + " Ohm" : "–") + "      Erdungswiderstand RA: " + (P.ra ? P.ra + " Ohm" : "–") + "      Prüfspannung Isolation: " + (P.iso || "–"), ML + 2, y, "#1b1f24"); y += 8;
+  // Stromkreise
+  const cols = [["Kz",11,""],["Stromkreis",34,""],["Leitung",24,""],["Schutz",20,""],["Riso",14,"MOhm"],["RLO",12,"Ohm"],["Zs",12,"Ohm"],["Ik",11,"A"],["Idn",11,"mA"],["tA",10,"ms"],["UB",10,"V"],["Erg.",13,""]];
+  const cx = []; let xx = ML; cols.forEach(c => { cx.push(xx); xx += c[1]; });
+  const th = () => { B.fill(ML, y - 4.2, W, 8.6, "#e3e8ee"); cols.forEach((c, i) => { B.font(true, 7.4); T(c[0], cx[i] + 1, y, "#1b1f24"); if(c[2]){ B.font(false, 6.2); T(c[2], cx[i] + 1, y + 3.2, "#5d6b7c"); } }); y += 8.8; };
+  sec("4. Messen – Stromkreise"); th();
+  const G = fiGroups(v); let zi = 0;
+  prKreise(v).forEach(d => { if(need(5.6)) { sec("4. Messen – Stromkreise (Fortsetzung)"); th(); } const m = P.kr[d.id] || {}, e = prEval(v, d); const fiD = d.fi && v.devs.find(x => x.id === d.fi); const fm = fiD ? (P.rcd[fiD.id] || {}) : m;
+    if(zi++ % 2) B.fill(ML, y - 3.9, W, 5.4, "#f6f8fa"); if(fiD && G[fiD.id]) B.fill(ML, y - 3.9, 1, 5.4, G[fiD.id]);
+    const zs = prNum(m.zs); const vals = [d.kz || "–", d.kreis || "", m.ltg || d.ltg || "", short(d), m.riso || "", m.rlo || "", m.zs || "", zs ? String(Math.round(230 / zs.n)) : "", fiD ? String(fiD.idn || 30) : d.t === "fils" ? String(d.idn || 30) : "", fm.ta || "", fm.ub || ""];
+    vals.forEach((t, i) => { B.font(i === 0, 7.8); const c = i >= 9 && fiD ? "#8b98a5" : "#1b1f24"; T(F(t, cols[i][1] - 1.6), cx[i] + 1, y, c); });
+    const b = BADGE[e.st]; B.font(true, 7.4); T(b[1], cx[11] + 1, y, e.st === "ok" ? "#1f9d55" : e.st === "bad" ? "#d93a3a" : "#8b98a5"); y += 5.4; });
+  B.font(false, 7); T("Grenzwerte (vereinfacht): Riso >= 1 MOhm · Zs <= U0/Ia mit Ia = 5·In (B), 10·In (C), 20·In (D), U0 = 230 V · RCD tA <= 300 ms · UB <= 50 V.", ML, y + 0.5, "#5d6b7c");
+  T("Graue Werte bei tA/UB: gemessen am vorgeschalteten RCD (siehe RCD-Tabelle).", ML, y + 3.8, "#5d6b7c"); y += 9;
+  // RCD
+  const fis = prFis(v); if(fis.length){ sec("5. Fehlerstrom-Schutzeinrichtungen (RCD)");
+    const rc = [["Kz",14],["Gerät",70],["Idn mA",18],["tA ms",18],["UB V",18],["Prüftaste",26],["Erg.",18]]; const rx = []; let q = ML; rc.forEach(c => { rx.push(q); q += c[1]; });
+    B.fill(ML, y - 4.2, W, 6, "#e3e8ee"); B.font(true, 7.6); rc.forEach((c, i) => T(c[0], rx[i] + 1, y, "#1b1f24")); y += 6;
+    fis.forEach((d, i) => { need(5.6); const m = P.rcd[d.id] || {}, e = prEval(v, d); if(i % 2) B.fill(ML, y - 3.9, W, 5.4, "#f6f8fa"); B.fill(ML, y - 3.9, 1, 5.4, G[d.id]);
+      [d.kz || "–", longName(d), String(d.idn || 30), m.ta || "", m.ub || "", m.tb === "ok" ? "löst aus" : m.tb === "no" ? "löst nicht aus" : ""].forEach((t, j) => { B.font(j === 0, 8); T(F(t, rc[j][1] - 1.6), rx[j] + 1, y, "#1b1f24"); });
+      const b = BADGE[e.st]; B.font(true, 7.6); T(b[1], rx[6] + 1, y, e.st === "ok" ? "#1f9d55" : e.st === "bad" ? "#d93a3a" : "#8b98a5"); y += 5.4; }); y += 4; }
+  // Ergebnis
+  need(62); sec((fis.length ? "6" : "5") + ". Ergebnis"); const c = prCounts(v);
+  const eg = PR_ERG.find(x => x[0] === P.erg); const ec = P.erg === "ok" ? "#1f9d55" : P.erg ? "#d93a3a" : "#8b98a5";
+  B.font(true, 11); const et = eg ? eg[1] : "noch nicht bewertet"; const ew = B.width(pdfSafe(et)) + 8; B.fill(ML, y - 4.6, ew, 7, ec); T(et, ML + 4, y, "#ffffff");
+  B.font(false, 9); T(c.krOk + " von " + c.krN + " Stromkreisen in Ordnung · " + c.maengel + " Mängel · " + c.offen + " Punkte offen", ML + ew + 4, y, "#5d6b7c"); y += 8;
+  if(P.maengel){ B.font(true, 9); T("Mängel / Bemerkungen:", ML, y, "#1b1f24"); y += 4.8; B.font(false, 9);
+    String(P.maengel).split(/\n/).forEach(par => { let line = ""; par.split(/\s+/).forEach(w => { const t = line ? line + " " + w : w; if(B.width(pdfSafe(t)) > W - 4){ need(5); T(line, ML + 2, y, "#1b1f24"); y += 4.6; line = w; } else line = t; }); if(line){ need(5); T(line, ML + 2, y, "#1b1f24"); y += 4.6; } }); y += 2; }
+  B.font(false, 9); T("Nächster empfohlener Prüftermin: " + (P.next ? dDEs(P.next) : "–"), ML, y, "#1b1f24"); y += 6;
+  B.font(false, 8.2); T("Die Anlage wurde nach der genannten Norm besichtigt, erprobt und gemessen. Das Ergebnis gilt für den Zustand am Prüfdatum.", ML, y, "#5d6b7c"); y += 10;
+  need(30); const sw = (W - 10) / 2; const sy = y + 16;
+  if(P.sig){ const im = await loadImg(P.sig); if(im) B.image(im, ML, y - 2, 52, 52 * im.naturalHeight / im.naturalWidth); }
+  B.line(ML, sy, ML + sw, sy, 0.3, "#1b1f24"); B.line(ML + sw + 10, sy, MR, sy, 0.3, "#1b1f24");
+  B.font(false, 8); T("Ort, Datum, Unterschrift Prüfer" + (P.pruefer ? " (" + P.pruefer + ")" : ""), ML, sy + 4, "#5d6b7c"); T("Ort, Datum, Unterschrift Auftraggeber", ML + sw + 10, sy + 4, "#5d6b7c");
+  B.font(false, 8); T(dDEs(P.datum), ML + sw - 22, sy - 1.5, "#1b1f24");
+  y = sy + 10; B.font(false, 7); T("Erstellt mit Oh-MyGosch. Grenzwerte vereinfacht – die Bewertung trifft die Prüfperson.", ML, y, "#8b98a5"); }
+async function prPdf(btn){ const v = store.vt[cur]; if(!v) return; const t = btn.textContent; btn.disabled = true; btn.textContent = "PDF wird erstellt …";
+  try{ const B = NetPDF(); const logo = await loadImg(LOGO_SRC); const k = knd(v.kunde); const today = dDE(new Date());
+    const who = (() => { try{ return (JSON.parse(localStorage.getItem("wb.settings.v1") || "{}").name || "").trim(); }catch(e){ return ""; } })();
+    await protoPages(B, v, k, logo, today, who);
+    B.eachPage((i, n) => { B.line(14, 287, 196, 287, 0.2, "#d6dee8"); B.font(false, 8); B.text("Gosch Elektroanlagen GmbH" + (who ? " · " + who : "") + " · erstellt am " + today, 14, 291.5, "#8b98a5"); const s = "Seite " + (i + 1) + " von " + n; B.text(s, 196 - B.width(s), 291.5, "#8b98a5"); });
+    await GT.deliver(B.output("Prüfprotokoll " + v.name), "Pruefprotokoll_" + safeFn(k ? k.name : "") + (k ? "_" : "") + safeFn(v.name) + "_" + (v.pr.datum || "") + ".pdf", "PDF teilen"); }
+  catch(e){ console.error(e); GT.toast("PDF konnte nicht erstellt werden."); } finally{ btn.disabled = false; btn.textContent = t; } }
+$("prPdf").addEventListener("click", () => prPdf($("prPdf")));
+$("prPdfTop").addEventListener("click", () => prPdf($("prPdfTop")));
+const TITLES = {pr:"Prüfprotokoll", exp:"Doku exportieren", kunden:"Kunden", list:"Verteilungen", field:"Verteilung"};
+const LEADS = {pr:"Besichtigen, Erproben, Messen – Stromkreise kommen automatisch aus der Verteilung.", exp:"Alle Verteilungen eines Kunden oder nur Teile davon als ein PDF.", kunden:"Kunden anlegen und auswählen – danach siehst du nur ihre Verteilungen.", list:"Stromkreisverteiler dokumentieren und den Belegungsplan für die Tür erstellen.", field:"Geräte eintragen, Stromkreise beschriften, PDF für die Tür."};
+function showView(v){ view = v; $("vKunden").hidden = v !== "kunden"; $("vList").hidden = v !== "list"; $("vField").hidden = v !== "field"; $("vExp").hidden = v !== "exp"; $("vPr").hidden = v !== "pr";
   $("pageTitle").textContent = TITLES[v]; $("lead").textContent = LEADS[v];
-  document.querySelectorAll("#nav [data-view]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === (v === "field" ? "list" : v))));
-  if(v === "list") renderList(); if(v === "kunden") renderKunden(); if(v === "exp") renderExp(); }
+  document.querySelectorAll("#nav [data-view]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === (v === "field" || v === "pr" ? "list" : v))));
+  if(v === "list") renderList(); if(v === "kunden") renderKunden(); if(v === "exp") renderExp(); if(v === "pr") renderPr(); }
 $("nav").addEventListener("click", e => { const b = e.target.closest("[data-view]"); if(!b) return; if(b.dataset.view === "list" && cur && view === "kunden"){ showView("field"); renderField(); } else { if(b.dataset.view === "list") cur = null; showView(b.dataset.view); } window.scrollTo(0,0); });
 document.addEventListener("click", e => { if(e.target.classList && e.target.classList.contains("sheet-bg")) e.target.hidden = true; });
 
@@ -1549,6 +1823,7 @@ setTimeout(() => GT.tour("el", [
   {sel:"#newBtn", title:"Verteilung anlegen", text:"Bezeichnung, Standort, Anzahl Reihen und TE pro Reihe. Zuleitung, Vorsicherung und Netzform kommen mit aufs Türblatt."},
   {title:"Geräte eintragen", text:"In der Verteilung auf + tippen: LS, FI, FI/LS, Hauptschalter, SLS, Überspannungsschutz oder Reserve. Kennzeichnung (F1, Q1 …) wird automatisch hochgezählt, LS-Schalter ordnest du ihrem FI zu."},
   {title:"Belegungsplan für die Tür", text:"Ein Tipp auf „PDF“ erstellt den Plan mit Grafik und Stromkreisliste – nach FI gruppiert, zum Ausdrucken und in die Verteilertür hängen."},
+  {title:"Prüfprotokoll VDE 0100-600", text:"In jeder Verteilung: Besichtigen, Erproben, Messen. Die Stromkreise kommen automatisch aus der Verteilung, die Messwerte werden sofort bewertet – mit Unterschrift und PDF."},
   {sel:'#nav [data-view="exp"]', fixed:true, title:"Doku exportieren", text:"Alle Verteilungen eines Kunden in ein PDF – oder nur Teile: einzelne Verteilungen, nur Grafiken oder nur Tabellen, mit oder ohne Deckblatt."}
 ]), 700);
 })();
