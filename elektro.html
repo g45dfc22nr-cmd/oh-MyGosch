@@ -96,6 +96,26 @@ h1{margin:4px 2px 0;font:800 30px/1.1 var(--f-display);letter-spacing:-.02em}
 .port .jack em.poe{position:absolute;right:8%;bottom:10%;width:22%;height:22%;border-radius:50%;background:#f5c518}
 .legend button.add{background:none;box-shadow:inset 0 0 0 1.5px var(--line)}
 #nav{left:8px;right:8px}#nav .in{gap:2px}#nav button{font-size:10.5px;padding:6px 1px;letter-spacing:-.01em}
+.gcol{display:flex;flex-wrap:wrap;gap:8px}
+.gcol button{width:34px;height:34px;border-radius:50%;border:0;background:var(--c);box-shadow:inset 0 0 0 1px rgba(0,0,0,.15);display:grid;place-items:center;color:#fff;font:800 14px/1 var(--f-body)}
+.gcol button[aria-pressed="true"]{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--ink)}
+.gcol button.std{width:auto;padding:0 12px;border-radius:99px;background:var(--sunk);color:var(--ink);font-size:13px;gap:6px;display:flex;align-items:center}
+.gcol button.std i{width:14px;height:14px;border-radius:50%;background:var(--c)}
+/* Patchfeld-Front (Stil wie Switch) */
+.pfc .pfrows{display:grid;gap:10px}
+.pfrow{display:flex;gap:7px}
+.pfgrp{flex:1;display:grid;grid-template-columns:repeat(var(--n,6),minmax(0,1fr));min-width:0}
+.port.pp{gap:2px;padding:0 1.5px}
+.port.pp .no{order:-1;align-self:stretch;width:calc(100% + 3px);margin:0 -1.5px;background:#eef1f4;color:#1b1f24;font:800 8.5px/13px var(--f-body);text-align:center;box-shadow:inset -1px 0 0 #c4ccd4}
+.pfgrp .port.pp:first-child .no{border-radius:3px 0 0 3px}.pfgrp .port.pp:last-child .no{border-radius:0 3px 3px 0;box-shadow:none}
+.port.pp .lb{display:none}
+.port.pp .jack{aspect-ratio:1/.86;border-radius:2px;background:#0d1013;box-shadow:inset 0 0 0 2px var(--pc,#5f6873);padding:0;display:block}
+.port.pp .jack::before{left:33%;right:33%;top:12%;height:20%;background:#2f363e;border-radius:1px}
+.port.pp .jack i{position:absolute;left:26%;right:26%;bottom:16%;height:9%;width:auto;border-radius:0;background:repeating-linear-gradient(90deg,#b08d3a 0 1.5px,transparent 1.5px 3px)}
+.port.pp.used::after{content:"";position:absolute;right:4px;bottom:-4px;width:5px;height:2px;border-radius:1px;background:#2ecc71;box-shadow:0 0 3px #2ecc71}
+.port.pp.lwl .jack{background:var(--cc,#2f80ed);box-shadow:inset 0 0 0 2px var(--pc,#5f6873);display:flex;align-items:center;justify-content:center;gap:10%}
+.port.pp.lwl .jack::before{display:none}
+.port.pp.lwl .jack i{display:none}
 /* Switch-Front */
 #swPanelBox,#swPanelBox>*{min-width:0}
 .swc{position:relative;min-width:0;max-width:100%;box-sizing:border-box;background:linear-gradient(#3b434b,#2a3036 30%,#22272c);border-radius:6px;padding:10px 24px 12px;box-shadow:0 6px 18px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.08)}
@@ -496,8 +516,17 @@ header.top{position:static!important;border-bottom:0!important}
   function persist(){ try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch(e){} }
   function registerSW(){ if("serviceWorker" in navigator && location.protocol === "https:" && !(window.claude && window.claude.use)){ navigator.serviceWorker.register("sw.js").catch(()=>{}); } }
   // Zurück zum Startbildschirm
+  // Zurück-Button: immer eine Ebene näher zur Startseite. Auf der obersten Ebene eines Bereichs -> Startseite.
+  // Ein offenes Fenster wird zuerst geschlossen. (Kein history.back – das wäre „letzter Zustand“.)
+  let backSet = false;
+  function backLabel(top){ backSet = true; document.querySelectorAll(".backbtn").forEach(b => { b.textContent = top ? "‹ Startseite" : "‹ Zurück"; }); }
+  document.addEventListener("DOMContentLoaded", () => { if(!backSet) backLabel(true); });
+  let backFn = null;
+  function setBack(fn){ backFn = fn || null; backLabel(!fn); }
   function home(ev){
-    try{ if(document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1){ if(ev) ev.preventDefault(); history.back(); return false; } }catch(e){}
+    const open = [...document.querySelectorAll(".sheet-bg")].find(x => !x.hidden);
+    if(open){ if(ev) ev.preventDefault(); const x = open.querySelector(".sheet-x"); if(x) x.click(); else open.hidden = true; return false; }
+    if(backFn){ if(ev) ev.preventDefault(); backFn(); window.scrollTo(0, 0); return false; }
     return true;
   }
   // App nach mehr als 15 Minuten im Hintergrund wieder auf dem Startbildschirm öffnen
@@ -631,7 +660,23 @@ header.top{position:static!important;border-bottom:0!important}
     root.addEventListener("contextmenu", e => { if(e.target.closest(opts.item)) e.preventDefault(); });
     root.addEventListener("dragstart", e => e.preventDefault());
   }
-  window.GT = {drag, toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home, tour, tourDone, tourReset};
+
+  // ---------- Runder Schließen-Button oben links in jedem Fenster ----------
+  function sheetX(){ if(!document.getElementById("gtXCss")){ const c = document.createElement("style"); c.id = "gtXCss";
+      c.textContent = ".sheet-bg>.sheet.has-x{position:relative;padding-top:12px!important}"
+        + ".sheet-x{position:sticky;top:0;margin:0 0 -4px -4px;justify-self:start;align-self:start;flex:none;width:38px;height:38px;border-radius:50%;border:0;background:var(--sunk,#eef1f4);color:var(--ink,#1b1f24);display:grid;place-items:center;cursor:pointer;z-index:2;box-shadow:inset 0 0 0 1px var(--line,rgba(0,0,0,.08))}"
+        + ".sheet-x svg{width:16px;height:16px;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;fill:none}"
+        + ".sheet-x:active{transform:scale(.94)}";
+      document.head.appendChild(c); }
+    document.querySelectorAll(".sheet-bg > .sheet").forEach(sh => { if(sh.querySelector(":scope > .sheet-x")) return; sh.classList.add("has-x");
+      const b = document.createElement("button"); b.type = "button"; b.className = "sheet-x"; b.setAttribute("aria-label", "Schließen");
+      b.innerHTML = '<svg viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13"/></svg>';
+      b.addEventListener("click", e => { e.preventDefault(); e.stopPropagation();
+        const c = [...sh.querySelectorAll("button")].find(x => x !== b && !x.closest("[hidden]") && (/cancel|close/i.test(x.id || "") || /^\s*(Abbrechen|Schließen|Zurück)\s*$/i.test(x.textContent || "")));
+        if(c) c.click(); else { const bg = sh.closest(".sheet-bg"); if(bg) bg.hidden = true; } });
+      sh.insertBefore(b, sh.firstChild); }); }
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", sheetX); else sheetX();
+  window.GT = {setBack, backLabel, sheetX, drag, toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home, tour, tourDone, tourReset};
   persist(); registerSW();
 })();
 
@@ -1474,7 +1519,7 @@ const swLinked = (sg, sid, n) => { const P = (sg.pc || {})[n] || {}; return !P.o
 const swOrder = kid => { const L = topoLayout(kid); const o = L.ids.filter(id => hasPorts(store.geraete[id])); devsOf(kid).forEach(id => { if(hasPorts(store.geraete[id]) && !o.includes(id)) o.push(id); }); return o; };
 // Switch als Geraet zeichnen (19-Zoll-Front). Gibt die Hoehe zurueck.
 function drawSwitchPDF(B, sg, sid, x0, y0, w){
-  const np = Number(sg.ports) || 0, sfp = sfpOf(sg), rj = np - sfp, st = gtOf(sg.typ);
+  const np = Number(sg.ports) || 0, sfp = sfpOf(sg), rj = np - sfp, st = gtD(sg);
   const units = []; for(let s = 1; s <= rj; s += 48) units.push([s, Math.min(48, rj - s + 1)]); if(!units.length) units.push([1, 0]);
   let yy = y0;
   units.forEach(([start, cnt], ui) => { const last = ui === units.length - 1, sf = last ? sfp : 0;
@@ -1520,6 +1565,35 @@ function drawSwitchPDF(B, sg, sid, x0, y0, w){
       B.font(true, 3.6); const tw = B.width("SFP"); B.fill(sx, yy + 1.6, cx - g - sx, 0.25, "#6b7580"); B.fill(sx + (cx - g - sx - tw)/2 - 0.8, yy + 0.9, tw + 1.6, 1.6, "#2b3036"); B.text("SFP", sx + (cx - g - sx - tw)/2, yy + 2.2, "#9aa4ae"); }
     yy += H + (last ? 0 : 1.2); });
   return yy - y0;
+}
+// Patchfeld als Gerät zeichnen (19-Zoll-Front, Stil wie Switch). measure=true: nur Höhe berechnen
+function drawPatchPDF(B, fd, x0, y0, w, measure){
+  const n = fd.ports, L = isLwl(fd), perRow = n <= 12 ? n : 24, rows = Math.ceil(n / perRow);
+  const EAR = 7, LBL = 27, gg = 2.6, grpN = perRow <= 8 ? perRow : 6, groups = Math.ceil(perRow / grpN);
+  const avail = w - 2*EAR - LBL - 6, pw = Math.min(9, (avail - (groups - 1)*gg) / perRow), ph = pw * 0.86, SH = 3.4;
+  const rowH = SH + 0.8 + ph + 2.4, H = 2.4 + rows*rowH + 0.6;
+  if(measure) return H;
+  B.fill(x0, y0, w, H, "#2b3036"); B.fill(x0, y0, w, 1.1, "#454d56"); B.fill(x0, y0 + H - 0.9, w, 0.9, "#1b1f23");
+  [x0, x0 + w - EAR].forEach(ex => { B.fill(ex, y0, EAR, H, "#c4cad0"); B.fill(ex, y0, EAR, 0.8, "#e1e5e9"); B.fill(ex + (ex === x0 ? EAR - 0.5 : 0), y0, 0.5, H, "#8f98a1");
+    const hs = rows > 1 ? [0.18, 0.82] : [0.26, 0.74]; hs.forEach(f => { const hy = y0 + H*f - 1.1; B.fill(ex + EAR/2 - 1.8, hy, 3.6, 2.2, "#4a525b"); B.fill(ex + EAR/2 - 1.8, hy, 3.6, 0.5, "#2a3036"); }); });
+  const lx = x0 + EAR + 3; B.font(true, 6.4); B.text(L ? "LWL-FELD" : "PATCHFELD", lx, y0 + 6, "#ffffff");
+  B.font(false, 5.2); B.text(B.fit(fd.name || "", LBL - 2), lx, y0 + 9.4, "#aab3bc"); B.text(B.fit(L ? n + " × " + stOf(fd).n : n + " × RJ45", LBL - 2), lx, y0 + 12.4, "#8b98a5");
+  B.fill(x0 + EAR + LBL, y0 + 2, 0.3, H - 4, "#454d56");
+  const used = perRow*pw + (groups - 1)*gg; const px0 = x0 + EAR + LBL + 3 + Math.max(0, (avail - used) / 2);
+  for(let i = 1; i <= n; i++){ const r = Math.floor((i - 1) / perRow), c = (i - 1) % perRow, g = Math.floor(c / grpN);
+    const px = px0 + c*pw + g*gg, ry = y0 + 2.4 + r*rowH, py = ry + SH + 0.8; const P = fd.p[i] || {};
+    // Beschriftungsstreifen mit Nummer
+    B.fill(px + (c % grpN === 0 ? 0 : -0.01), ry, pw, SH, "#eef1f4"); if(c % grpN) B.fill(px, ry + 0.5, 0.15, SH - 1, "#c4ccd4");
+    B.font(true, pw < 5.5 ? 4 : 4.8); const t = String(i); B.text(t, px + (pw - B.width(t))/2, ry + SH - 0.9, "#1b1f24");
+    const fr = Math.max(0.45, pw*0.11), q = 0.35, jx = px + q, jw = pw - 2*q; const col = P.c ? colOf(P.c).c : null;
+    if(L){ const d = stOf(fd).d; B.fill(jx, py, jw, ph, col || "#5f6873"); B.fill(jx + fr, py + fr, jw - 2*fr, ph - 2*fr, couplerCol(fd));
+      if(d === 2){ B.fill(jx + jw*0.2, py + ph*0.3, jw*0.24, ph*0.42, "#0d1013"); B.fill(jx + jw*0.56, py + ph*0.3, jw*0.24, ph*0.42, "#0d1013"); }
+      else B.fill(jx + jw*0.32, py + ph*0.28, jw*0.36, ph*0.46, "#0d1013"); }
+    else { B.fill(jx, py, jw, ph, col || "#5f6873"); B.fill(jx + fr, py + fr, jw - 2*fr, ph - 2*fr, "#0d1013");
+      const nw = jw*0.34, nh = ph*0.2; B.fill(jx + (jw - nw)/2, py + fr, nw, nh, "#2f363e");
+      for(let k = 0; k < 4; k++) B.fill(jx + jw*0.24 + k*jw*0.15, py + ph - fr - ph*0.2, jw*0.06, ph*0.08, "#b08d3a"); }
+    if(devAtPort(fd.__id, i) || P.name){ B.fill(jx + jw - fr - 0.2 - Math.max(0.7, pw*0.14), py + ph + 0.5, Math.max(0.7, pw*0.14), 0.5, "#2ecc71"); } }
+  return H;
 }
 
 async function elPdf(ids, opt){
@@ -1808,16 +1882,22 @@ async function prPdf(btn){ const v = store.vt[cur]; if(!v) return; const t = btn
   catch(e){ console.error(e); GT.toast("PDF konnte nicht erstellt werden."); } finally{ btn.disabled = false; btn.textContent = t; } }
 $("prPdf").addEventListener("click", () => prPdf($("prPdf")));
 $("prPdfTop").addEventListener("click", () => prPdf($("prPdfTop")));
+// ---------- Zurück: immer eine Ebene näher zur Startseite ----------
+// Ebenen: Startseite ‹ Kunden ‹ Verteilungen ‹ Verteilung ‹ Prüfprotokoll; Export liegt unter Verteilungen
+const PARENT = {pr: "field", field: "list", exp: "list", list: "kunden", kunden: null};
+(() => { const bb = document.querySelector(".backbtn"); if(!bb) return;
+  bb.onclick = e => { if(GT.home(e) === false) return false; const pv = PARENT[view]; if(!pv) return true;
+    e.preventDefault(); if(pv === "list") cur = null; showView(pv); if(pv === "field") renderField(); window.scrollTo(0, 0); return false; }; })();
 const TITLES = {pr:"Prüfprotokoll", exp:"Doku exportieren", kunden:"Kunden", list:"Verteilungen", field:"Verteilung"};
 const LEADS = {pr:"Besichtigen, Erproben, Messen – Stromkreise kommen automatisch aus der Verteilung.", exp:"Alle Verteilungen eines Kunden oder nur Teile davon als ein PDF.", kunden:"Kunden anlegen und auswählen – danach siehst du nur ihre Verteilungen.", list:"Stromkreisverteiler dokumentieren und den Belegungsplan für die Tür erstellen.", field:"Geräte eintragen, Stromkreise beschriften, PDF für die Tür."};
-function showView(v){ view = v; $("vKunden").hidden = v !== "kunden"; $("vList").hidden = v !== "list"; $("vField").hidden = v !== "field"; $("vExp").hidden = v !== "exp"; $("vPr").hidden = v !== "pr";
+function showView(v){ GT.backLabel(!PARENT[v]); view = v; $("vKunden").hidden = v !== "kunden"; $("vList").hidden = v !== "list"; $("vField").hidden = v !== "field"; $("vExp").hidden = v !== "exp"; $("vPr").hidden = v !== "pr";
   $("pageTitle").textContent = TITLES[v]; $("lead").textContent = LEADS[v];
   document.querySelectorAll("#nav [data-view]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === (v === "field" || v === "pr" ? "list" : v))));
   if(v === "list") renderList(); if(v === "kunden") renderKunden(); if(v === "exp") renderExp(); if(v === "pr") renderPr(); }
 $("nav").addEventListener("click", e => { const b = e.target.closest("[data-view]"); if(!b) return; if(b.dataset.view === "list" && cur && view === "kunden"){ showView("field"); renderField(); } else { if(b.dataset.view === "list") cur = null; showView(b.dataset.view); } window.scrollTo(0,0); });
 document.addEventListener("click", e => { if(e.target.classList && e.target.classList.contains("sheet-bg")) e.target.hidden = true; });
 
-showView(Object.keys(kunden).length || Object.keys(store.vt).length ? "list" : "kunden");
+showView("kunden");
 setTimeout(() => GT.tour("el", [
   {sel:'#nav [data-view="kunden"]', fixed:true, title:"Kunden", text:"Eigener Kundenstamm für Elektro. Kunde auswählen – dann siehst du nur seine Verteilungen. Kunden aus den Brandmeldeanlagen kannst du beim Anlegen übernehmen."},
   {sel:"#newBtn", title:"Verteilung anlegen", text:"Bezeichnung, Standort, Anzahl Reihen und TE pro Reihe. Zuleitung, Vorsicherung und Netzform kommen mit aufs Türblatt."},

@@ -270,8 +270,17 @@ header.top{position:static!important;border-bottom:0!important}
   function persist(){ try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch(e){} }
   function registerSW(){ if("serviceWorker" in navigator && location.protocol === "https:" && !(window.claude && window.claude.use)){ navigator.serviceWorker.register("sw.js").catch(()=>{}); } }
   // Zurück zum Startbildschirm
+  // Zurück-Button: immer eine Ebene näher zur Startseite. Auf der obersten Ebene eines Bereichs -> Startseite.
+  // Ein offenes Fenster wird zuerst geschlossen. (Kein history.back – das wäre „letzter Zustand“.)
+  let backSet = false;
+  function backLabel(top){ backSet = true; document.querySelectorAll(".backbtn").forEach(b => { b.textContent = top ? "‹ Startseite" : "‹ Zurück"; }); }
+  document.addEventListener("DOMContentLoaded", () => { if(!backSet) backLabel(true); });
+  let backFn = null;
+  function setBack(fn){ backFn = fn || null; backLabel(!fn); }
   function home(ev){
-    try{ if(document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1){ if(ev) ev.preventDefault(); history.back(); return false; } }catch(e){}
+    const open = [...document.querySelectorAll(".sheet-bg")].find(x => !x.hidden);
+    if(open){ if(ev) ev.preventDefault(); const x = open.querySelector(".sheet-x"); if(x) x.click(); else open.hidden = true; return false; }
+    if(backFn){ if(ev) ev.preventDefault(); backFn(); window.scrollTo(0, 0); return false; }
     return true;
   }
   // App nach mehr als 15 Minuten im Hintergrund wieder auf dem Startbildschirm öffnen
@@ -405,7 +414,23 @@ header.top{position:static!important;border-bottom:0!important}
     root.addEventListener("contextmenu", e => { if(e.target.closest(opts.item)) e.preventDefault(); });
     root.addEventListener("dragstart", e => e.preventDefault());
   }
-  window.GT = {drag, toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home, tour, tourDone, tourReset};
+
+  // ---------- Runder Schließen-Button oben links in jedem Fenster ----------
+  function sheetX(){ if(!document.getElementById("gtXCss")){ const c = document.createElement("style"); c.id = "gtXCss";
+      c.textContent = ".sheet-bg>.sheet.has-x{position:relative;padding-top:12px!important}"
+        + ".sheet-x{position:sticky;top:0;margin:0 0 -4px -4px;justify-self:start;align-self:start;flex:none;width:38px;height:38px;border-radius:50%;border:0;background:var(--sunk,#eef1f4);color:var(--ink,#1b1f24);display:grid;place-items:center;cursor:pointer;z-index:2;box-shadow:inset 0 0 0 1px var(--line,rgba(0,0,0,.08))}"
+        + ".sheet-x svg{width:16px;height:16px;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;fill:none}"
+        + ".sheet-x:active{transform:scale(.94)}";
+      document.head.appendChild(c); }
+    document.querySelectorAll(".sheet-bg > .sheet").forEach(sh => { if(sh.querySelector(":scope > .sheet-x")) return; sh.classList.add("has-x");
+      const b = document.createElement("button"); b.type = "button"; b.className = "sheet-x"; b.setAttribute("aria-label", "Schließen");
+      b.innerHTML = '<svg viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13"/></svg>';
+      b.addEventListener("click", e => { e.preventDefault(); e.stopPropagation();
+        const c = [...sh.querySelectorAll("button")].find(x => x !== b && !x.closest("[hidden]") && (/cancel|close/i.test(x.id || "") || /^\s*(Abbrechen|Schließen|Zurück)\s*$/i.test(x.textContent || "")));
+        if(c) c.click(); else { const bg = sh.closest(".sheet-bg"); if(bg) bg.hidden = true; } });
+      sh.insertBefore(b, sh.firstChild); }); }
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", sheetX); else sheetX();
+  window.GT = {setBack, backLabel, sheetX, drag, toast, deliver, IDB, blobsAsData, restoreBlobs, blobToData, persist, registerSW, home, tour, tourDone, tourReset};
   persist(); registerSW();
 })();
 
@@ -1228,6 +1253,7 @@ header.top{position:static!important;border-bottom:0!important}
     hits.hidden = false; hits.textContent = n === 1 ? "1 Kapitel gefunden" : n + " Kapitel gefunden"; none.hidden = n > 0;
   });
   nav.addEventListener("click", ev => { const b = ev.target.closest("[data-view]"); if(!b) return; view = b.dataset.view;
+    GT.setBack(view === "firma" ? null : () => nav.querySelector('[data-view="firma"]').click());
     nav.querySelectorAll("[data-view]").forEach(x => x.setAttribute("aria-selected", String(x === b)));
     title.textContent = TITLES[view]; document.getElementById("lead").textContent = LEADS[view]; q.value = ""; hits.hidden = true; none.hidden = true; show(); window.scrollTo(0, 0); });
   show();
