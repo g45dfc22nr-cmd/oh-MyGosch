@@ -246,11 +246,6 @@ header.top{position:static!important;border-bottom:0!important}
 <main class="wrap" id="vHome">
   <p class="greet" id="greet">Was möchtest du öffnen?</p>
   <div class="tiles">
-    <a class="tile" id="t-bma" href="brandmelde.html">
-      <span class="tic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.5M12 18v2.5M3.5 12H6M18 12h2.5"/></svg></span>
-      <span style="margin:0;white-space:normal"><b>Brandmeldeanlagen</b><span id="s-bma">Melderprüfung, Grundrisse, Mängel</span></span>
-      <i class="go"></i>
-    </a>
     <a class="tile" id="t-wb" href="stundenzettel.html">
       <span class="tic"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5V3h6v1.5M8.5 10h7M8.5 13.5h7M8.5 17h4"/></svg></span>
       <span style="margin:0;white-space:normal"><b>Stundenzettel</b><span id="s-wb">Wochenbericht erfassen und erstellen</span></span>
@@ -261,9 +256,19 @@ header.top{position:static!important;border-bottom:0!important}
       <span style="margin:0;white-space:normal"><b>Urlaub beantragen</b><span id="s-ur">Urlaub und Überstunden</span></span>
       <i class="go"></i>
     </a>
-    <a class="tile" id="t-lf" href="leitfaden.html">
-      <span class="tic"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 22H20v-4"/><path d="M8.5 7.5h7M8.5 11h5"/></svg></span>
-      <span style="margin:0;white-space:normal"><b>Leitfäden</b><span id="s-lf">Firma, Elektro, BMA, SAT, Notfall</span></span>
+    <a class="tile" id="t-bma" href="brandmelde.html">
+      <span class="tic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.5M12 18v2.5M3.5 12H6M18 12h2.5"/></svg></span>
+      <span style="margin:0;white-space:normal"><b>Brandmeldeanlagen</b><span id="s-bma">Melderprüfung, Grundrisse, Mängel</span></span>
+      <i class="go"></i>
+    </a>
+    <a class="tile" id="t-el" href="elektro.html">
+      <span class="tic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9.5h18M3 15h18"/><path d="M7 6.2v1M10 6.2v1M13 6.2v1M7 11.7v1M10 11.7v1"/></svg></span>
+      <span style="margin:0;white-space:normal"><b>Elektro</b><span id="s-el">Verteilungen dokumentieren, Plan für die Tür</span></span>
+      <i class="go"></i>
+    </a>
+    <a class="tile" id="t-net" href="netzwerk.html">
+      <span class="tic"><svg viewBox="0 0 24 24"><rect x="2.5" y="7" width="19" height="10" rx="2"/><path d="M6 11h2v2H6zM11 11h2v2h-2zM16 11h2v2h-2z"/></svg></span>
+      <span style="margin:0;white-space:normal"><b>Netzwerk</b><span id="s-net">Patchfelder beschriften, RJ45-Stecker</span></span>
       <i class="go"></i>
     </a>
     <a class="tile" id="t-sat" href="satfinder.html">
@@ -271,10 +276,15 @@ header.top{position:static!important;border-bottom:0!important}
       <span style="margin:0;white-space:normal"><b>SAT-Finder</b><span id="s-sat">Schüssel ausrichten mit Kompass</span></span>
       <i class="go"></i>
     </a>
+    <a class="tile" id="t-lf" href="leitfaden.html">
+      <span class="tic"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 22H20v-4"/><path d="M8.5 7.5h7M8.5 11h5"/></svg></span>
+      <span style="margin:0;white-space:normal"><b>Leitfäden</b><span id="s-lf">Firma, Elektro, BMA, SAT, Notfall</span></span>
+      <i class="go"></i>
+    </a>
   </div>
   <p class="note" id="noneNote" hidden>Alle Bereiche sind ausgeblendet. Schalte unten unter „Einstellungen“ einen Bereich ein.</p>
 
-  <p class="ver"><span style="white-space:nowrap">Oh-MyGosch</span> · <span style="white-space:nowrap">Version 4.3</span></p>
+  <p class="ver"><span style="white-space:nowrap">Oh-MyGosch</span> · <span style="white-space:nowrap">Version 4.4</span></p>
 </main>
 <main class="wrap" id="vSet" hidden>
   <div class="pagehead"><h1>Einstellungen</h1><span class="ctx">Oh-MyGosch</span></div>
@@ -341,11 +351,13 @@ header.top{position:static!important;border-bottom:0!important}
   <details class="card" id="secMod">
     <summary>Bereiche anzeigen</summary>
     <div class="in">
-      <label class="check"><input type="checkbox" id="m-bma"> Brandmeldeanlagen</label>
       <label class="check"><input type="checkbox" id="m-wb"> Stundenzettel</label>
       <label class="check"><input type="checkbox" id="m-ur"> Urlaub beantragen</label>
-      <label class="check"><input type="checkbox" id="m-lf"> Leitfäden</label>
+      <label class="check"><input type="checkbox" id="m-bma"> Brandmeldeanlagen</label>
+      <label class="check"><input type="checkbox" id="m-el"> Elektro</label>
+      <label class="check"><input type="checkbox" id="m-net"> Netzwerk</label>
       <label class="check"><input type="checkbox" id="m-sat"> SAT-Finder</label>
+      <label class="check"><input type="checkbox" id="m-lf"> Leitfäden</label>
     </div>
   </details>
   <details class="card" id="secHelp">
@@ -359,7 +371,7 @@ header.top{position:static!important;border-bottom:0!important}
   <details class="card" id="secBk">
     <summary>Datensicherung</summary>
     <div class="in">
-      <p class="note">Alles liegt nur auf diesem Gerät. „Alles sichern“ speichert Stundenzettel, Brandmeldeanlagen mit Grundrissen und Urlaubsanträge in eine Datei. Leg sie z. B. in deinen Dateien oder Downloads auf dem Gerät ab.</p>
+      <p class="note">Alles liegt nur auf diesem Gerät. „Alles sichern“ speichert Stundenzettel, Brandmeldeanlagen mit Grundrissen, Urlaubsanträge, Patchfelder und Verteilungen in eine Datei. Leg sie z. B. in deinen Dateien oder Downloads auf dem Gerät ab.</p>
       <div class="row">
         <button class="btn primary" type="button" id="bkAll">Alles sichern</button>
         <button class="btn" type="button" id="bkLoad">Sicherung einlesen</button>
@@ -372,7 +384,7 @@ header.top{position:static!important;border-bottom:0!important}
       <p class="note">Eingelesen werden Sicherungen aus dieser App, aus dem alten Wochenbericht und aus der alten Brandmelde-App. Einträge mit gleicher Kennung werden ersetzt, alle anderen bleiben.</p>
     </div>
   </details>
-  <p class="ver"><span style="white-space:nowrap">Oh-MyGosch</span> · <span style="white-space:nowrap">Version 4.3</span></p>
+  <p class="ver"><span style="white-space:nowrap">Oh-MyGosch</span> · <span style="white-space:nowrap">Version 4.4</span></p>
 </main>
 <div class="ins-bg" id="insPop" role="dialog" aria-modal="true" aria-labelledby="insT" hidden>
   <div class="ins">
@@ -950,13 +962,13 @@ function summary(){
 }
 
 // ---------- Bereiche ein/aus ----------
-function modules(){ return Object.assign({bma:true, wb:true, ur:true, lf:true, sat:true}, ls("app.modules") || {}); }
+function modules(){ return Object.assign({bma:true, wb:true, ur:true, lf:true, sat:true, net:true, el:true}, ls("app.modules") || {}); }
 function renderModules(){
   const m = modules();
-  $("t-bma").hidden = !m.bma; $("t-wb").hidden = !m.wb; $("t-ur").hidden = !m.ur; $("t-lf").hidden = !m.lf; $("m-lf").checked = m.lf; $("t-sat").hidden = !m.sat; $("m-sat").checked = m.sat; $("m-bma").checked = m.bma; $("m-wb").checked = m.wb; $("m-ur").checked = m.ur;
-  $("noneNote").hidden = m.bma || m.wb || m.ur || m.lf || m.sat;
+  $("t-bma").hidden = !m.bma; $("t-wb").hidden = !m.wb; $("t-ur").hidden = !m.ur; $("t-lf").hidden = !m.lf; $("m-lf").checked = m.lf; $("t-sat").hidden = !m.sat; $("m-sat").checked = m.sat; $("t-net").hidden = !m.net; $("m-net").checked = m.net; $("t-el").hidden = !m.el; $("m-el").checked = m.el; $("m-bma").checked = m.bma; $("m-wb").checked = m.wb; $("m-ur").checked = m.ur;
+  $("noneNote").hidden = m.bma || m.wb || m.ur || m.lf || m.sat || m.net || m.el;
 }
-["bma","wb","ur","lf","sat"].forEach(k => $("m-"+k).addEventListener("change", () => { const m = modules(); m[k] = $("m-"+k).checked; lsSet("app.modules", m); renderModules(); }));
+["bma","wb","ur","lf","sat","net","el"].forEach(k => $("m-"+k).addEventListener("change", () => { const m = modules(); m[k] = $("m-"+k).checked; lsSet("app.modules", m); renderModules(); }));
 
 // ---------- Arbeitszeit ----------
 const WD = ["Mo","Di","Mi","Do","Fr","Sa","So"];
@@ -1016,7 +1028,7 @@ $("bkAll").addEventListener("click", async () => {
   const ids = Object.values(bma.plaene || {}).map(p => p.asset);
   const data = {app:"gosch-tools", version:1, exported:new Date().toISOString(),
     wochenbericht:{reports: ls("wb.reports.v1") || {}, settings: ls("wb.settings.v1") || {}},
-    urlaub: ls("urlaub.v1") || null, arbeitszeit: ls("app.arbeitszeit") || null,
+    urlaub: ls("urlaub.v1") || null, arbeitszeit: ls("app.arbeitszeit") || null, netz: ls("netz.v1") || null, elektro: ls("elektro.v1") || null,
     bma, blobs: await GT.blobsAsData(ids)};
   const d = new Date(); const fn = "OhMyGosch-Sicherung_" + d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate()) + ".json";
   await GT.deliver(new Blob([JSON.stringify(data)], {type:"application/json"}), fn, "Sicherung teilen");
@@ -1027,7 +1039,7 @@ $("bkFile").addEventListener("change", async () => {
   const f = $("bkFile").files && $("bkFile").files[0]; $("bkFile").value = ""; if(!f) return;
   let j; try{ j = JSON.parse(await f.text()); }catch(e){ GT.toast("Die Datei ist keine gültige Sicherung."); return; }
   const parts = [];
-  if(j && j.app === "gosch-tools"){ pending = j; parts.push("Stundenzettel", "Brandmeldeanlagen"); if(j.urlaub) parts.push("Urlaub"); }
+  if(j && j.app === "gosch-tools"){ pending = j; parts.push("Stundenzettel", "Brandmeldeanlagen"); if(j.urlaub) parts.push("Urlaub"); if(j.netz) parts.push("Patchfelder"); if(j.elektro) parts.push("Verteilungen"); }
   else if(j && j.app === "wochenbericht"){ pending = {wochenbericht:{reports:j.reports, settings:j.settings}}; parts.push("Stundenzettel"); }
   else if(j && j.app === "bma-pruefung"){ const b = {}; for(const c of ["kunden","anlagen","gruppen","melder","plaene","messpunkte","messungen","maengel"]) b[c] = j[c] || {}; b.einst = j.einstellungen || {}; pending = {bma:b, blobs:j.blobs || {}}; parts.push("Brandmeldeanlagen"); }
   else { GT.toast("Diese Datei ist keine Sicherung aus Oh-MyGosch."); return; }
@@ -1038,6 +1050,8 @@ $("bkFile").addEventListener("change", async () => {
 $("bkNo").addEventListener("click", () => { pending = null; $("bkAsk").hidden = true; });
 $("bkYes").addEventListener("click", async () => {
   if(!pending) return; const p = pending; pending = null; $("bkAsk").hidden = true;
+  if(p.elektro && (p.elektro.vt || p.elektro.kunden)){ const e = ls("elektro.v1") || {}; e.vt = Object.assign(e.vt || {}, p.elektro.vt || {}); e.kunden = Object.assign(e.kunden || {}, p.elektro.kunden || {}); lsSet("elektro.v1", e); }
+  if(p.netz && (p.netz.felder || p.netz.kunden)){ const n = ls("netz.v1") || {}; n.felder = Object.assign(n.felder || {}, p.netz.felder || {}); n.kunden = Object.assign(n.kunden || {}, p.netz.kunden || {}); lsSet("netz.v1", n); }
   if(p.wochenbericht){
     const r = Object.assign(ls("wb.reports.v1") || {}, p.wochenbericht.reports || {}); lsSet("wb.reports.v1", r);
     const cur = ls("wb.settings.v1") || {}; const s = Object.assign({}, cur, p.wochenbericht.settings || {});
@@ -1083,11 +1097,13 @@ renderLook(); renderModules(); renderAz(); summary();
 // Einführung
 const TOUR_START = [
   {title:"Willkommen bei Oh-MyGosch", text:"Eine kurze Einführung in wenigen Schritten. Du kannst sie überspringen und jederzeit über das „?“ oben rechts neu starten."},
-  {sel:"#t-bma", title:"Brandmeldeanlagen", text:"Kunden und Anlagen anlegen, Melder prüfen und abhaken, Mängel notieren."},
   {sel:"#t-wb", title:"Stundenzettel", text:"Deinen Wochenbericht erfassen und als PDF für den Chef erstellen."},
   {sel:"#t-ur", title:"Urlaub beantragen", text:"Urlaubsanträge ausfüllen, als PDF erstellen und deine Urlaubstage im Blick behalten."},
-  {sel:"#t-lf", title:"Leitfäden", text:"Regeln im Betrieb, Elektro, Brandmeldeanlagen, SAT – und der Ablauf im Notfall."},
+  {sel:"#t-bma", title:"Brandmeldeanlagen", text:"Kunden und Anlagen anlegen, Melder prüfen und abhaken, Mängel notieren."},
+  {sel:"#t-el", title:"Elektro", text:"Verteilungen dokumentieren: Geräte, Stromkreise, FI-Zuordnung – und den Belegungsplan für die Verteilertür als PDF."},
+  {sel:"#t-net", title:"Netzwerk", text:"Patchfelder anlegen, jeden Port benennen und farbig kennzeichnen – dazu die Anleitung für den RJ45-Stecker."},
   {sel:"#t-sat", title:"SAT-Finder", text:"Schüssel ausrichten: Richtung, Höhe und LNB-Drehung für Schleswig-Holstein – mit dem Kompass des Geräts."},
+  {sel:"#t-lf", title:"Leitfäden", text:"Regeln im Betrieb, Elektro, Brandmeldeanlagen, SAT – und der Ablauf im Notfall."},
   {sel:'#nav [data-view="set"]', fixed:true, title:"Einstellungen", text:"Name, Unterschrift, Urlaubstage, App-Sperre und Design – alles an einer Stelle."},
   {sel:'#nav [data-view="home"]', fixed:true, title:"Deine Daten bleiben bei dir", text:"Alles wird nur auf diesem Gerät gespeichert. Sichere es ab und zu unter Einstellungen → Datensicherung."}
 ];

@@ -91,6 +91,20 @@ tbody tr{cursor:pointer}
 .level{width:min(70vw,260px);height:auto;display:block}
 .pill{display:inline-block;border-radius:99px;padding:3px 10px;font-size:13px;font-weight:700;background:var(--sunk);color:var(--muted)}
 .pill.ok{background:var(--ok-soft);color:var(--ok)}
+/* Transponder */
+.lv{display:grid;gap:10px}
+.lvh{display:flex;align-items:center;gap:10px}
+.lvb{flex:none;min-width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font:800 20px/1 var(--f-display);color:#fff}
+.lvh b{display:block;font:700 17px/1.2 var(--f-display)}
+.lvh small{display:block;color:var(--muted);font-size:13px}
+.lvh .chk{margin-left:auto;flex:none;border:0;border-radius:99px;height:38px;padding:0 14px;font-weight:700;background:var(--sunk);color:var(--muted)}
+.lvh .chk[aria-pressed="true"]{background:var(--ok-soft);color:var(--ok)}
+.tp{background:var(--sunk);border-radius:var(--rs);padding:10px 12px;display:grid;gap:3px}
+.tp .f{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.tp .f b{font:800 20px/1.1 var(--f-display);letter-spacing:-.01em}
+.tp .f span{font-size:13px;color:var(--muted);font-weight:650}
+.tp .c{font-size:14px}
+.lvsum{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 
 /* ===== Design „Modern“: hellgrau, weiße Karten mit großen Rundungen, Pillen-Knöpfe in Fast-Schwarz ===== */
 :root[data-design="modern"]{--bg:#f3f5f8;--paper:#ffffff;--surface:#ffffff;--sunk:#eef2f6;--ink:#0d1b2e;--muted:#5d6b7c;--line:#d6dee8;--accent:#003769;--accent-ink:#ffffff;--accent-soft:#e2eaf3;--brand:#003769;--ok:#13804f;--ok-soft:#e3f3ea;--danger:#c62f2f;--danger-soft:#fbe9e9;--warn:#b05f0b;--warn-soft:#fcf0e1;--shadow:0 1px 2px rgba(0,55,105,.05),0 12px 32px rgba(0,55,105,.08);--navbg:#003769;--f-display:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--f-body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--f-mono:system-ui,-apple-system,sans-serif;--r:26px;--rs:16px;color-scheme:light}
@@ -749,10 +763,21 @@ header.top{position:static!important;border-bottom:0!important}
       <p class="note">Handy hochkant mit der Längsseite an den Mast halten. Steht der Mast schief, stimmt die Elevation nicht über den ganzen Bogen.</p>
     </div>
   </section>
+  <!-- ======== Transponder ======== -->
+  <section id="vTp" style="display:grid;gap:14px" hidden>
+    <div class="card">
+      <h2>Alle vier Ebenen prüfen – Astra 19,2° Ost</h2>
+      <p class="note">Pro Ebene ein oder mehrere Testtransponder mit Sendern, die in Schleswig-Holstein viel geschaut werden. Am Messgerät bzw. Receiver Frequenz, Polarisation und Symbolrate eingeben – oder einfach den Sender einschalten. Lockt der Transponder mit guter Qualität (MER/C/N), ist die Ebene in Ordnung.</p>
+      <div class="lvsum"><span class="pill" id="tpSum">0 / 4 Ebenen geprüft</span><button class="btn" type="button" id="tpReset" style="min-height:36px;height:36px">Zurücksetzen</button></div>
+    </div>
+    <div id="tpList" style="display:grid;gap:14px"></div>
+    <p class="note">Stand: Oktober 2026. Sender wechseln gelegentlich den Transponder – stimmt etwas nicht, Sendersuchlauf machen. Die Frequenzen und Symbolraten stammen aus öffentlichen Senderlisten (u. a. LyngSat, Senderangaben).</p>
+  </section>
 </main>
 <nav class="appnav" id="nav" aria-label="SAT-Finder"><div class="in" role="tablist">
   <button type="button" role="tab" data-view="calc" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M4 10a10 10 0 0 0 10 10L4 10z"/><path d="M9 15l4-4M13 7a4 4 0 0 1 4 4M13 3a8 8 0 0 1 8 8"/></svg>Ausrichten</button>
   <button type="button" role="tab" data-view="comp" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Kompass</button>
+  <button type="button" role="tab" data-view="tp" aria-selected="false"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 9h4M7 12h6"/></svg>Transponder</button>
   <button type="button" role="tab" data-view="tilt" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M3 20h18"/><path d="M5 20A15 15 0 0 1 17 8"/><path d="M5 20l12-12"/></svg>Neigung</button>
 </div></nav>
 <script>
@@ -930,19 +955,46 @@ $("compBtn").addEventListener("click", async () => { if(await startSensors()){ $
 $("tiltBtn").addEventListener("click", async () => { if(await startSensors()){ $("compBtn").hidden = true; $("tiltBtn").hidden = true; tick(); } });
 
 // ---------- Navigation ----------
-const LEADS = {calc:"Wohin zeigt die Schüssel? Richtung, Höhe und LNB-Drehung für Schleswig-Holstein.", comp:"Der Pfeil zeigt dir, wohin du die Schüssel drehen musst.", tilt:"Höhe peilen und prüfen, ob der Mast gerade steht."};
-const TITLES = {calc:"SAT-Finder", comp:"Kompass", tilt:"Neigung"};
+const LEADS = {tp:"Testtransponder für alle vier Ebenen: Low/High Band, horizontal und vertikal.", calc:"Wohin zeigt die Schüssel? Richtung, Höhe und LNB-Drehung für Schleswig-Holstein.", comp:"Der Pfeil zeigt dir, wohin du die Schüssel drehen musst.", tilt:"Höhe peilen und prüfen, ob der Mast gerade steht."};
+const TITLES = {tp:"Transponder", calc:"SAT-Finder", comp:"Kompass", tilt:"Neigung"};
 $("nav").addEventListener("click", ev => { const b = ev.target.closest("[data-view]"); if(!b) return; const v = b.dataset.view;
   $("nav").querySelectorAll("[data-view]").forEach(x => x.setAttribute("aria-selected", String(x === b)));
-  $("vCalc").hidden = v !== "calc"; $("vComp").hidden = v !== "comp"; $("vTilt").hidden = v !== "tilt";
+  $("vCalc").hidden = v !== "calc"; $("vComp").hidden = v !== "comp"; $("vTilt").hidden = v !== "tilt"; $("vTp").hidden = v !== "tp";
   $("pageTitle").textContent = TITLES[v]; $("lead").textContent = LEADS[v]; window.scrollTo(0, 0); tick(); });
 
 renderSats(); roseBase(); render();
+// ---------- Testtransponder Astra 19,2° Ost ----------
+const LEVELS = [
+  {k:"LV", n:"Low Band · vertikal", d:"13 V · 0 kHz · 10,70–11,70 GHz", col:"#2f80ed", tps:[
+    {f:11347, p:"V", sr:22000, m:"DVB-S2 8PSK", fec:"2/3", c:"3sat HD, KiKA HD, ZDFinfo HD"}]},
+  {k:"LH", n:"Low Band · horizontal", d:"18 V · 0 kHz · 10,70–11,70 GHz", col:"#30a46c", tps:[
+    {f:11494, p:"H", sr:22000, m:"DVB-S2 8PSK", fec:"2/3", c:"Das Erste HD"},
+    {f:11362, p:"H", sr:22000, m:"DVB-S2 8PSK", fec:"2/3", c:"ZDF HD, ZDFneo HD"},
+    {f:11582, p:"H", sr:22000, m:"DVB-S2 8PSK", fec:"2/3", c:"NDR Fernsehen HD (SH-Fenster), phoenix HD"},
+    {f:11523, p:"H", sr:22000, m:"DVB-S2 8PSK", fec:"2/3", c:"WDR HD"}]},
+  {k:"HV", n:"High Band · vertikal", d:"13 V · 22 kHz · 11,70–12,75 GHz", col:"#f2811d", tps:[
+    {f:12480, p:"V", sr:27500, m:"DVB-S QPSK", fec:"3/4", c:"DMAX, SPORT1, Tele 5, HSE"},
+    {f:12552, p:"V", sr:22000, m:"DVB-S QPSK", fec:"5/6", c:"QVC, Bibel TV"}]},
+  {k:"HH", n:"High Band · horizontal", d:"18 V · 22 kHz · 11,70–12,75 GHz", col:"#e5484d", tps:[
+    {f:12188, p:"H", sr:27500, m:"DVB-S QPSK", fec:"3/4", c:"RTL, VOX, RTLZWEI, ntv, NITRO, RTL Nord (HH/SH)"},
+    {f:12544, p:"H", sr:22000, m:"DVB-S QPSK", fec:"5/6", c:"ProSieben"},
+    {f:12422, p:"H", sr:27500, m:"DVB-S QPSK", fec:"3/4", c:"WDR Fernsehen (SD-Regionalfenster), Radio Bremen TV, SR Fernsehen"}]}
+];
+let tpOk = (() => { try{ return JSON.parse(sessionStorage.getItem("sat.tpok") || "{}") || {}; }catch(e){ return {}; } })();
+function renderTp(){
+  $("tpList").innerHTML = LEVELS.map(L => '<div class="card lv"><div class="lvh"><span class="lvb" style="background:'+L.col+'">'+L.k+'</span><span><b>'+L.n+'</b><small>'+L.d+'</small></span><button class="chk" type="button" data-k="'+L.k+'" aria-pressed="'+(!!tpOk[L.k])+'">'+(tpOk[L.k] ? "✓ geprüft" : "abhaken")+'</button></div>'
+    + L.tps.map(t => '<div class="tp"><div class="f"><b>'+t.f+' '+t.p+'</b><span>SR '+t.sr+' · '+t.m+' · FEC '+t.fec+'</span></div><div class="c">'+t.c+'</div></div>').join("") + '</div>').join("");
+  const n = LEVELS.filter(L => tpOk[L.k]).length; $("tpSum").textContent = n + " / 4 Ebenen geprüft" + (n === 4 ? " ✓" : ""); $("tpSum").className = "pill" + (n === 4 ? " ok" : "");
+}
+$("tpList").addEventListener("click", e => { const b = e.target.closest("[data-k]"); if(!b) return; tpOk[b.dataset.k] = !tpOk[b.dataset.k]; try{ sessionStorage.setItem("sat.tpok", JSON.stringify(tpOk)); }catch(_){} renderTp(); });
+$("tpReset").addEventListener("click", () => { tpOk = {}; try{ sessionStorage.removeItem("sat.tpok"); }catch(_){} renderTp(); });
+renderTp();
 setTimeout(() => GT.tour("sat", [
   {sel:"#locCard", title:"Standort", text:"Gerechnet wird für den Raum Schleswig / Rendsburg – das passt für ganz Schleswig-Holstein."},
   {sel:"#sats", title:"Satellit wählen", text:"Meist Astra 19,2° Ost. Für Türkisch, Polnisch oder Italienisch z. B. Türksat 42° oder Hotbird 13°."},
   {sel:"#big", title:"Die drei Werte", text:"Kompassrichtung (schon um die Missweisung korrigiert), Höhe für die Skala am Halter und wie weit du das LNB drehst."},
   {sel:'#nav [data-view="comp"]', fixed:true, title:"Kompass", text:"Der Pfeil zeigt, wohin du dich drehen musst. Handy flach halten und Abstand zu Metall."},
+  {sel:'#nav [data-view="tp"]', fixed:true, title:"Transponder", text:"Testtransponder für alle vier Ebenen (LV, LH, HV, HH) mit bekannten Sendern wie Das Erste, ZDF, NDR, RTL und DMAX – zum Abhaken."},
   {sel:'#nav [data-view="tilt"]', fixed:true, title:"Neigung", text:"Höhe zum Himmel peilen – sind Bäume im Weg? – und prüfen, ob der Mast lotrecht steht."}
 ]), 700);
 })();
