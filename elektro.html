@@ -976,7 +976,7 @@ header.top{position:static!important;border-bottom:0!important}
     <div class="card" style="display:grid;gap:6px"><div class="row" style="justify-content:space-between"><h2>3 · Erproben</h2><button class="btn ghost sm" type="button" data-allok="erp">alle i.O.</button></div><div class="pk" id="prErp"></div></div>
     <div class="card" style="display:grid;gap:10px">
       <h2>4 · Messen – Anlage</h2>
-      <div class="frow"><label class="field">PA-Schiene (Ω)<input id="prRpa" inputmode="decimal" placeholder="z. B. 0,12"></label><label class="field">Erdung RA (Ω)<input id="prRa" inputmode="decimal" placeholder="bei TT"></label></div>
+      <div class="frow"><label class="field">PA-Schiene (Ω)<input id="prRpa" placeholder="z. B. 0,12"></label><label class="field">Erdung RA (Ω)<input id="prRa" placeholder="bei TT"></label></div>
       <div class="field">Prüfspannung Isolationsmessung<div class="chips" id="prIso"></div></div>
       <p class="note">Grenzwerte in der App (vereinfacht): R<sub>iso</sub> ≥ 1 MΩ · Z<sub>s</sub> ≤ U<sub>0</sub>/I<sub>a</sub> (B = 5·I<sub>n</sub>, C = 10·I<sub>n</sub>, D = 20·I<sub>n</sub>) · RCD t<sub>A</sub> ≤ 300 ms bei I<sub>Δn</sub> · U<sub>B</sub> ≤ 50 V. Die Bewertung trifft immer die Prüfperson.</p>
     </div>
@@ -1034,7 +1034,7 @@ header.top{position:static!important;border-bottom:0!important}
     <div class="field">Art<div class="chips" id="dsTyp"></div></div>
     <div class="three">
       <label class="field">Kennz.<input id="dsKz" autocomplete="off"></label>
-      <label class="field" id="dsInBox">Nennstrom (A)<input id="dsIn" inputmode="decimal" list="inList" autocomplete="off"></label>
+      <label class="field" id="dsInBox">Nennstrom (A)<input id="dsIn" list="inList" autocomplete="off"></label>
       <label class="field" id="dsTeBox">Breite (TE)<input id="dsTe" inputmode="numeric"></label>
     </div>
     <datalist id="inList"><option>6</option><option>10</option><option>13</option><option>16</option><option>20</option><option>25</option><option>32</option><option>40</option><option>50</option><option>63</option></datalist>
@@ -1059,14 +1059,14 @@ header.top{position:static!important;border-bottom:0!important}
     <p class="note" id="msSub"></p>
     <label class="field">Leitung (Typ, Adern × Querschnitt)<input id="msLtg" autocomplete="off" list="ltgList"></label>
     <div class="three">
-      <label class="field">Riso (MΩ)<input id="msRiso" inputmode="decimal" placeholder="> 500"></label>
-      <label class="field">RLO (Ω)<input id="msRlo" inputmode="decimal" placeholder="0,35"></label>
-      <label class="field">Zs (Ω)<input id="msZs" inputmode="decimal" placeholder="0,62"></label>
+      <label class="field">Riso (MΩ)<input id="msRiso" placeholder="> 500"></label>
+      <label class="field">RLO (Ω)<input id="msRlo" placeholder="0,35"></label>
+      <label class="field">Zs (Ω)<input id="msZs" placeholder="0,62"></label>
     </div>
     <div class="three" id="msRcdBox">
       <label class="field">IΔn (mA)<input id="msIdn" inputmode="numeric" readonly></label>
-      <label class="field">tA (ms)<input id="msTa" inputmode="decimal" placeholder="24"></label>
-      <label class="field">UB (V)<input id="msUb" inputmode="decimal" placeholder="1,2"></label>
+      <label class="field">tA (ms)<input id="msTa" placeholder="24"></label>
+      <label class="field">UB (V)<input id="msUb" placeholder="1,2"></label>
     </div>
     <div class="field" id="msTbBox">Prüftaste „T“<div class="chips" id="msTb"></div></div>
     <div class="meval" id="msEval"></div>
