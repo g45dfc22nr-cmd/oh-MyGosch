@@ -2,4 +2,5 @@ Copyright (c) 2026 Christopher Seltmann. Alle Rechte vorbehalten.
 
 Dieser Code ist nicht frei verwendbar. Ohne schriftliche Zustimmung des Rechteinhabers ist es nicht erlaubt,
 ihn ganz oder in Teilen zu kopieren, zu verändern, zu veröffentlichen, weiterzugeben oder in eigene Produkte zu übernehmen.
-Ausgenommen sind pdf.js und pdf.worker.js (Mozilla Foundation, Apache License 2.0, siehe LICENSE-pdfjs.txt).
+Ausgenommen sind pdf.js und pdf.worker.js (Mozilla Foundation, Apache License 2.0, siehe LICENSE-pdfjs.txt)
+sowie der Ordner pdfjs/ (Lizenzen der Bilddecoder jeweils daneben).
